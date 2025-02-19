@@ -24,7 +24,6 @@ Vivado_IP/*/*
 BlockDesign/*
 !BlockDesign/*.bd
 
-zPulse/
 ## OS
 .DS_Store
 .DS_Store?
