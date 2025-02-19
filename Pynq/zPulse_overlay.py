@@ -1,3 +1,7 @@
+#  -------------------------------------------------------------------------------------------------
+#  Copyright (C) 2025 Matías Rubén Bolaños Wagner
+#  SPDX-License-Identifier: GPL-3.0-or-later
+#  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- --
 from pynq import Overlay, MMIO, GPIO
 import os
 
