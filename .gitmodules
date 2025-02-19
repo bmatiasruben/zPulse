@@ -1,3 +1,3 @@
 [submodule "Hog"]
 	path = Hog
-	url = https://github.com/Hog-CERN/Hog.git
+	url = ../../hog/Hog.git
