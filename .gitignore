@@ -21,8 +21,8 @@
 Vivado_IP/*/*
 !Vivado_IP/*/*.xci*
 
-BlockDesign/*
-!BlockDesign/*.bd
+BlockDesign/*/*
+!BlockDesign/*/*.bd
 
 ## OS
 .DS_Store
