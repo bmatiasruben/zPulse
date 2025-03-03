@@ -68,7 +68,7 @@ begin
             -- Clocks --
             gtrefclk00_in(0) => mgtrefclk_single_ended,
             gtrefclk00_in(1) => mgtrefclk_single_ended,
-            txinhibit_ind => tx_inhibit,
+            txinhibit_in => tx_inhibit,
             gthrxn_in => "00000000",
             gthrxp_in => "00000000",
             rxusrclk_in(0) => w_rxusrclk,
