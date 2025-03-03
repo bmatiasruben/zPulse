@@ -37,6 +37,7 @@ architecture Behavioral of Top is
     signal w_txoutclk : std_logic_vector(7 downto 0);
     signal w_rxoutclk : std_logic_vector(7 downto 0);
     signal w_qpll0outrefclk : std_logic_vector(1 downto 0);
+    signal tx_inhibit : std_logic_vector(7 downto 0) := (others => '1');
 
 begin
 
@@ -67,6 +68,7 @@ begin
             -- Clocks --
             gtrefclk00_in(0) => mgtrefclk_single_ended,
             gtrefclk00_in(1) => mgtrefclk_single_ended,
+            txinhibit_ind => tx_inhibit,
             gthrxn_in => "00000000",
             gthrxp_in => "00000000",
             rxusrclk_in(0) => w_rxusrclk,
@@ -133,6 +135,7 @@ begin
             txusr_in => w_txusrclk2,
             clk_10_out => clk_out_10,
             tx_data => tx_data,
+            tx_inhibit => tx_inhibit,
             locked_0 => o_led(0)
         );
 

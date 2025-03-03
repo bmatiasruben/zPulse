@@ -34,10 +34,7 @@ module DACRAMstreamer #( parameter DWIDTH = 64, parameter MEM_SIZE_BYTES = 26214
   (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 axis_aresetn RST" *)
   input  wire              axis_aresetn,
   output reg  [DWIDTH-1:0] axis_tdata,       // luckily rest of AXIS is inferred properly
-  input [31:0] ram_addr_limit,
-  // Control Input Parameters
-//   input  [$clog2(MEM_SIZE_BYTES/(DWIDTH/8))-1:0] numSampleVectors,
-  input                    enable );
+  input [31:0] ram_addr_limit);
 
 //   reg [$clog2(MEM_SIZE_BYTES/(DWIDTH/8))-1:0] vcnt;
   wire [31:0] ramAddressLimit;
@@ -54,17 +51,12 @@ module DACRAMstreamer #( parameter DWIDTH = 64, parameter MEM_SIZE_BYTES = 26214
 
     if (~axis_aresetn) begin
   	end else begin
-  	  if (enable) begin
   		portA_en    <= 1'b1;
         if (portAcpu_addr == ramAddressLimit) begin
             portAcpu_addr <= 0;
         end else begin 
             portAcpu_addr <= portAcpu_addr + DWIDTH/8;
         end
-  	  end else begin
-  	    portAcpu_addr <= 0;
-  	    portA_en      <= 0;
-  	  end
   	end
   end
 endmodule

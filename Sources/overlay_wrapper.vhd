@@ -9,42 +9,45 @@
 --Purpose     : IP block netlist
 ----------------------------------------------------------------------------------
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.all;
 library UNISIM;
-use UNISIM.VCOMPONENTS.ALL;
+use UNISIM.VCOMPONENTS.all;
 entity overlay_wrapper is
-  port (
-    CLK_IN_300_clk_n : in STD_LOGIC;
-    CLK_IN_300_clk_p : in STD_LOGIC;
-    clk_10_out : out STD_LOGIC;
-    clk_out_250 : out STD_LOGIC;
-    locked_0 : out STD_LOGIC;
-    tx_data : out STD_LOGIC_VECTOR ( 511 downto 0 );
-    txusr_in : in STD_LOGIC
-  );
+    port (
+        CLK_IN_300_clk_n : in std_logic;
+        CLK_IN_300_clk_p : in std_logic;
+        clk_10_out : out std_logic;
+        clk_out_250 : out std_logic;
+        locked_0 : out std_logic;
+        tx_data : out std_logic_vector (511 downto 0);
+        tx_inhibit : out std_logic_vector (7 downto 0);
+        txusr_in : in std_logic
+    );
 end overlay_wrapper;
 
 architecture STRUCTURE of overlay_wrapper is
-  component overlay is
-  port (
-    CLK_IN_300_clk_n : in STD_LOGIC;
-    CLK_IN_300_clk_p : in STD_LOGIC;
-    clk_out_250 : out STD_LOGIC;
-    txusr_in : in STD_LOGIC;
-    tx_data : out STD_LOGIC_VECTOR ( 511 downto 0 );
-    clk_10_out : out STD_LOGIC;
-    locked_0 : out STD_LOGIC
-  );
-  end component overlay;
+    component overlay is
+        port (
+            CLK_IN_300_clk_n : in std_logic;
+            CLK_IN_300_clk_p : in std_logic;
+            clk_out_250 : out std_logic;
+            txusr_in : in std_logic;
+            tx_data : out std_logic_vector (511 downto 0);
+            tx_inhibit : out std_logic_vector (7 downto 0);
+            clk_10_out : out std_logic;
+            locked_0 : out std_logic
+        );
+    end component overlay;
 begin
-overlay_i: component overlay
-     port map (
-      CLK_IN_300_clk_n => CLK_IN_300_clk_n,
-      CLK_IN_300_clk_p => CLK_IN_300_clk_p,
-      clk_10_out => clk_10_out,
-      clk_out_250 => clk_out_250,
-      locked_0 => locked_0,
-      tx_data(511 downto 0) => tx_data(511 downto 0),
-      txusr_in => txusr_in
-    );
-end STRUCTURE;
+    overlay_i : component overlay
+        port map(
+            CLK_IN_300_clk_n => CLK_IN_300_clk_n,
+            CLK_IN_300_clk_p => CLK_IN_300_clk_p,
+            clk_10_out => clk_10_out,
+            clk_out_250 => clk_out_250,
+            locked_0 => locked_0,
+            tx_data(511 downto 0) => tx_data(511 downto 0),
+            tx_inhibit(7 downto 0) => tx_inhibit(7 downto 0),
+            txusr_in => txusr_in
+        );
+    end STRUCTURE;

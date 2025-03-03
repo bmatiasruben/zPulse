@@ -1,12 +1,12 @@
 {
   "design": {
     "design_info": {
-      "boundary_crc": "0x55504243F9F831A8",
+      "boundary_crc": "0xEC6EBCF74141C391",
       "device": "xczu9eg-ffvb1156-2-e",
       "gen_directory": "../../../../zPulse.gen/sources_1/bd/overlay",
       "name": "overlay",
       "rev_ctrl_bd_flag": "RevCtrlBdOff",
-      "synth_flow_mode": "Hierarchical",
+      "synth_flow_mode": "None",
       "tool_version": "2024.2",
       "validated": "true"
     },
@@ -108,8 +108,10 @@
           "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
           "DACRAMstreamer_0": ""
-        }
-      }
+        },
+        "xlconcat_1": ""
+      },
+      "util_vector_logic_0": ""
     },
     "interface_ports": {
       "CLK_IN_300": {
@@ -229,6 +231,21 @@
       },
       "locked_0": {
         "direction": "O"
+      },
+      "tx_inhibit": {
+        "direction": "O",
+        "left": "7",
+        "right": "0",
+        "parameters": {
+          "PortType": {
+            "value": "undef",
+            "value_src": "ip_prop"
+          },
+          "PortType.PROP_SRC": {
+            "value": "false",
+            "value_src": "ip_prop"
+          }
+        }
       }
     },
     "components": {
@@ -5921,6 +5938,11 @@
           "s_axi_aresetn1": {
             "type": "rst",
             "direction": "I"
+          },
+          "dout_0": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
           }
         },
         "components": {
@@ -5972,6 +5994,11 @@
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
+                "right": "0"
+              },
+              "gpio2_io_o": {
+                "direction": "O",
+                "left": "0",
                 "right": "0"
               }
             },
@@ -6173,9 +6200,6 @@
                     "direction": "I",
                     "left": "31",
                     "right": "0"
-                  },
-                  "enable": {
-                    "direction": "I"
                   }
                 }
               }
@@ -6222,7 +6246,7 @@
               "channel_ctrl_0_gpio2_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio2_io_o",
-                  "DACRAMstreamer_0/enable"
+                  "gpio2_io_o"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -6286,6 +6310,11 @@
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
+                "right": "0"
+              },
+              "gpio2_io_o": {
+                "direction": "O",
+                "left": "0",
                 "right": "0"
               }
             },
@@ -6487,9 +6516,6 @@
                     "direction": "I",
                     "left": "31",
                     "right": "0"
-                  },
-                  "enable": {
-                    "direction": "I"
                   }
                 }
               }
@@ -6536,7 +6562,7 @@
               "channel_ctrl_0_gpio2_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio2_io_o",
-                  "DACRAMstreamer_0/enable"
+                  "gpio2_io_o"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -6600,6 +6626,11 @@
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
+                "right": "0"
+              },
+              "gpio2_io_o": {
+                "direction": "O",
+                "left": "0",
                 "right": "0"
               }
             },
@@ -6801,9 +6832,6 @@
                     "direction": "I",
                     "left": "31",
                     "right": "0"
-                  },
-                  "enable": {
-                    "direction": "I"
                   }
                 }
               }
@@ -6850,7 +6878,7 @@
               "channel_ctrl_0_gpio2_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio2_io_o",
-                  "DACRAMstreamer_0/enable"
+                  "gpio2_io_o"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -6914,6 +6942,11 @@
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
+                "right": "0"
+              },
+              "gpio2_io_o": {
+                "direction": "O",
+                "left": "0",
                 "right": "0"
               }
             },
@@ -7115,9 +7148,6 @@
                     "direction": "I",
                     "left": "31",
                     "right": "0"
-                  },
-                  "enable": {
-                    "direction": "I"
                   }
                 }
               }
@@ -7164,7 +7194,7 @@
               "channel_ctrl_0_gpio2_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio2_io_o",
-                  "DACRAMstreamer_0/enable"
+                  "gpio2_io_o"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -7228,6 +7258,11 @@
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
+                "right": "0"
+              },
+              "gpio2_io_o": {
+                "direction": "O",
+                "left": "0",
                 "right": "0"
               }
             },
@@ -7429,9 +7464,6 @@
                     "direction": "I",
                     "left": "31",
                     "right": "0"
-                  },
-                  "enable": {
-                    "direction": "I"
                   }
                 }
               }
@@ -7478,7 +7510,7 @@
               "channel_ctrl_0_gpio2_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio2_io_o",
-                  "DACRAMstreamer_0/enable"
+                  "gpio2_io_o"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -7542,6 +7574,11 @@
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
+                "right": "0"
+              },
+              "gpio2_io_o": {
+                "direction": "O",
+                "left": "0",
                 "right": "0"
               }
             },
@@ -7743,9 +7780,6 @@
                     "direction": "I",
                     "left": "31",
                     "right": "0"
-                  },
-                  "enable": {
-                    "direction": "I"
                   }
                 }
               }
@@ -7792,7 +7826,7 @@
               "channel_ctrl_0_gpio2_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio2_io_o",
-                  "DACRAMstreamer_0/enable"
+                  "gpio2_io_o"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -7856,6 +7890,11 @@
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
+                "right": "0"
+              },
+              "gpio2_io_o": {
+                "direction": "O",
+                "left": "0",
                 "right": "0"
               }
             },
@@ -8057,9 +8096,6 @@
                     "direction": "I",
                     "left": "31",
                     "right": "0"
-                  },
-                  "enable": {
-                    "direction": "I"
                   }
                 }
               }
@@ -8106,7 +8142,7 @@
               "channel_ctrl_0_gpio2_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio2_io_o",
-                  "DACRAMstreamer_0/enable"
+                  "gpio2_io_o"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -8170,6 +8206,11 @@
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
+                "right": "0"
+              },
+              "gpio2_io_o": {
+                "direction": "O",
+                "left": "0",
                 "right": "0"
               }
             },
@@ -8371,9 +8412,6 @@
                     "direction": "I",
                     "left": "31",
                     "right": "0"
-                  },
-                  "enable": {
-                    "direction": "I"
                   }
                 }
               }
@@ -8420,7 +8458,7 @@
               "channel_ctrl_0_gpio2_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio2_io_o",
-                  "DACRAMstreamer_0/enable"
+                  "gpio2_io_o"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -8448,6 +8486,18 @@
                   "axi_bram_ctrl_0/s_axi_aclk",
                   "channel_ctrl_0/s_axi_aclk"
                 ]
+              }
+            }
+          },
+          "xlconcat_1": {
+            "vlnv": "xilinx.com:ip:xlconcat:2.1",
+            "ip_revision": "6",
+            "xci_name": "overlay_xlconcat_0_1",
+            "xci_path": "ip\\overlay_xlconcat_0_1\\overlay_xlconcat_0_1.xci",
+            "inst_hier_path": "tx_channels/xlconcat_1",
+            "parameters": {
+              "NUM_PORTS": {
+                "value": "8"
               }
             }
           }
@@ -8596,10 +8646,22 @@
               "xlconcat_0/In0"
             ]
           },
+          "tx_channel_0_gpio2_io_o": {
+            "ports": [
+              "tx_channel_0/gpio2_io_o",
+              "xlconcat_1/In0"
+            ]
+          },
           "tx_channel_1_axis_tdata": {
             "ports": [
               "tx_channel_1/axis_tdata",
               "xlconcat_0/In1"
+            ]
+          },
+          "tx_channel_1_gpio2_io_o": {
+            "ports": [
+              "tx_channel_1/gpio2_io_o",
+              "xlconcat_1/In1"
             ]
           },
           "tx_channel_2_axis_tdata": {
@@ -8608,10 +8670,22 @@
               "xlconcat_0/In2"
             ]
           },
+          "tx_channel_2_gpio2_io_o": {
+            "ports": [
+              "tx_channel_2/gpio2_io_o",
+              "xlconcat_1/In2"
+            ]
+          },
           "tx_channel_3_axis_tdata": {
             "ports": [
               "tx_channel_3/axis_tdata",
               "xlconcat_0/In3"
+            ]
+          },
+          "tx_channel_3_gpio2_io_o": {
+            "ports": [
+              "tx_channel_3/gpio2_io_o",
+              "xlconcat_1/In3"
             ]
           },
           "tx_channel_4_axis_tdata": {
@@ -8620,10 +8694,22 @@
               "xlconcat_0/In4"
             ]
           },
+          "tx_channel_4_gpio2_io_o": {
+            "ports": [
+              "tx_channel_4/gpio2_io_o",
+              "xlconcat_1/In4"
+            ]
+          },
           "tx_channel_5_axis_tdata": {
             "ports": [
               "tx_channel_5/axis_tdata",
               "xlconcat_0/In5"
+            ]
+          },
+          "tx_channel_5_gpio2_io_o": {
+            "ports": [
+              "tx_channel_5/gpio2_io_o",
+              "xlconcat_1/In5"
             ]
           },
           "tx_channel_6_axis_tdata": {
@@ -8632,16 +8718,34 @@
               "xlconcat_0/In6"
             ]
           },
+          "tx_channel_6_gpio2_io_o": {
+            "ports": [
+              "tx_channel_6/gpio2_io_o",
+              "xlconcat_1/In6"
+            ]
+          },
           "tx_channel_7_axis_tdata": {
             "ports": [
               "tx_channel_7/axis_tdata",
               "xlconcat_0/In7"
             ]
           },
+          "tx_channel_7_gpio2_io_o": {
+            "ports": [
+              "tx_channel_7/gpio2_io_o",
+              "xlconcat_1/In7"
+            ]
+          },
           "xlconcat_0_dout": {
             "ports": [
               "xlconcat_0/dout",
               "tx_data"
+            ]
+          },
+          "xlconcat_1_dout": {
+            "ports": [
+              "xlconcat_1/dout",
+              "dout_0"
             ]
           },
           "zynq_ultra_ps_e_0_pl_clk0": {
@@ -8656,6 +8760,18 @@
               "tx_channel_3/s_axi_aclk",
               "tx_channel_2/s_axi_aclk"
             ]
+          }
+        }
+      },
+      "util_vector_logic_0": {
+        "vlnv": "xilinx.com:ip:util_vector_logic:2.0",
+        "ip_revision": "4",
+        "xci_name": "overlay_util_vector_logic_0_0",
+        "xci_path": "ip\\overlay_util_vector_logic_0_0\\overlay_util_vector_logic_0_0.xci",
+        "inst_hier_path": "util_vector_logic_0",
+        "parameters": {
+          "C_OPERATION": {
+            "value": "not"
           }
         }
       }
@@ -8834,6 +8950,18 @@
           "tx_channels/txusr_in",
           "clk_wiz_1/clk_in1",
           "proc_sys_reset_0/slowest_sync_clk"
+        ]
+      },
+      "tx_channels_dout_0": {
+        "ports": [
+          "tx_channels/dout_0",
+          "util_vector_logic_0/Op1"
+        ]
+      },
+      "util_vector_logic_0_Res": {
+        "ports": [
+          "util_vector_logic_0/Res",
+          "tx_inhibit"
         ]
       },
       "xlconcat_0_dout": {
