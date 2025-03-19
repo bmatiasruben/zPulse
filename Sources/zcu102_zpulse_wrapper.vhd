@@ -26,7 +26,7 @@ entity overlay_wrapper is
 end overlay_wrapper;
 
 architecture STRUCTURE of overlay_wrapper is
-    component overlay is
+    component zcu102_zpulse is
         port (
             CLK_IN_300_clk_n : in std_logic;
             CLK_IN_300_clk_p : in std_logic;
@@ -37,9 +37,9 @@ architecture STRUCTURE of overlay_wrapper is
             clk_10_out : out std_logic;
             locked_0 : out std_logic
         );
-    end component overlay;
+    end component zcu102_zpulse;
 begin
-    overlay_i : component overlay
+    overlay_i : component zcu102_zpulse
         port map(
             CLK_IN_300_clk_n => CLK_IN_300_clk_n,
             CLK_IN_300_clk_p => CLK_IN_300_clk_p,

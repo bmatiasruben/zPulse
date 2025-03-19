@@ -3,8 +3,8 @@
     "design_info": {
       "boundary_crc": "0xEC6EBCF74141C391",
       "device": "xczu9eg-ffvb1156-2-e",
-      "gen_directory": "../../../../zPulse.gen/sources_1/bd/overlay",
-      "name": "overlay",
+      "gen_directory": "../../Projects/zPulse/zPulse.gen/sources_1/bd/zcu102_zpulse",
+      "name": "zcu102_zpulse",
       "rev_ctrl_bd_flag": "RevCtrlBdOff",
       "synth_flow_mode": "None",
       "tool_version": "2024.2",
@@ -25,7 +25,8 @@
         "m04_couplers": {},
         "m05_couplers": {},
         "m06_couplers": {},
-        "m07_couplers": {}
+        "m07_couplers": {},
+        "m08_couplers": {}
       },
       "bram_interconnects": {
         "xbar": "",
@@ -65,53 +66,54 @@
           "channel_ctrl_0": "",
           "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
-          "DACRAMstreamer_0": ""
+          "BRAM_streamer_data_0": ""
         },
         "tx_channel_0": {
           "channel_ctrl_0": "",
           "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
-          "DACRAMstreamer_0": ""
+          "BRAM_streamer_data_0": ""
         },
         "tx_channel_2": {
           "channel_ctrl_0": "",
           "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
-          "DACRAMstreamer_0": ""
+          "BRAM_streamer_data_0": ""
         },
         "tx_channel_3": {
           "channel_ctrl_0": "",
           "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
-          "DACRAMstreamer_0": ""
+          "BRAM_streamer_data_0": ""
         },
         "tx_channel_4": {
           "channel_ctrl_0": "",
           "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
-          "DACRAMstreamer_0": ""
+          "BRAM_streamer_data_0": ""
         },
         "tx_channel_5": {
           "channel_ctrl_0": "",
           "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
-          "DACRAMstreamer_0": ""
+          "BRAM_streamer_data_0": ""
         },
         "tx_channel_6": {
           "channel_ctrl_0": "",
           "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
-          "DACRAMstreamer_0": ""
+          "BRAM_streamer_data_0": ""
         },
         "tx_channel_7": {
           "channel_ctrl_0": "",
-          "blk_mem_gen_0": "",
           "axi_bram_ctrl_0": "",
-          "DACRAMstreamer_0": ""
+          "BRAM_streamer_data_0": "",
+          "blk_mem_gen_0": ""
         },
         "xlconcat_1": ""
       },
-      "util_vector_logic_0": ""
+      "util_vector_logic_0": "",
+      "reset_gpio": ""
     },
     "interface_ports": {
       "CLK_IN_300": {
@@ -146,7 +148,7 @@
         "direction": "O",
         "parameters": {
           "CLK_DOMAIN": {
-            "value": "overlay_clk_wiz_0_0_clk_out1",
+            "value": "zcu102_zpulse_clk_wiz_0_0_clk_out1",
             "value_src": "default_prop"
           },
           "FREQ_HZ": {
@@ -172,7 +174,7 @@
         "direction": "I",
         "parameters": {
           "CLK_DOMAIN": {
-            "value": "overlay_txusr_in",
+            "value": "zcu102_zpulse_txusr_in",
             "value_src": "default"
           },
           "FREQ_HZ": {
@@ -208,7 +210,7 @@
         "direction": "O",
         "parameters": {
           "CLK_DOMAIN": {
-            "value": "overlay_clk_wiz_1_0_clk_out1",
+            "value": "zcu102_zpulse_clk_wiz_1_0_clk_out1",
             "value_src": "default_prop"
           },
           "FREQ_HZ": {
@@ -252,8 +254,8 @@
       "zynq_ultra_ps_e_0": {
         "vlnv": "xilinx.com:ip:zynq_ultra_ps_e:3.5",
         "ip_revision": "5",
-        "xci_name": "overlay_zynq_ultra_ps_e_0_0",
-        "xci_path": "ip\\overlay_zynq_ultra_ps_e_0_0\\overlay_zynq_ultra_ps_e_0_0.xci",
+        "xci_name": "zcu102_zpulse_zynq_ultra_ps_e_0_0",
+        "xci_path": "ip\\zcu102_zpulse_zynq_ultra_ps_e_0_0\\zcu102_zpulse_zynq_ultra_ps_e_0_0.xci",
         "inst_hier_path": "zynq_ultra_ps_e_0",
         "parameters": {
           "CAN0_BOARD_INTERFACE": {
@@ -3443,12 +3445,12 @@
       },
       "control_interconnects": {
         "vlnv": "xilinx.com:ip:axi_interconnect:2.1",
-        "xci_path": "ip\\overlay_control_interconnects_0\\overlay_control_interconnects_0.xci",
+        "xci_path": "ip\\zcu102_zpulse_control_interconnects_0\\zcu102_zpulse_control_interconnects_0.xci",
         "inst_hier_path": "control_interconnects",
-        "xci_name": "overlay_control_interconnects_0",
+        "xci_name": "zcu102_zpulse_control_interconnects_0",
         "parameters": {
           "NUM_MI": {
-            "value": "8"
+            "value": "9"
           }
         },
         "interface_ports": {
@@ -3493,6 +3495,11 @@
             "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
           },
           "M07_AXI": {
+            "mode": "Master",
+            "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+          },
+          "M08_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
             "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
@@ -3655,18 +3662,34 @@
           "M07_ARESETN": {
             "type": "rst",
             "direction": "I"
+          },
+          "M08_ACLK": {
+            "type": "clk",
+            "direction": "I",
+            "parameters": {
+              "ASSOCIATED_BUSIF": {
+                "value": "M08_AXI"
+              },
+              "ASSOCIATED_RESET": {
+                "value": "M08_ARESETN"
+              }
+            }
+          },
+          "M08_ARESETN": {
+            "type": "rst",
+            "direction": "I"
           }
         },
         "components": {
           "xbar": {
             "vlnv": "xilinx.com:ip:axi_crossbar:2.1",
             "ip_revision": "34",
-            "xci_name": "overlay_control_interconnects_imp_xbar_0",
-            "xci_path": "ip\\overlay_control_interconnects_imp_xbar_0\\overlay_control_interconnects_imp_xbar_0.xci",
+            "xci_name": "zcu102_zpulse_control_interconnects_imp_xbar_0",
+            "xci_path": "ip\\zcu102_zpulse_control_interconnects_imp_xbar_0\\zcu102_zpulse_control_interconnects_imp_xbar_0.xci",
             "inst_hier_path": "control_interconnects/xbar",
             "parameters": {
               "NUM_MI": {
-                "value": "8"
+                "value": "9"
               },
               "NUM_SI": {
                 "value": "1"
@@ -3687,7 +3710,8 @@
                   "M04_AXI",
                   "M05_AXI",
                   "M06_AXI",
-                  "M07_AXI"
+                  "M07_AXI",
+                  "M08_AXI"
                 ]
               }
             }
@@ -3743,8 +3767,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_control_interconnects_imp_auto_ds_0",
-                "xci_path": "ip\\overlay_control_interconnects_imp_auto_ds_0\\overlay_control_interconnects_imp_auto_ds_0.xci",
+                "xci_name": "zcu102_zpulse_control_interconnects_imp_auto_ds_0",
+                "xci_path": "ip\\zcu102_zpulse_control_interconnects_imp_auto_ds_0\\zcu102_zpulse_control_interconnects_imp_auto_ds_0.xci",
                 "inst_hier_path": "control_interconnects/s00_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -3767,8 +3791,8 @@
               "auto_pc": {
                 "vlnv": "xilinx.com:ip:axi_protocol_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_control_interconnects_imp_auto_pc_0",
-                "xci_path": "ip\\overlay_control_interconnects_imp_auto_pc_0\\overlay_control_interconnects_imp_auto_pc_0.xci",
+                "xci_name": "zcu102_zpulse_control_interconnects_imp_auto_pc_0",
+                "xci_path": "ip\\zcu102_zpulse_control_interconnects_imp_auto_pc_0\\zcu102_zpulse_control_interconnects_imp_auto_pc_0.xci",
                 "inst_hier_path": "control_interconnects/s00_couplers/auto_pc",
                 "parameters": {
                   "MI_PROTOCOL": {
@@ -4273,6 +4297,62 @@
                 ]
               }
             }
+          },
+          "m08_couplers": {
+            "interface_ports": {
+              "M_AXI": {
+                "mode": "Master",
+                "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+              },
+              "S_AXI": {
+                "mode": "Slave",
+                "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+              }
+            },
+            "ports": {
+              "M_ACLK": {
+                "type": "clk",
+                "direction": "I",
+                "parameters": {
+                  "ASSOCIATED_BUSIF": {
+                    "value": "M_AXI"
+                  },
+                  "ASSOCIATED_RESET": {
+                    "value": "M_ARESETN"
+                  }
+                }
+              },
+              "M_ARESETN": {
+                "type": "rst",
+                "direction": "I"
+              },
+              "S_ACLK": {
+                "type": "clk",
+                "direction": "I",
+                "parameters": {
+                  "ASSOCIATED_BUSIF": {
+                    "value": "S_AXI"
+                  },
+                  "ASSOCIATED_RESET": {
+                    "value": "S_ARESETN"
+                  }
+                }
+              },
+              "S_ARESETN": {
+                "type": "rst",
+                "direction": "I"
+              }
+            },
+            "interface_nets": {
+              "m08_couplers_to_m08_couplers": {
+                "interface_ports": [
+                  "S_AXI",
+                  "M_AXI"
+                ]
+              }
+            }
           }
         },
         "interface_nets": {
@@ -4330,6 +4410,12 @@
               "M07_AXI"
             ]
           },
+          "m08_couplers_to_control_interconnects": {
+            "interface_ports": [
+              "m08_couplers/M_AXI",
+              "M08_AXI"
+            ]
+          },
           "s00_couplers_to_xbar": {
             "interface_ports": [
               "s00_couplers/M_AXI",
@@ -4383,6 +4469,12 @@
               "xbar/M07_AXI",
               "m07_couplers/S_AXI"
             ]
+          },
+          "xbar_to_m08_couplers": {
+            "interface_ports": [
+              "xbar/M08_AXI",
+              "m08_couplers/S_AXI"
+            ]
           }
         },
         "nets": {
@@ -4400,6 +4492,7 @@
               "m05_couplers/M_ACLK",
               "m06_couplers/M_ACLK",
               "m07_couplers/M_ACLK",
+              "m08_couplers/M_ACLK",
               "m00_couplers/S_ACLK",
               "m01_couplers/S_ACLK",
               "m02_couplers/S_ACLK",
@@ -4407,7 +4500,8 @@
               "m04_couplers/S_ACLK",
               "m05_couplers/S_ACLK",
               "m06_couplers/S_ACLK",
-              "m07_couplers/S_ACLK"
+              "m07_couplers/S_ACLK",
+              "m08_couplers/S_ACLK"
             ]
           },
           "control_interconnects_ARESETN_net": {
@@ -4424,6 +4518,7 @@
               "m05_couplers/M_ARESETN",
               "m06_couplers/M_ARESETN",
               "m07_couplers/M_ARESETN",
+              "m08_couplers/M_ARESETN",
               "m00_couplers/S_ARESETN",
               "m01_couplers/S_ARESETN",
               "m02_couplers/S_ARESETN",
@@ -4431,16 +4526,17 @@
               "m04_couplers/S_ARESETN",
               "m05_couplers/S_ARESETN",
               "m06_couplers/S_ARESETN",
-              "m07_couplers/S_ARESETN"
+              "m07_couplers/S_ARESETN",
+              "m08_couplers/S_ARESETN"
             ]
           }
         }
       },
       "bram_interconnects": {
         "vlnv": "xilinx.com:ip:axi_interconnect:2.1",
-        "xci_path": "ip\\overlay_bram_interconnects_0\\overlay_bram_interconnects_0.xci",
+        "xci_path": "ip\\zcu102_zpulse_bram_interconnects_0\\zcu102_zpulse_bram_interconnects_0.xci",
         "inst_hier_path": "bram_interconnects",
-        "xci_name": "overlay_bram_interconnects_0",
+        "xci_name": "zcu102_zpulse_bram_interconnects_0",
         "parameters": {
           "NUM_MI": {
             "value": "8"
@@ -4656,8 +4752,8 @@
           "xbar": {
             "vlnv": "xilinx.com:ip:axi_crossbar:2.1",
             "ip_revision": "34",
-            "xci_name": "overlay_bram_interconnects_imp_xbar_0",
-            "xci_path": "ip\\overlay_bram_interconnects_imp_xbar_0\\overlay_bram_interconnects_imp_xbar_0.xci",
+            "xci_name": "zcu102_zpulse_bram_interconnects_imp_xbar_0",
+            "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_xbar_0\\zcu102_zpulse_bram_interconnects_imp_xbar_0.xci",
             "inst_hier_path": "bram_interconnects/xbar",
             "parameters": {
               "NUM_MI": {
@@ -4794,8 +4890,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_bram_interconnects_imp_auto_ds_0",
-                "xci_path": "ip\\overlay_bram_interconnects_imp_auto_ds_0\\overlay_bram_interconnects_imp_auto_ds_0.xci",
+                "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_0",
+                "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_auto_ds_0\\zcu102_zpulse_bram_interconnects_imp_auto_ds_0.xci",
                 "inst_hier_path": "bram_interconnects/m00_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -4896,8 +4992,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_bram_interconnects_imp_auto_ds_1",
-                "xci_path": "ip\\overlay_bram_interconnects_imp_auto_ds_1\\overlay_bram_interconnects_imp_auto_ds_1.xci",
+                "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_1",
+                "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_auto_ds_1\\zcu102_zpulse_bram_interconnects_imp_auto_ds_1.xci",
                 "inst_hier_path": "bram_interconnects/m01_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -4998,8 +5094,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_bram_interconnects_imp_auto_ds_2",
-                "xci_path": "ip\\overlay_bram_interconnects_imp_auto_ds_2\\overlay_bram_interconnects_imp_auto_ds_2.xci",
+                "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_2",
+                "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_auto_ds_2\\zcu102_zpulse_bram_interconnects_imp_auto_ds_2.xci",
                 "inst_hier_path": "bram_interconnects/m02_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -5100,8 +5196,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_bram_interconnects_imp_auto_ds_3",
-                "xci_path": "ip\\overlay_bram_interconnects_imp_auto_ds_3\\overlay_bram_interconnects_imp_auto_ds_3.xci",
+                "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_3",
+                "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_auto_ds_3\\zcu102_zpulse_bram_interconnects_imp_auto_ds_3.xci",
                 "inst_hier_path": "bram_interconnects/m03_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -5202,8 +5298,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_bram_interconnects_imp_auto_ds_4",
-                "xci_path": "ip\\overlay_bram_interconnects_imp_auto_ds_4\\overlay_bram_interconnects_imp_auto_ds_4.xci",
+                "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_4",
+                "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_auto_ds_4\\zcu102_zpulse_bram_interconnects_imp_auto_ds_4.xci",
                 "inst_hier_path": "bram_interconnects/m04_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -5304,8 +5400,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_bram_interconnects_imp_auto_ds_5",
-                "xci_path": "ip\\overlay_bram_interconnects_imp_auto_ds_5\\overlay_bram_interconnects_imp_auto_ds_5.xci",
+                "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_5",
+                "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_auto_ds_5\\zcu102_zpulse_bram_interconnects_imp_auto_ds_5.xci",
                 "inst_hier_path": "bram_interconnects/m05_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -5406,8 +5502,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_bram_interconnects_imp_auto_ds_6",
-                "xci_path": "ip\\overlay_bram_interconnects_imp_auto_ds_6\\overlay_bram_interconnects_imp_auto_ds_6.xci",
+                "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_6",
+                "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_auto_ds_6\\zcu102_zpulse_bram_interconnects_imp_auto_ds_6.xci",
                 "inst_hier_path": "bram_interconnects/m06_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -5508,8 +5604,8 @@
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
                 "ip_revision": "33",
-                "xci_name": "overlay_bram_interconnects_imp_auto_ds_7",
-                "xci_path": "ip\\overlay_bram_interconnects_imp_auto_ds_7\\overlay_bram_interconnects_imp_auto_ds_7.xci",
+                "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_7",
+                "xci_path": "ip\\zcu102_zpulse_bram_interconnects_imp_auto_ds_7\\zcu102_zpulse_bram_interconnects_imp_auto_ds_7.xci",
                 "inst_hier_path": "bram_interconnects/m07_couplers/auto_ds",
                 "parameters": {
                   "MI_DATA_WIDTH": {
@@ -5724,8 +5820,8 @@
       "clk_wiz_0": {
         "vlnv": "xilinx.com:ip:clk_wiz:6.0",
         "ip_revision": "15",
-        "xci_name": "overlay_clk_wiz_0_0",
-        "xci_path": "ip\\overlay_clk_wiz_0_0\\overlay_clk_wiz_0_0.xci",
+        "xci_name": "zcu102_zpulse_clk_wiz_0_0",
+        "xci_path": "ip\\zcu102_zpulse_clk_wiz_0_0\\zcu102_zpulse_clk_wiz_0_0.xci",
         "inst_hier_path": "clk_wiz_0",
         "parameters": {
           "CLKIN1_JITTER_PS": {
@@ -5775,22 +5871,22 @@
       "proc_sys_reset_0": {
         "vlnv": "xilinx.com:ip:proc_sys_reset:5.0",
         "ip_revision": "16",
-        "xci_name": "overlay_proc_sys_reset_0_0",
-        "xci_path": "ip\\overlay_proc_sys_reset_0_0\\overlay_proc_sys_reset_0_0.xci",
+        "xci_name": "zcu102_zpulse_proc_sys_reset_0_0",
+        "xci_path": "ip\\zcu102_zpulse_proc_sys_reset_0_0\\zcu102_zpulse_proc_sys_reset_0_0.xci",
         "inst_hier_path": "proc_sys_reset_0"
       },
       "proc_sys_reset_1": {
         "vlnv": "xilinx.com:ip:proc_sys_reset:5.0",
         "ip_revision": "16",
-        "xci_name": "overlay_proc_sys_reset_1_0",
-        "xci_path": "ip\\overlay_proc_sys_reset_1_0\\overlay_proc_sys_reset_1_0.xci",
+        "xci_name": "zcu102_zpulse_proc_sys_reset_1_0",
+        "xci_path": "ip\\zcu102_zpulse_proc_sys_reset_1_0\\zcu102_zpulse_proc_sys_reset_1_0.xci",
         "inst_hier_path": "proc_sys_reset_1"
       },
       "clk_wiz_1": {
         "vlnv": "xilinx.com:ip:clk_wiz:6.0",
         "ip_revision": "15",
-        "xci_name": "overlay_clk_wiz_1_0",
-        "xci_path": "ip\\overlay_clk_wiz_1_0\\overlay_clk_wiz_1_0.xci",
+        "xci_name": "zcu102_zpulse_clk_wiz_1_0",
+        "xci_path": "ip\\zcu102_zpulse_clk_wiz_1_0\\zcu102_zpulse_clk_wiz_1_0.xci",
         "inst_hier_path": "clk_wiz_1",
         "parameters": {
           "CLKIN1_JITTER_PS": {
@@ -5949,8 +6045,8 @@
           "xlconcat_0": {
             "vlnv": "xilinx.com:ip:xlconcat:2.1",
             "ip_revision": "6",
-            "xci_name": "overlay_xlconcat_0_0",
-            "xci_path": "ip\\overlay_xlconcat_0_0\\overlay_xlconcat_0_0.xci",
+            "xci_name": "zcu102_zpulse_xlconcat_0_0",
+            "xci_path": "ip\\zcu102_zpulse_xlconcat_0_0\\zcu102_zpulse_xlconcat_0_0.xci",
             "inst_hier_path": "tx_channels/xlconcat_0",
             "parameters": {
               "NUM_PORTS": {
@@ -6006,8 +6102,8 @@
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
                 "ip_revision": "35",
-                "xci_name": "overlay_channel_ctrl_0_0",
-                "xci_path": "ip\\overlay_channel_ctrl_0_0\\overlay_channel_ctrl_0_0.xci",
+                "xci_name": "zcu102_zpulse_channel_ctrl_0_0",
+                "xci_path": "ip\\zcu102_zpulse_channel_ctrl_0_0\\zcu102_zpulse_channel_ctrl_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/channel_ctrl_0",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
@@ -6030,8 +6126,8 @@
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
                 "ip_revision": "9",
-                "xci_name": "overlay_blk_mem_gen_0_0",
-                "xci_path": "ip\\overlay_blk_mem_gen_0_0\\overlay_blk_mem_gen_0_0.xci",
+                "xci_name": "zcu102_zpulse_blk_mem_gen_0_0",
+                "xci_path": "ip\\zcu102_zpulse_blk_mem_gen_0_0\\zcu102_zpulse_blk_mem_gen_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/blk_mem_gen_0",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
@@ -6052,9 +6148,6 @@
                   "Operating_Mode_B": {
                     "value": "WRITE_FIRST"
                   },
-                  "PRIM_type_to_Implement": {
-                    "value": "BRAM"
-                  },
                   "Port_B_Clock": {
                     "value": "100"
                   },
@@ -6072,8 +6165,8 @@
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
                 "ip_revision": "11",
-                "xci_name": "overlay_axi_bram_ctrl_0_0",
-                "xci_path": "ip\\overlay_axi_bram_ctrl_0_0\\overlay_axi_bram_ctrl_0_0.xci",
+                "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_0",
+                "xci_path": "ip\\zcu102_zpulse_axi_bram_ctrl_0_0\\zcu102_zpulse_axi_bram_ctrl_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/axi_bram_ctrl_0",
                 "parameters": {
                   "DATA_WIDTH": {
@@ -6084,33 +6177,25 @@
                   }
                 }
               },
-              "DACRAMstreamer_0": {
-                "vlnv": "xilinx.com:module_ref:DACRAMstreamer:1.0",
+              "BRAM_streamer_data_0": {
+                "vlnv": "xilinx.com:module_ref:BRAM_streamer_data:1.0",
                 "ip_revision": "1",
-                "xci_name": "overlay_DACRAMstreamer_0_0",
-                "xci_path": "ip\\overlay_DACRAMstreamer_0_0\\overlay_DACRAMstreamer_0_0.xci",
-                "inst_hier_path": "tx_channels/tx_channel_1/DACRAMstreamer_0",
+                "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_0",
+                "xci_path": "ip\\zcu102_zpulse_BRAM_streamer_data_0_0\\zcu102_zpulse_BRAM_streamer_data_0_0.xci",
+                "inst_hier_path": "tx_channels/tx_channel_1/BRAM_streamer_data_0",
                 "reference_info": {
                   "ref_type": "hdl",
-                  "ref_name": "DACRAMstreamer",
+                  "ref_name": "BRAM_streamer_data",
                   "boundary_crc": "0x0"
                 },
                 "interface_ports": {
-                  "BRAM_A": {
+                  "BRAM_DATA": {
                     "mode": "Master",
                     "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
                     "vlnv": "xilinx.com:interface:bram_rtl:1.0",
                     "parameters": {
                       "MASTER_TYPE": {
                         "value": "BRAM_CTRL",
-                        "value_src": "constant"
-                      },
-                      "READ_WRITE_MODE": {
-                        "value": "READ",
-                        "value_src": "constant"
-                      },
-                      "MEM_SIZE": {
-                        "value": "262144",
                         "value_src": "constant"
                       },
                       "MEM_WIDTH": {
@@ -6120,55 +6205,56 @@
                     },
                     "port_maps": {
                       "EN": {
-                        "physical_name": "portA_en",
+                        "physical_name": "o_bram_en",
                         "direction": "O"
                       },
                       "DOUT": {
-                        "physical_name": "portA_cpu_rdata",
+                        "physical_name": "i_bram_din",
                         "direction": "I",
                         "left": "63",
                         "right": "0"
                       },
                       "DIN": {
-                        "physical_name": "portA_cpu_wdata",
+                        "physical_name": "o_bram_dout",
                         "direction": "O",
                         "left": "63",
                         "right": "0"
                       },
                       "WE": {
-                        "physical_name": "portA_we",
+                        "physical_name": "o_bram_we",
                         "direction": "O",
                         "left": "7",
                         "right": "0"
                       },
                       "ADDR": {
-                        "physical_name": "portAcpu_addr",
+                        "physical_name": "o_bram_addr",
                         "direction": "O",
                         "left": "31",
                         "right": "0"
                       },
                       "CLK": {
-                        "physical_name": "portA_clk",
+                        "physical_name": "o_bram_clk",
                         "direction": "O"
                       },
                       "RST": {
-                        "physical_name": "portA_rst",
+                        "physical_name": "o_bram_rst",
                         "direction": "O"
                       }
                     }
                   }
                 },
                 "ports": {
-                  "axis_clk": {
+                  "i_addr_limit": {
+                    "direction": "I",
+                    "left": "31",
+                    "right": "0"
+                  },
+                  "i_axis_clk": {
                     "type": "clk",
                     "direction": "I",
                     "parameters": {
                       "ASSOCIATED_RESET": {
-                        "value": "axis_aresetn",
-                        "value_src": "constant"
-                      },
-                      "ASSOCIATED_BUSIF": {
-                        "value": "AXIS",
+                        "value": "i_axis_aresetn",
                         "value_src": "constant"
                       },
                       "FREQ_HZ": {
@@ -6176,38 +6262,33 @@
                         "value_src": "user_prop"
                       },
                       "CLK_DOMAIN": {
-                        "value": "overlay_txusr_in",
+                        "value": "zcu102_zpulse_txusr_in",
                         "value_src": "default_prop"
                       }
                     }
                   },
-                  "axis_aresetn": {
+                  "i_axis_aresetn": {
                     "type": "rst",
                     "direction": "I",
                     "parameters": {
                       "POLARITY": {
                         "value": "ACTIVE_LOW",
-                        "value_src": "const_prop"
+                        "value_src": "constant"
                       }
                     }
                   },
-                  "axis_tdata": {
+                  "o_axis_tdata": {
                     "direction": "O",
                     "left": "63",
-                    "right": "0"
-                  },
-                  "ram_addr_limit": {
-                    "direction": "I",
-                    "left": "31",
                     "right": "0"
                   }
                 }
               }
             },
             "interface_nets": {
-              "DACRAMstreamer_0_BRAM_A": {
+              "BRAM_streamer_data_1_BRAM_DATA": {
                 "interface_ports": [
-                  "DACRAMstreamer_0/BRAM_A",
+                  "BRAM_streamer_data_0/BRAM_DATA",
                   "blk_mem_gen_0/BRAM_PORTB"
                 ]
               },
@@ -6231,16 +6312,16 @@
               }
             },
             "nets": {
-              "DACRAMstreamer_0_axis_tdata": {
+              "BRAM_streamer_data_1_o_axis_tdata": {
                 "ports": [
-                  "DACRAMstreamer_0/axis_tdata",
+                  "BRAM_streamer_data_0/o_axis_tdata",
                   "axis_tdata"
                 ]
               },
               "axi_gpio_0_gpio_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio_io_o",
-                  "DACRAMstreamer_0/ram_addr_limit"
+                  "BRAM_streamer_data_0/i_addr_limit"
                 ]
               },
               "channel_ctrl_0_gpio2_io_o": {
@@ -6252,7 +6333,7 @@
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
-                  "DACRAMstreamer_0/axis_aresetn"
+                  "BRAM_streamer_data_0/i_axis_aresetn"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -6265,7 +6346,7 @@
               "s_axi_aclk_0_1": {
                 "ports": [
                   "txusr_in",
-                  "DACRAMstreamer_0/axis_clk"
+                  "BRAM_streamer_data_0/i_axis_clk"
                 ]
               },
               "zynq_ultra_ps_e_0_pl_clk0": {
@@ -6322,8 +6403,8 @@
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
                 "ip_revision": "35",
-                "xci_name": "overlay_channel_ctrl_0_1",
-                "xci_path": "ip\\overlay_channel_ctrl_0_1\\overlay_channel_ctrl_0_1.xci",
+                "xci_name": "zcu102_zpulse_channel_ctrl_0_1",
+                "xci_path": "ip\\zcu102_zpulse_channel_ctrl_0_1\\zcu102_zpulse_channel_ctrl_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/channel_ctrl_0",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
@@ -6346,8 +6427,8 @@
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
                 "ip_revision": "9",
-                "xci_name": "overlay_blk_mem_gen_0_1",
-                "xci_path": "ip\\overlay_blk_mem_gen_0_1\\overlay_blk_mem_gen_0_1.xci",
+                "xci_name": "zcu102_zpulse_blk_mem_gen_0_1",
+                "xci_path": "ip\\zcu102_zpulse_blk_mem_gen_0_1\\zcu102_zpulse_blk_mem_gen_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/blk_mem_gen_0",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
@@ -6368,9 +6449,6 @@
                   "Operating_Mode_B": {
                     "value": "WRITE_FIRST"
                   },
-                  "PRIM_type_to_Implement": {
-                    "value": "BRAM"
-                  },
                   "Port_B_Clock": {
                     "value": "100"
                   },
@@ -6388,8 +6466,8 @@
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
                 "ip_revision": "11",
-                "xci_name": "overlay_axi_bram_ctrl_0_1",
-                "xci_path": "ip\\overlay_axi_bram_ctrl_0_1\\overlay_axi_bram_ctrl_0_1.xci",
+                "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_1",
+                "xci_path": "ip\\zcu102_zpulse_axi_bram_ctrl_0_1\\zcu102_zpulse_axi_bram_ctrl_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/axi_bram_ctrl_0",
                 "parameters": {
                   "DATA_WIDTH": {
@@ -6400,33 +6478,25 @@
                   }
                 }
               },
-              "DACRAMstreamer_0": {
-                "vlnv": "xilinx.com:module_ref:DACRAMstreamer:1.0",
+              "BRAM_streamer_data_0": {
+                "vlnv": "xilinx.com:module_ref:BRAM_streamer_data:1.0",
                 "ip_revision": "1",
-                "xci_name": "overlay_DACRAMstreamer_0_1",
-                "xci_path": "ip\\overlay_DACRAMstreamer_0_1\\overlay_DACRAMstreamer_0_1.xci",
-                "inst_hier_path": "tx_channels/tx_channel_0/DACRAMstreamer_0",
+                "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_1",
+                "xci_path": "ip\\zcu102_zpulse_BRAM_streamer_data_0_1\\zcu102_zpulse_BRAM_streamer_data_0_1.xci",
+                "inst_hier_path": "tx_channels/tx_channel_0/BRAM_streamer_data_0",
                 "reference_info": {
                   "ref_type": "hdl",
-                  "ref_name": "DACRAMstreamer",
+                  "ref_name": "BRAM_streamer_data",
                   "boundary_crc": "0x0"
                 },
                 "interface_ports": {
-                  "BRAM_A": {
+                  "BRAM_DATA": {
                     "mode": "Master",
                     "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
                     "vlnv": "xilinx.com:interface:bram_rtl:1.0",
                     "parameters": {
                       "MASTER_TYPE": {
                         "value": "BRAM_CTRL",
-                        "value_src": "constant"
-                      },
-                      "READ_WRITE_MODE": {
-                        "value": "READ",
-                        "value_src": "constant"
-                      },
-                      "MEM_SIZE": {
-                        "value": "262144",
                         "value_src": "constant"
                       },
                       "MEM_WIDTH": {
@@ -6436,55 +6506,56 @@
                     },
                     "port_maps": {
                       "EN": {
-                        "physical_name": "portA_en",
+                        "physical_name": "o_bram_en",
                         "direction": "O"
                       },
                       "DOUT": {
-                        "physical_name": "portA_cpu_rdata",
+                        "physical_name": "i_bram_din",
                         "direction": "I",
                         "left": "63",
                         "right": "0"
                       },
                       "DIN": {
-                        "physical_name": "portA_cpu_wdata",
+                        "physical_name": "o_bram_dout",
                         "direction": "O",
                         "left": "63",
                         "right": "0"
                       },
                       "WE": {
-                        "physical_name": "portA_we",
+                        "physical_name": "o_bram_we",
                         "direction": "O",
                         "left": "7",
                         "right": "0"
                       },
                       "ADDR": {
-                        "physical_name": "portAcpu_addr",
+                        "physical_name": "o_bram_addr",
                         "direction": "O",
                         "left": "31",
                         "right": "0"
                       },
                       "CLK": {
-                        "physical_name": "portA_clk",
+                        "physical_name": "o_bram_clk",
                         "direction": "O"
                       },
                       "RST": {
-                        "physical_name": "portA_rst",
+                        "physical_name": "o_bram_rst",
                         "direction": "O"
                       }
                     }
                   }
                 },
                 "ports": {
-                  "axis_clk": {
+                  "i_addr_limit": {
+                    "direction": "I",
+                    "left": "31",
+                    "right": "0"
+                  },
+                  "i_axis_clk": {
                     "type": "clk",
                     "direction": "I",
                     "parameters": {
                       "ASSOCIATED_RESET": {
-                        "value": "axis_aresetn",
-                        "value_src": "constant"
-                      },
-                      "ASSOCIATED_BUSIF": {
-                        "value": "AXIS",
+                        "value": "i_axis_aresetn",
                         "value_src": "constant"
                       },
                       "FREQ_HZ": {
@@ -6492,39 +6563,34 @@
                         "value_src": "user_prop"
                       },
                       "CLK_DOMAIN": {
-                        "value": "overlay_txusr_in",
+                        "value": "zcu102_zpulse_txusr_in",
                         "value_src": "default_prop"
                       }
                     }
                   },
-                  "axis_aresetn": {
+                  "i_axis_aresetn": {
                     "type": "rst",
                     "direction": "I",
                     "parameters": {
                       "POLARITY": {
                         "value": "ACTIVE_LOW",
-                        "value_src": "const_prop"
+                        "value_src": "constant"
                       }
                     }
                   },
-                  "axis_tdata": {
+                  "o_axis_tdata": {
                     "direction": "O",
                     "left": "63",
-                    "right": "0"
-                  },
-                  "ram_addr_limit": {
-                    "direction": "I",
-                    "left": "31",
                     "right": "0"
                   }
                 }
               }
             },
             "interface_nets": {
-              "DACRAMstreamer_0_BRAM_A": {
+              "BRAM_streamer_data_0_BRAM_DATA": {
                 "interface_ports": [
-                  "DACRAMstreamer_0/BRAM_A",
-                  "blk_mem_gen_0/BRAM_PORTB"
+                  "blk_mem_gen_0/BRAM_PORTB",
+                  "BRAM_streamer_data_0/BRAM_DATA"
                 ]
               },
               "axi_bram_ctrl_0_BRAM_PORTA": {
@@ -6547,16 +6613,16 @@
               }
             },
             "nets": {
-              "DACRAMstreamer_0_axis_tdata": {
+              "BRAM_streamer_data_0_o_axis_tdata": {
                 "ports": [
-                  "DACRAMstreamer_0/axis_tdata",
+                  "BRAM_streamer_data_0/o_axis_tdata",
                   "axis_tdata"
                 ]
               },
               "axi_gpio_0_gpio_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio_io_o",
-                  "DACRAMstreamer_0/ram_addr_limit"
+                  "BRAM_streamer_data_0/i_addr_limit"
                 ]
               },
               "channel_ctrl_0_gpio2_io_o": {
@@ -6568,7 +6634,7 @@
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
-                  "DACRAMstreamer_0/axis_aresetn"
+                  "BRAM_streamer_data_0/i_axis_aresetn"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -6581,7 +6647,7 @@
               "s_axi_aclk_0_1": {
                 "ports": [
                   "txusr_in",
-                  "DACRAMstreamer_0/axis_clk"
+                  "BRAM_streamer_data_0/i_axis_clk"
                 ]
               },
               "zynq_ultra_ps_e_0_pl_clk0": {
@@ -6638,8 +6704,8 @@
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
                 "ip_revision": "35",
-                "xci_name": "overlay_channel_ctrl_0_2",
-                "xci_path": "ip\\overlay_channel_ctrl_0_2\\overlay_channel_ctrl_0_2.xci",
+                "xci_name": "zcu102_zpulse_channel_ctrl_0_2",
+                "xci_path": "ip\\zcu102_zpulse_channel_ctrl_0_2\\zcu102_zpulse_channel_ctrl_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/channel_ctrl_0",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
@@ -6662,8 +6728,8 @@
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
                 "ip_revision": "9",
-                "xci_name": "overlay_blk_mem_gen_0_2",
-                "xci_path": "ip\\overlay_blk_mem_gen_0_2\\overlay_blk_mem_gen_0_2.xci",
+                "xci_name": "zcu102_zpulse_blk_mem_gen_0_2",
+                "xci_path": "ip\\zcu102_zpulse_blk_mem_gen_0_2\\zcu102_zpulse_blk_mem_gen_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/blk_mem_gen_0",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
@@ -6684,9 +6750,6 @@
                   "Operating_Mode_B": {
                     "value": "WRITE_FIRST"
                   },
-                  "PRIM_type_to_Implement": {
-                    "value": "BRAM"
-                  },
                   "Port_B_Clock": {
                     "value": "100"
                   },
@@ -6704,8 +6767,8 @@
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
                 "ip_revision": "11",
-                "xci_name": "overlay_axi_bram_ctrl_0_2",
-                "xci_path": "ip\\overlay_axi_bram_ctrl_0_2\\overlay_axi_bram_ctrl_0_2.xci",
+                "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_2",
+                "xci_path": "ip\\zcu102_zpulse_axi_bram_ctrl_0_2\\zcu102_zpulse_axi_bram_ctrl_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/axi_bram_ctrl_0",
                 "parameters": {
                   "DATA_WIDTH": {
@@ -6716,33 +6779,25 @@
                   }
                 }
               },
-              "DACRAMstreamer_0": {
-                "vlnv": "xilinx.com:module_ref:DACRAMstreamer:1.0",
+              "BRAM_streamer_data_0": {
+                "vlnv": "xilinx.com:module_ref:BRAM_streamer_data:1.0",
                 "ip_revision": "1",
-                "xci_name": "overlay_DACRAMstreamer_0_2",
-                "xci_path": "ip\\overlay_DACRAMstreamer_0_2\\overlay_DACRAMstreamer_0_2.xci",
-                "inst_hier_path": "tx_channels/tx_channel_2/DACRAMstreamer_0",
+                "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_2",
+                "xci_path": "ip\\zcu102_zpulse_BRAM_streamer_data_0_2\\zcu102_zpulse_BRAM_streamer_data_0_2.xci",
+                "inst_hier_path": "tx_channels/tx_channel_2/BRAM_streamer_data_0",
                 "reference_info": {
                   "ref_type": "hdl",
-                  "ref_name": "DACRAMstreamer",
+                  "ref_name": "BRAM_streamer_data",
                   "boundary_crc": "0x0"
                 },
                 "interface_ports": {
-                  "BRAM_A": {
+                  "BRAM_DATA": {
                     "mode": "Master",
                     "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
                     "vlnv": "xilinx.com:interface:bram_rtl:1.0",
                     "parameters": {
                       "MASTER_TYPE": {
                         "value": "BRAM_CTRL",
-                        "value_src": "constant"
-                      },
-                      "READ_WRITE_MODE": {
-                        "value": "READ",
-                        "value_src": "constant"
-                      },
-                      "MEM_SIZE": {
-                        "value": "262144",
                         "value_src": "constant"
                       },
                       "MEM_WIDTH": {
@@ -6752,55 +6807,56 @@
                     },
                     "port_maps": {
                       "EN": {
-                        "physical_name": "portA_en",
+                        "physical_name": "o_bram_en",
                         "direction": "O"
                       },
                       "DOUT": {
-                        "physical_name": "portA_cpu_rdata",
+                        "physical_name": "i_bram_din",
                         "direction": "I",
                         "left": "63",
                         "right": "0"
                       },
                       "DIN": {
-                        "physical_name": "portA_cpu_wdata",
+                        "physical_name": "o_bram_dout",
                         "direction": "O",
                         "left": "63",
                         "right": "0"
                       },
                       "WE": {
-                        "physical_name": "portA_we",
+                        "physical_name": "o_bram_we",
                         "direction": "O",
                         "left": "7",
                         "right": "0"
                       },
                       "ADDR": {
-                        "physical_name": "portAcpu_addr",
+                        "physical_name": "o_bram_addr",
                         "direction": "O",
                         "left": "31",
                         "right": "0"
                       },
                       "CLK": {
-                        "physical_name": "portA_clk",
+                        "physical_name": "o_bram_clk",
                         "direction": "O"
                       },
                       "RST": {
-                        "physical_name": "portA_rst",
+                        "physical_name": "o_bram_rst",
                         "direction": "O"
                       }
                     }
                   }
                 },
                 "ports": {
-                  "axis_clk": {
+                  "i_addr_limit": {
+                    "direction": "I",
+                    "left": "31",
+                    "right": "0"
+                  },
+                  "i_axis_clk": {
                     "type": "clk",
                     "direction": "I",
                     "parameters": {
                       "ASSOCIATED_RESET": {
-                        "value": "axis_aresetn",
-                        "value_src": "constant"
-                      },
-                      "ASSOCIATED_BUSIF": {
-                        "value": "AXIS",
+                        "value": "i_axis_aresetn",
                         "value_src": "constant"
                       },
                       "FREQ_HZ": {
@@ -6808,38 +6864,33 @@
                         "value_src": "user_prop"
                       },
                       "CLK_DOMAIN": {
-                        "value": "overlay_txusr_in",
+                        "value": "zcu102_zpulse_txusr_in",
                         "value_src": "default_prop"
                       }
                     }
                   },
-                  "axis_aresetn": {
+                  "i_axis_aresetn": {
                     "type": "rst",
                     "direction": "I",
                     "parameters": {
                       "POLARITY": {
                         "value": "ACTIVE_LOW",
-                        "value_src": "const_prop"
+                        "value_src": "constant"
                       }
                     }
                   },
-                  "axis_tdata": {
+                  "o_axis_tdata": {
                     "direction": "O",
                     "left": "63",
-                    "right": "0"
-                  },
-                  "ram_addr_limit": {
-                    "direction": "I",
-                    "left": "31",
                     "right": "0"
                   }
                 }
               }
             },
             "interface_nets": {
-              "DACRAMstreamer_0_BRAM_A": {
+              "BRAM_streamer_data_0_BRAM_DATA": {
                 "interface_ports": [
-                  "DACRAMstreamer_0/BRAM_A",
+                  "BRAM_streamer_data_0/BRAM_DATA",
                   "blk_mem_gen_0/BRAM_PORTB"
                 ]
               },
@@ -6863,16 +6914,16 @@
               }
             },
             "nets": {
-              "DACRAMstreamer_0_axis_tdata": {
+              "BRAM_streamer_data_2_o_axis_tdata": {
                 "ports": [
-                  "DACRAMstreamer_0/axis_tdata",
+                  "BRAM_streamer_data_0/o_axis_tdata",
                   "axis_tdata"
                 ]
               },
               "axi_gpio_0_gpio_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio_io_o",
-                  "DACRAMstreamer_0/ram_addr_limit"
+                  "BRAM_streamer_data_0/i_addr_limit"
                 ]
               },
               "channel_ctrl_0_gpio2_io_o": {
@@ -6884,7 +6935,7 @@
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
-                  "DACRAMstreamer_0/axis_aresetn"
+                  "BRAM_streamer_data_0/i_axis_aresetn"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -6897,7 +6948,7 @@
               "s_axi_aclk_0_1": {
                 "ports": [
                   "txusr_in",
-                  "DACRAMstreamer_0/axis_clk"
+                  "BRAM_streamer_data_0/i_axis_clk"
                 ]
               },
               "zynq_ultra_ps_e_0_pl_clk0": {
@@ -6931,14 +6982,6 @@
                 "type": "rst",
                 "direction": "I"
               },
-              "txusr_in": {
-                "type": "clk",
-                "direction": "I"
-              },
-              "s_axi_aresetn1": {
-                "type": "rst",
-                "direction": "I"
-              },
               "axis_tdata": {
                 "direction": "O",
                 "left": "63",
@@ -6948,14 +6991,22 @@
                 "direction": "O",
                 "left": "0",
                 "right": "0"
+              },
+              "txusr_in": {
+                "type": "clk",
+                "direction": "I"
+              },
+              "s_axi_aresetn1": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
                 "ip_revision": "35",
-                "xci_name": "overlay_channel_ctrl_0_3",
-                "xci_path": "ip\\overlay_channel_ctrl_0_3\\overlay_channel_ctrl_0_3.xci",
+                "xci_name": "zcu102_zpulse_channel_ctrl_0_3",
+                "xci_path": "ip\\zcu102_zpulse_channel_ctrl_0_3\\zcu102_zpulse_channel_ctrl_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/channel_ctrl_0",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
@@ -6978,8 +7029,8 @@
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
                 "ip_revision": "9",
-                "xci_name": "overlay_blk_mem_gen_0_3",
-                "xci_path": "ip\\overlay_blk_mem_gen_0_3\\overlay_blk_mem_gen_0_3.xci",
+                "xci_name": "zcu102_zpulse_blk_mem_gen_0_3",
+                "xci_path": "ip\\zcu102_zpulse_blk_mem_gen_0_3\\zcu102_zpulse_blk_mem_gen_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/blk_mem_gen_0",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
@@ -7000,9 +7051,6 @@
                   "Operating_Mode_B": {
                     "value": "WRITE_FIRST"
                   },
-                  "PRIM_type_to_Implement": {
-                    "value": "BRAM"
-                  },
                   "Port_B_Clock": {
                     "value": "100"
                   },
@@ -7020,8 +7068,8 @@
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
                 "ip_revision": "11",
-                "xci_name": "overlay_axi_bram_ctrl_0_3",
-                "xci_path": "ip\\overlay_axi_bram_ctrl_0_3\\overlay_axi_bram_ctrl_0_3.xci",
+                "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_3",
+                "xci_path": "ip\\zcu102_zpulse_axi_bram_ctrl_0_3\\zcu102_zpulse_axi_bram_ctrl_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/axi_bram_ctrl_0",
                 "parameters": {
                   "DATA_WIDTH": {
@@ -7032,33 +7080,25 @@
                   }
                 }
               },
-              "DACRAMstreamer_0": {
-                "vlnv": "xilinx.com:module_ref:DACRAMstreamer:1.0",
+              "BRAM_streamer_data_0": {
+                "vlnv": "xilinx.com:module_ref:BRAM_streamer_data:1.0",
                 "ip_revision": "1",
-                "xci_name": "overlay_DACRAMstreamer_0_3",
-                "xci_path": "ip\\overlay_DACRAMstreamer_0_3\\overlay_DACRAMstreamer_0_3.xci",
-                "inst_hier_path": "tx_channels/tx_channel_3/DACRAMstreamer_0",
+                "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_3",
+                "xci_path": "ip\\zcu102_zpulse_BRAM_streamer_data_0_3\\zcu102_zpulse_BRAM_streamer_data_0_3.xci",
+                "inst_hier_path": "tx_channels/tx_channel_3/BRAM_streamer_data_0",
                 "reference_info": {
                   "ref_type": "hdl",
-                  "ref_name": "DACRAMstreamer",
+                  "ref_name": "BRAM_streamer_data",
                   "boundary_crc": "0x0"
                 },
                 "interface_ports": {
-                  "BRAM_A": {
+                  "BRAM_DATA": {
                     "mode": "Master",
                     "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
                     "vlnv": "xilinx.com:interface:bram_rtl:1.0",
                     "parameters": {
                       "MASTER_TYPE": {
                         "value": "BRAM_CTRL",
-                        "value_src": "constant"
-                      },
-                      "READ_WRITE_MODE": {
-                        "value": "READ",
-                        "value_src": "constant"
-                      },
-                      "MEM_SIZE": {
-                        "value": "262144",
                         "value_src": "constant"
                       },
                       "MEM_WIDTH": {
@@ -7068,55 +7108,56 @@
                     },
                     "port_maps": {
                       "EN": {
-                        "physical_name": "portA_en",
+                        "physical_name": "o_bram_en",
                         "direction": "O"
                       },
                       "DOUT": {
-                        "physical_name": "portA_cpu_rdata",
+                        "physical_name": "i_bram_din",
                         "direction": "I",
                         "left": "63",
                         "right": "0"
                       },
                       "DIN": {
-                        "physical_name": "portA_cpu_wdata",
+                        "physical_name": "o_bram_dout",
                         "direction": "O",
                         "left": "63",
                         "right": "0"
                       },
                       "WE": {
-                        "physical_name": "portA_we",
+                        "physical_name": "o_bram_we",
                         "direction": "O",
                         "left": "7",
                         "right": "0"
                       },
                       "ADDR": {
-                        "physical_name": "portAcpu_addr",
+                        "physical_name": "o_bram_addr",
                         "direction": "O",
                         "left": "31",
                         "right": "0"
                       },
                       "CLK": {
-                        "physical_name": "portA_clk",
+                        "physical_name": "o_bram_clk",
                         "direction": "O"
                       },
                       "RST": {
-                        "physical_name": "portA_rst",
+                        "physical_name": "o_bram_rst",
                         "direction": "O"
                       }
                     }
                   }
                 },
                 "ports": {
-                  "axis_clk": {
+                  "i_addr_limit": {
+                    "direction": "I",
+                    "left": "31",
+                    "right": "0"
+                  },
+                  "i_axis_clk": {
                     "type": "clk",
                     "direction": "I",
                     "parameters": {
                       "ASSOCIATED_RESET": {
-                        "value": "axis_aresetn",
-                        "value_src": "constant"
-                      },
-                      "ASSOCIATED_BUSIF": {
-                        "value": "AXIS",
+                        "value": "i_axis_aresetn",
                         "value_src": "constant"
                       },
                       "FREQ_HZ": {
@@ -7124,38 +7165,33 @@
                         "value_src": "user_prop"
                       },
                       "CLK_DOMAIN": {
-                        "value": "overlay_txusr_in",
+                        "value": "zcu102_zpulse_txusr_in",
                         "value_src": "default_prop"
                       }
                     }
                   },
-                  "axis_aresetn": {
+                  "i_axis_aresetn": {
                     "type": "rst",
                     "direction": "I",
                     "parameters": {
                       "POLARITY": {
                         "value": "ACTIVE_LOW",
-                        "value_src": "const_prop"
+                        "value_src": "constant"
                       }
                     }
                   },
-                  "axis_tdata": {
+                  "o_axis_tdata": {
                     "direction": "O",
                     "left": "63",
-                    "right": "0"
-                  },
-                  "ram_addr_limit": {
-                    "direction": "I",
-                    "left": "31",
                     "right": "0"
                   }
                 }
               }
             },
             "interface_nets": {
-              "DACRAMstreamer_0_BRAM_A": {
+              "BRAM_streamer_data_3_BRAM_DATA": {
                 "interface_ports": [
-                  "DACRAMstreamer_0/BRAM_A",
+                  "BRAM_streamer_data_0/BRAM_DATA",
                   "blk_mem_gen_0/BRAM_PORTB"
                 ]
               },
@@ -7179,16 +7215,10 @@
               }
             },
             "nets": {
-              "DACRAMstreamer_0_axis_tdata": {
+              "BRAM_streamer_data_3_o_axis_tdata": {
                 "ports": [
-                  "DACRAMstreamer_0/axis_tdata",
+                  "BRAM_streamer_data_0/o_axis_tdata",
                   "axis_tdata"
-                ]
-              },
-              "axi_gpio_0_gpio_io_o": {
-                "ports": [
-                  "channel_ctrl_0/gpio_io_o",
-                  "DACRAMstreamer_0/ram_addr_limit"
                 ]
               },
               "channel_ctrl_0_gpio2_io_o": {
@@ -7197,10 +7227,10 @@
                   "gpio2_io_o"
                 ]
               },
-              "proc_sys_reset_0_peripheral_aresetn": {
+              "channel_ctrl_0_gpio_io_o": {
                 "ports": [
-                  "s_axi_aresetn1",
-                  "DACRAMstreamer_0/axis_aresetn"
+                  "channel_ctrl_0/gpio_io_o",
+                  "BRAM_streamer_data_0/i_addr_limit"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -7210,10 +7240,16 @@
                   "channel_ctrl_0/s_axi_aresetn"
                 ]
               },
-              "s_axi_aclk_0_1": {
+              "s_axi_aresetn1_1": {
+                "ports": [
+                  "s_axi_aresetn1",
+                  "BRAM_streamer_data_0/i_axis_aresetn"
+                ]
+              },
+              "txusr_in_1": {
                 "ports": [
                   "txusr_in",
-                  "DACRAMstreamer_0/axis_clk"
+                  "BRAM_streamer_data_0/i_axis_clk"
                 ]
               },
               "zynq_ultra_ps_e_0_pl_clk0": {
@@ -7270,8 +7306,8 @@
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
                 "ip_revision": "35",
-                "xci_name": "overlay_channel_ctrl_0_4",
-                "xci_path": "ip\\overlay_channel_ctrl_0_4\\overlay_channel_ctrl_0_4.xci",
+                "xci_name": "zcu102_zpulse_channel_ctrl_0_4",
+                "xci_path": "ip\\zcu102_zpulse_channel_ctrl_0_4\\zcu102_zpulse_channel_ctrl_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/channel_ctrl_0",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
@@ -7294,8 +7330,8 @@
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
                 "ip_revision": "9",
-                "xci_name": "overlay_blk_mem_gen_0_4",
-                "xci_path": "ip\\overlay_blk_mem_gen_0_4\\overlay_blk_mem_gen_0_4.xci",
+                "xci_name": "zcu102_zpulse_blk_mem_gen_0_4",
+                "xci_path": "ip\\zcu102_zpulse_blk_mem_gen_0_4\\zcu102_zpulse_blk_mem_gen_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/blk_mem_gen_0",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
@@ -7316,9 +7352,6 @@
                   "Operating_Mode_B": {
                     "value": "WRITE_FIRST"
                   },
-                  "PRIM_type_to_Implement": {
-                    "value": "BRAM"
-                  },
                   "Port_B_Clock": {
                     "value": "100"
                   },
@@ -7336,8 +7369,8 @@
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
                 "ip_revision": "11",
-                "xci_name": "overlay_axi_bram_ctrl_0_4",
-                "xci_path": "ip\\overlay_axi_bram_ctrl_0_4\\overlay_axi_bram_ctrl_0_4.xci",
+                "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_4",
+                "xci_path": "ip\\zcu102_zpulse_axi_bram_ctrl_0_4\\zcu102_zpulse_axi_bram_ctrl_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/axi_bram_ctrl_0",
                 "parameters": {
                   "DATA_WIDTH": {
@@ -7348,33 +7381,25 @@
                   }
                 }
               },
-              "DACRAMstreamer_0": {
-                "vlnv": "xilinx.com:module_ref:DACRAMstreamer:1.0",
+              "BRAM_streamer_data_0": {
+                "vlnv": "xilinx.com:module_ref:BRAM_streamer_data:1.0",
                 "ip_revision": "1",
-                "xci_name": "overlay_DACRAMstreamer_0_4",
-                "xci_path": "ip\\overlay_DACRAMstreamer_0_4\\overlay_DACRAMstreamer_0_4.xci",
-                "inst_hier_path": "tx_channels/tx_channel_4/DACRAMstreamer_0",
+                "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_4",
+                "xci_path": "ip\\zcu102_zpulse_BRAM_streamer_data_0_4\\zcu102_zpulse_BRAM_streamer_data_0_4.xci",
+                "inst_hier_path": "tx_channels/tx_channel_4/BRAM_streamer_data_0",
                 "reference_info": {
                   "ref_type": "hdl",
-                  "ref_name": "DACRAMstreamer",
+                  "ref_name": "BRAM_streamer_data",
                   "boundary_crc": "0x0"
                 },
                 "interface_ports": {
-                  "BRAM_A": {
+                  "BRAM_DATA": {
                     "mode": "Master",
                     "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
                     "vlnv": "xilinx.com:interface:bram_rtl:1.0",
                     "parameters": {
                       "MASTER_TYPE": {
                         "value": "BRAM_CTRL",
-                        "value_src": "constant"
-                      },
-                      "READ_WRITE_MODE": {
-                        "value": "READ",
-                        "value_src": "constant"
-                      },
-                      "MEM_SIZE": {
-                        "value": "262144",
                         "value_src": "constant"
                       },
                       "MEM_WIDTH": {
@@ -7384,55 +7409,56 @@
                     },
                     "port_maps": {
                       "EN": {
-                        "physical_name": "portA_en",
+                        "physical_name": "o_bram_en",
                         "direction": "O"
                       },
                       "DOUT": {
-                        "physical_name": "portA_cpu_rdata",
+                        "physical_name": "i_bram_din",
                         "direction": "I",
                         "left": "63",
                         "right": "0"
                       },
                       "DIN": {
-                        "physical_name": "portA_cpu_wdata",
+                        "physical_name": "o_bram_dout",
                         "direction": "O",
                         "left": "63",
                         "right": "0"
                       },
                       "WE": {
-                        "physical_name": "portA_we",
+                        "physical_name": "o_bram_we",
                         "direction": "O",
                         "left": "7",
                         "right": "0"
                       },
                       "ADDR": {
-                        "physical_name": "portAcpu_addr",
+                        "physical_name": "o_bram_addr",
                         "direction": "O",
                         "left": "31",
                         "right": "0"
                       },
                       "CLK": {
-                        "physical_name": "portA_clk",
+                        "physical_name": "o_bram_clk",
                         "direction": "O"
                       },
                       "RST": {
-                        "physical_name": "portA_rst",
+                        "physical_name": "o_bram_rst",
                         "direction": "O"
                       }
                     }
                   }
                 },
                 "ports": {
-                  "axis_clk": {
+                  "i_addr_limit": {
+                    "direction": "I",
+                    "left": "31",
+                    "right": "0"
+                  },
+                  "i_axis_clk": {
                     "type": "clk",
                     "direction": "I",
                     "parameters": {
                       "ASSOCIATED_RESET": {
-                        "value": "axis_aresetn",
-                        "value_src": "constant"
-                      },
-                      "ASSOCIATED_BUSIF": {
-                        "value": "AXIS",
+                        "value": "i_axis_aresetn",
                         "value_src": "constant"
                       },
                       "FREQ_HZ": {
@@ -7440,39 +7466,34 @@
                         "value_src": "user_prop"
                       },
                       "CLK_DOMAIN": {
-                        "value": "overlay_txusr_in",
+                        "value": "zcu102_zpulse_txusr_in",
                         "value_src": "default_prop"
                       }
                     }
                   },
-                  "axis_aresetn": {
+                  "i_axis_aresetn": {
                     "type": "rst",
                     "direction": "I",
                     "parameters": {
                       "POLARITY": {
                         "value": "ACTIVE_LOW",
-                        "value_src": "const_prop"
+                        "value_src": "constant"
                       }
                     }
                   },
-                  "axis_tdata": {
+                  "o_axis_tdata": {
                     "direction": "O",
                     "left": "63",
-                    "right": "0"
-                  },
-                  "ram_addr_limit": {
-                    "direction": "I",
-                    "left": "31",
                     "right": "0"
                   }
                 }
               }
             },
             "interface_nets": {
-              "DACRAMstreamer_0_BRAM_A": {
+              "BRAM_streamer_data_4_BRAM_DATA": {
                 "interface_ports": [
-                  "DACRAMstreamer_0/BRAM_A",
-                  "blk_mem_gen_0/BRAM_PORTB"
+                  "blk_mem_gen_0/BRAM_PORTB",
+                  "BRAM_streamer_data_0/BRAM_DATA"
                 ]
               },
               "axi_bram_ctrl_0_BRAM_PORTA": {
@@ -7495,16 +7516,16 @@
               }
             },
             "nets": {
-              "DACRAMstreamer_0_axis_tdata": {
+              "BRAM_streamer_data_4_o_axis_tdata": {
                 "ports": [
-                  "DACRAMstreamer_0/axis_tdata",
+                  "BRAM_streamer_data_0/o_axis_tdata",
                   "axis_tdata"
                 ]
               },
               "axi_gpio_0_gpio_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio_io_o",
-                  "DACRAMstreamer_0/ram_addr_limit"
+                  "BRAM_streamer_data_0/i_addr_limit"
                 ]
               },
               "channel_ctrl_0_gpio2_io_o": {
@@ -7516,7 +7537,7 @@
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
-                  "DACRAMstreamer_0/axis_aresetn"
+                  "BRAM_streamer_data_0/i_axis_aresetn"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -7529,7 +7550,7 @@
               "s_axi_aclk_0_1": {
                 "ports": [
                   "txusr_in",
-                  "DACRAMstreamer_0/axis_clk"
+                  "BRAM_streamer_data_0/i_axis_clk"
                 ]
               },
               "zynq_ultra_ps_e_0_pl_clk0": {
@@ -7586,8 +7607,8 @@
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
                 "ip_revision": "35",
-                "xci_name": "overlay_channel_ctrl_0_5",
-                "xci_path": "ip\\overlay_channel_ctrl_0_5\\overlay_channel_ctrl_0_5.xci",
+                "xci_name": "zcu102_zpulse_channel_ctrl_0_5",
+                "xci_path": "ip\\zcu102_zpulse_channel_ctrl_0_5\\zcu102_zpulse_channel_ctrl_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/channel_ctrl_0",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
@@ -7610,8 +7631,8 @@
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
                 "ip_revision": "9",
-                "xci_name": "overlay_blk_mem_gen_0_5",
-                "xci_path": "ip\\overlay_blk_mem_gen_0_5\\overlay_blk_mem_gen_0_5.xci",
+                "xci_name": "zcu102_zpulse_blk_mem_gen_0_5",
+                "xci_path": "ip\\zcu102_zpulse_blk_mem_gen_0_5\\zcu102_zpulse_blk_mem_gen_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/blk_mem_gen_0",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
@@ -7632,9 +7653,6 @@
                   "Operating_Mode_B": {
                     "value": "WRITE_FIRST"
                   },
-                  "PRIM_type_to_Implement": {
-                    "value": "BRAM"
-                  },
                   "Port_B_Clock": {
                     "value": "100"
                   },
@@ -7652,8 +7670,8 @@
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
                 "ip_revision": "11",
-                "xci_name": "overlay_axi_bram_ctrl_0_5",
-                "xci_path": "ip\\overlay_axi_bram_ctrl_0_5\\overlay_axi_bram_ctrl_0_5.xci",
+                "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_5",
+                "xci_path": "ip\\zcu102_zpulse_axi_bram_ctrl_0_5\\zcu102_zpulse_axi_bram_ctrl_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/axi_bram_ctrl_0",
                 "parameters": {
                   "DATA_WIDTH": {
@@ -7664,33 +7682,25 @@
                   }
                 }
               },
-              "DACRAMstreamer_0": {
-                "vlnv": "xilinx.com:module_ref:DACRAMstreamer:1.0",
+              "BRAM_streamer_data_0": {
+                "vlnv": "xilinx.com:module_ref:BRAM_streamer_data:1.0",
                 "ip_revision": "1",
-                "xci_name": "overlay_DACRAMstreamer_0_5",
-                "xci_path": "ip\\overlay_DACRAMstreamer_0_5\\overlay_DACRAMstreamer_0_5.xci",
-                "inst_hier_path": "tx_channels/tx_channel_5/DACRAMstreamer_0",
+                "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_5",
+                "xci_path": "ip\\zcu102_zpulse_BRAM_streamer_data_0_5\\zcu102_zpulse_BRAM_streamer_data_0_5.xci",
+                "inst_hier_path": "tx_channels/tx_channel_5/BRAM_streamer_data_0",
                 "reference_info": {
                   "ref_type": "hdl",
-                  "ref_name": "DACRAMstreamer",
+                  "ref_name": "BRAM_streamer_data",
                   "boundary_crc": "0x0"
                 },
                 "interface_ports": {
-                  "BRAM_A": {
+                  "BRAM_DATA": {
                     "mode": "Master",
                     "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
                     "vlnv": "xilinx.com:interface:bram_rtl:1.0",
                     "parameters": {
                       "MASTER_TYPE": {
                         "value": "BRAM_CTRL",
-                        "value_src": "constant"
-                      },
-                      "READ_WRITE_MODE": {
-                        "value": "READ",
-                        "value_src": "constant"
-                      },
-                      "MEM_SIZE": {
-                        "value": "262144",
                         "value_src": "constant"
                       },
                       "MEM_WIDTH": {
@@ -7700,55 +7710,56 @@
                     },
                     "port_maps": {
                       "EN": {
-                        "physical_name": "portA_en",
+                        "physical_name": "o_bram_en",
                         "direction": "O"
                       },
                       "DOUT": {
-                        "physical_name": "portA_cpu_rdata",
+                        "physical_name": "i_bram_din",
                         "direction": "I",
                         "left": "63",
                         "right": "0"
                       },
                       "DIN": {
-                        "physical_name": "portA_cpu_wdata",
+                        "physical_name": "o_bram_dout",
                         "direction": "O",
                         "left": "63",
                         "right": "0"
                       },
                       "WE": {
-                        "physical_name": "portA_we",
+                        "physical_name": "o_bram_we",
                         "direction": "O",
                         "left": "7",
                         "right": "0"
                       },
                       "ADDR": {
-                        "physical_name": "portAcpu_addr",
+                        "physical_name": "o_bram_addr",
                         "direction": "O",
                         "left": "31",
                         "right": "0"
                       },
                       "CLK": {
-                        "physical_name": "portA_clk",
+                        "physical_name": "o_bram_clk",
                         "direction": "O"
                       },
                       "RST": {
-                        "physical_name": "portA_rst",
+                        "physical_name": "o_bram_rst",
                         "direction": "O"
                       }
                     }
                   }
                 },
                 "ports": {
-                  "axis_clk": {
+                  "i_addr_limit": {
+                    "direction": "I",
+                    "left": "31",
+                    "right": "0"
+                  },
+                  "i_axis_clk": {
                     "type": "clk",
                     "direction": "I",
                     "parameters": {
                       "ASSOCIATED_RESET": {
-                        "value": "axis_aresetn",
-                        "value_src": "constant"
-                      },
-                      "ASSOCIATED_BUSIF": {
-                        "value": "AXIS",
+                        "value": "i_axis_aresetn",
                         "value_src": "constant"
                       },
                       "FREQ_HZ": {
@@ -7756,39 +7767,34 @@
                         "value_src": "user_prop"
                       },
                       "CLK_DOMAIN": {
-                        "value": "overlay_txusr_in",
+                        "value": "zcu102_zpulse_txusr_in",
                         "value_src": "default_prop"
                       }
                     }
                   },
-                  "axis_aresetn": {
+                  "i_axis_aresetn": {
                     "type": "rst",
                     "direction": "I",
                     "parameters": {
                       "POLARITY": {
                         "value": "ACTIVE_LOW",
-                        "value_src": "const_prop"
+                        "value_src": "constant"
                       }
                     }
                   },
-                  "axis_tdata": {
+                  "o_axis_tdata": {
                     "direction": "O",
                     "left": "63",
-                    "right": "0"
-                  },
-                  "ram_addr_limit": {
-                    "direction": "I",
-                    "left": "31",
                     "right": "0"
                   }
                 }
               }
             },
             "interface_nets": {
-              "DACRAMstreamer_0_BRAM_A": {
+              "BRAM_streamer_data_0_BRAM_DATA": {
                 "interface_ports": [
-                  "DACRAMstreamer_0/BRAM_A",
-                  "blk_mem_gen_0/BRAM_PORTB"
+                  "blk_mem_gen_0/BRAM_PORTB",
+                  "BRAM_streamer_data_0/BRAM_DATA"
                 ]
               },
               "axi_bram_ctrl_0_BRAM_PORTA": {
@@ -7811,16 +7817,16 @@
               }
             },
             "nets": {
-              "DACRAMstreamer_0_axis_tdata": {
+              "BRAM_streamer_data_5_o_axis_tdata": {
                 "ports": [
-                  "DACRAMstreamer_0/axis_tdata",
+                  "BRAM_streamer_data_0/o_axis_tdata",
                   "axis_tdata"
                 ]
               },
               "axi_gpio_0_gpio_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio_io_o",
-                  "DACRAMstreamer_0/ram_addr_limit"
+                  "BRAM_streamer_data_0/i_addr_limit"
                 ]
               },
               "channel_ctrl_0_gpio2_io_o": {
@@ -7832,7 +7838,7 @@
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
-                  "DACRAMstreamer_0/axis_aresetn"
+                  "BRAM_streamer_data_0/i_axis_aresetn"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -7845,7 +7851,7 @@
               "s_axi_aclk_0_1": {
                 "ports": [
                   "txusr_in",
-                  "DACRAMstreamer_0/axis_clk"
+                  "BRAM_streamer_data_0/i_axis_clk"
                 ]
               },
               "zynq_ultra_ps_e_0_pl_clk0": {
@@ -7902,8 +7908,8 @@
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
                 "ip_revision": "35",
-                "xci_name": "overlay_channel_ctrl_0_6",
-                "xci_path": "ip\\overlay_channel_ctrl_0_6\\overlay_channel_ctrl_0_6.xci",
+                "xci_name": "zcu102_zpulse_channel_ctrl_0_6",
+                "xci_path": "ip\\zcu102_zpulse_channel_ctrl_0_6\\zcu102_zpulse_channel_ctrl_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/channel_ctrl_0",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
@@ -7926,8 +7932,8 @@
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
                 "ip_revision": "9",
-                "xci_name": "overlay_blk_mem_gen_0_6",
-                "xci_path": "ip\\overlay_blk_mem_gen_0_6\\overlay_blk_mem_gen_0_6.xci",
+                "xci_name": "zcu102_zpulse_blk_mem_gen_0_6",
+                "xci_path": "ip\\zcu102_zpulse_blk_mem_gen_0_6\\zcu102_zpulse_blk_mem_gen_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/blk_mem_gen_0",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
@@ -7948,9 +7954,6 @@
                   "Operating_Mode_B": {
                     "value": "WRITE_FIRST"
                   },
-                  "PRIM_type_to_Implement": {
-                    "value": "BRAM"
-                  },
                   "Port_B_Clock": {
                     "value": "100"
                   },
@@ -7968,8 +7971,8 @@
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
                 "ip_revision": "11",
-                "xci_name": "overlay_axi_bram_ctrl_0_6",
-                "xci_path": "ip\\overlay_axi_bram_ctrl_0_6\\overlay_axi_bram_ctrl_0_6.xci",
+                "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_6",
+                "xci_path": "ip\\zcu102_zpulse_axi_bram_ctrl_0_6\\zcu102_zpulse_axi_bram_ctrl_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/axi_bram_ctrl_0",
                 "parameters": {
                   "DATA_WIDTH": {
@@ -7980,33 +7983,25 @@
                   }
                 }
               },
-              "DACRAMstreamer_0": {
-                "vlnv": "xilinx.com:module_ref:DACRAMstreamer:1.0",
+              "BRAM_streamer_data_0": {
+                "vlnv": "xilinx.com:module_ref:BRAM_streamer_data:1.0",
                 "ip_revision": "1",
-                "xci_name": "overlay_DACRAMstreamer_0_6",
-                "xci_path": "ip\\overlay_DACRAMstreamer_0_6\\overlay_DACRAMstreamer_0_6.xci",
-                "inst_hier_path": "tx_channels/tx_channel_6/DACRAMstreamer_0",
+                "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_6",
+                "xci_path": "ip\\zcu102_zpulse_BRAM_streamer_data_0_6\\zcu102_zpulse_BRAM_streamer_data_0_6.xci",
+                "inst_hier_path": "tx_channels/tx_channel_6/BRAM_streamer_data_0",
                 "reference_info": {
                   "ref_type": "hdl",
-                  "ref_name": "DACRAMstreamer",
+                  "ref_name": "BRAM_streamer_data",
                   "boundary_crc": "0x0"
                 },
                 "interface_ports": {
-                  "BRAM_A": {
+                  "BRAM_DATA": {
                     "mode": "Master",
                     "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
                     "vlnv": "xilinx.com:interface:bram_rtl:1.0",
                     "parameters": {
                       "MASTER_TYPE": {
                         "value": "BRAM_CTRL",
-                        "value_src": "constant"
-                      },
-                      "READ_WRITE_MODE": {
-                        "value": "READ",
-                        "value_src": "constant"
-                      },
-                      "MEM_SIZE": {
-                        "value": "262144",
                         "value_src": "constant"
                       },
                       "MEM_WIDTH": {
@@ -8016,55 +8011,56 @@
                     },
                     "port_maps": {
                       "EN": {
-                        "physical_name": "portA_en",
+                        "physical_name": "o_bram_en",
                         "direction": "O"
                       },
                       "DOUT": {
-                        "physical_name": "portA_cpu_rdata",
+                        "physical_name": "i_bram_din",
                         "direction": "I",
                         "left": "63",
                         "right": "0"
                       },
                       "DIN": {
-                        "physical_name": "portA_cpu_wdata",
+                        "physical_name": "o_bram_dout",
                         "direction": "O",
                         "left": "63",
                         "right": "0"
                       },
                       "WE": {
-                        "physical_name": "portA_we",
+                        "physical_name": "o_bram_we",
                         "direction": "O",
                         "left": "7",
                         "right": "0"
                       },
                       "ADDR": {
-                        "physical_name": "portAcpu_addr",
+                        "physical_name": "o_bram_addr",
                         "direction": "O",
                         "left": "31",
                         "right": "0"
                       },
                       "CLK": {
-                        "physical_name": "portA_clk",
+                        "physical_name": "o_bram_clk",
                         "direction": "O"
                       },
                       "RST": {
-                        "physical_name": "portA_rst",
+                        "physical_name": "o_bram_rst",
                         "direction": "O"
                       }
                     }
                   }
                 },
                 "ports": {
-                  "axis_clk": {
+                  "i_addr_limit": {
+                    "direction": "I",
+                    "left": "31",
+                    "right": "0"
+                  },
+                  "i_axis_clk": {
                     "type": "clk",
                     "direction": "I",
                     "parameters": {
                       "ASSOCIATED_RESET": {
-                        "value": "axis_aresetn",
-                        "value_src": "constant"
-                      },
-                      "ASSOCIATED_BUSIF": {
-                        "value": "AXIS",
+                        "value": "i_axis_aresetn",
                         "value_src": "constant"
                       },
                       "FREQ_HZ": {
@@ -8072,38 +8068,33 @@
                         "value_src": "user_prop"
                       },
                       "CLK_DOMAIN": {
-                        "value": "overlay_txusr_in",
+                        "value": "zcu102_zpulse_txusr_in",
                         "value_src": "default_prop"
                       }
                     }
                   },
-                  "axis_aresetn": {
+                  "i_axis_aresetn": {
                     "type": "rst",
                     "direction": "I",
                     "parameters": {
                       "POLARITY": {
                         "value": "ACTIVE_LOW",
-                        "value_src": "const_prop"
+                        "value_src": "constant"
                       }
                     }
                   },
-                  "axis_tdata": {
+                  "o_axis_tdata": {
                     "direction": "O",
                     "left": "63",
-                    "right": "0"
-                  },
-                  "ram_addr_limit": {
-                    "direction": "I",
-                    "left": "31",
                     "right": "0"
                   }
                 }
               }
             },
             "interface_nets": {
-              "DACRAMstreamer_0_BRAM_A": {
+              "BRAM_streamer_data_6_BRAM_DATA": {
                 "interface_ports": [
-                  "DACRAMstreamer_0/BRAM_A",
+                  "BRAM_streamer_data_0/BRAM_DATA",
                   "blk_mem_gen_0/BRAM_PORTB"
                 ]
               },
@@ -8127,16 +8118,16 @@
               }
             },
             "nets": {
-              "DACRAMstreamer_0_axis_tdata": {
+              "BRAM_streamer_data_6_o_axis_tdata": {
                 "ports": [
-                  "DACRAMstreamer_0/axis_tdata",
+                  "BRAM_streamer_data_0/o_axis_tdata",
                   "axis_tdata"
                 ]
               },
               "axi_gpio_0_gpio_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio_io_o",
-                  "DACRAMstreamer_0/ram_addr_limit"
+                  "BRAM_streamer_data_0/i_addr_limit"
                 ]
               },
               "channel_ctrl_0_gpio2_io_o": {
@@ -8148,7 +8139,7 @@
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
-                  "DACRAMstreamer_0/axis_aresetn"
+                  "BRAM_streamer_data_0/i_axis_aresetn"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -8161,7 +8152,7 @@
               "s_axi_aclk_0_1": {
                 "ports": [
                   "txusr_in",
-                  "DACRAMstreamer_0/axis_clk"
+                  "BRAM_streamer_data_0/i_axis_clk"
                 ]
               },
               "zynq_ultra_ps_e_0_pl_clk0": {
@@ -8218,8 +8209,8 @@
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
                 "ip_revision": "35",
-                "xci_name": "overlay_channel_ctrl_0_7",
-                "xci_path": "ip\\overlay_channel_ctrl_0_7\\overlay_channel_ctrl_0_7.xci",
+                "xci_name": "zcu102_zpulse_channel_ctrl_0_7",
+                "xci_path": "ip\\zcu102_zpulse_channel_ctrl_0_7\\zcu102_zpulse_channel_ctrl_0_7.xci",
                 "inst_hier_path": "tx_channels/tx_channel_7/channel_ctrl_0",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
@@ -8239,11 +8230,133 @@
                   }
                 }
               },
+              "axi_bram_ctrl_0": {
+                "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
+                "ip_revision": "11",
+                "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_7",
+                "xci_path": "ip\\zcu102_zpulse_axi_bram_ctrl_0_7\\zcu102_zpulse_axi_bram_ctrl_0_7.xci",
+                "inst_hier_path": "tx_channels/tx_channel_7/axi_bram_ctrl_0",
+                "parameters": {
+                  "DATA_WIDTH": {
+                    "value": "64"
+                  },
+                  "SINGLE_PORT_BRAM": {
+                    "value": "1"
+                  }
+                }
+              },
+              "BRAM_streamer_data_0": {
+                "vlnv": "xilinx.com:module_ref:BRAM_streamer_data:1.0",
+                "ip_revision": "1",
+                "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_7",
+                "xci_path": "ip\\zcu102_zpulse_BRAM_streamer_data_0_7\\zcu102_zpulse_BRAM_streamer_data_0_7.xci",
+                "inst_hier_path": "tx_channels/tx_channel_7/BRAM_streamer_data_0",
+                "reference_info": {
+                  "ref_type": "hdl",
+                  "ref_name": "BRAM_streamer_data",
+                  "boundary_crc": "0x0"
+                },
+                "interface_ports": {
+                  "BRAM_DATA": {
+                    "mode": "Master",
+                    "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
+                    "vlnv": "xilinx.com:interface:bram_rtl:1.0",
+                    "parameters": {
+                      "MASTER_TYPE": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "constant"
+                      },
+                      "MEM_WIDTH": {
+                        "value": "64",
+                        "value_src": "constant"
+                      }
+                    },
+                    "port_maps": {
+                      "EN": {
+                        "physical_name": "o_bram_en",
+                        "direction": "O"
+                      },
+                      "DOUT": {
+                        "physical_name": "i_bram_din",
+                        "direction": "I",
+                        "left": "63",
+                        "right": "0"
+                      },
+                      "DIN": {
+                        "physical_name": "o_bram_dout",
+                        "direction": "O",
+                        "left": "63",
+                        "right": "0"
+                      },
+                      "WE": {
+                        "physical_name": "o_bram_we",
+                        "direction": "O",
+                        "left": "7",
+                        "right": "0"
+                      },
+                      "ADDR": {
+                        "physical_name": "o_bram_addr",
+                        "direction": "O",
+                        "left": "31",
+                        "right": "0"
+                      },
+                      "CLK": {
+                        "physical_name": "o_bram_clk",
+                        "direction": "O"
+                      },
+                      "RST": {
+                        "physical_name": "o_bram_rst",
+                        "direction": "O"
+                      }
+                    }
+                  }
+                },
+                "ports": {
+                  "i_addr_limit": {
+                    "direction": "I",
+                    "left": "31",
+                    "right": "0"
+                  },
+                  "i_axis_clk": {
+                    "type": "clk",
+                    "direction": "I",
+                    "parameters": {
+                      "ASSOCIATED_RESET": {
+                        "value": "i_axis_aresetn",
+                        "value_src": "constant"
+                      },
+                      "FREQ_HZ": {
+                        "value": "250000000",
+                        "value_src": "user_prop"
+                      },
+                      "CLK_DOMAIN": {
+                        "value": "zcu102_zpulse_txusr_in",
+                        "value_src": "default_prop"
+                      }
+                    }
+                  },
+                  "i_axis_aresetn": {
+                    "type": "rst",
+                    "direction": "I",
+                    "parameters": {
+                      "POLARITY": {
+                        "value": "ACTIVE_LOW",
+                        "value_src": "constant"
+                      }
+                    }
+                  },
+                  "o_axis_tdata": {
+                    "direction": "O",
+                    "left": "63",
+                    "right": "0"
+                  }
+                }
+              },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
                 "ip_revision": "9",
-                "xci_name": "overlay_blk_mem_gen_0_7",
-                "xci_path": "ip\\overlay_blk_mem_gen_0_7\\overlay_blk_mem_gen_0_7.xci",
+                "xci_name": "zcu102_zpulse_blk_mem_gen_0_7",
+                "xci_path": "ip\\zcu102_zpulse_blk_mem_gen_0_7\\zcu102_zpulse_blk_mem_gen_0_7.xci",
                 "inst_hier_path": "tx_channels/tx_channel_7/blk_mem_gen_0",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
@@ -8264,9 +8377,6 @@
                   "Operating_Mode_B": {
                     "value": "WRITE_FIRST"
                   },
-                  "PRIM_type_to_Implement": {
-                    "value": "BRAM"
-                  },
                   "Port_B_Clock": {
                     "value": "100"
                   },
@@ -8280,147 +8390,13 @@
                     "value": "true"
                   }
                 }
-              },
-              "axi_bram_ctrl_0": {
-                "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
-                "xci_name": "overlay_axi_bram_ctrl_0_7",
-                "xci_path": "ip\\overlay_axi_bram_ctrl_0_7\\overlay_axi_bram_ctrl_0_7.xci",
-                "inst_hier_path": "tx_channels/tx_channel_7/axi_bram_ctrl_0",
-                "parameters": {
-                  "DATA_WIDTH": {
-                    "value": "64"
-                  },
-                  "SINGLE_PORT_BRAM": {
-                    "value": "1"
-                  }
-                }
-              },
-              "DACRAMstreamer_0": {
-                "vlnv": "xilinx.com:module_ref:DACRAMstreamer:1.0",
-                "ip_revision": "1",
-                "xci_name": "overlay_DACRAMstreamer_0_7",
-                "xci_path": "ip\\overlay_DACRAMstreamer_0_7\\overlay_DACRAMstreamer_0_7.xci",
-                "inst_hier_path": "tx_channels/tx_channel_7/DACRAMstreamer_0",
-                "reference_info": {
-                  "ref_type": "hdl",
-                  "ref_name": "DACRAMstreamer",
-                  "boundary_crc": "0x0"
-                },
-                "interface_ports": {
-                  "BRAM_A": {
-                    "mode": "Master",
-                    "vlnv_bus_definition": "xilinx.com:interface:bram:1.0",
-                    "vlnv": "xilinx.com:interface:bram_rtl:1.0",
-                    "parameters": {
-                      "MASTER_TYPE": {
-                        "value": "BRAM_CTRL",
-                        "value_src": "constant"
-                      },
-                      "READ_WRITE_MODE": {
-                        "value": "READ",
-                        "value_src": "constant"
-                      },
-                      "MEM_SIZE": {
-                        "value": "262144",
-                        "value_src": "constant"
-                      },
-                      "MEM_WIDTH": {
-                        "value": "64",
-                        "value_src": "constant"
-                      }
-                    },
-                    "port_maps": {
-                      "EN": {
-                        "physical_name": "portA_en",
-                        "direction": "O"
-                      },
-                      "DOUT": {
-                        "physical_name": "portA_cpu_rdata",
-                        "direction": "I",
-                        "left": "63",
-                        "right": "0"
-                      },
-                      "DIN": {
-                        "physical_name": "portA_cpu_wdata",
-                        "direction": "O",
-                        "left": "63",
-                        "right": "0"
-                      },
-                      "WE": {
-                        "physical_name": "portA_we",
-                        "direction": "O",
-                        "left": "7",
-                        "right": "0"
-                      },
-                      "ADDR": {
-                        "physical_name": "portAcpu_addr",
-                        "direction": "O",
-                        "left": "31",
-                        "right": "0"
-                      },
-                      "CLK": {
-                        "physical_name": "portA_clk",
-                        "direction": "O"
-                      },
-                      "RST": {
-                        "physical_name": "portA_rst",
-                        "direction": "O"
-                      }
-                    }
-                  }
-                },
-                "ports": {
-                  "axis_clk": {
-                    "type": "clk",
-                    "direction": "I",
-                    "parameters": {
-                      "ASSOCIATED_RESET": {
-                        "value": "axis_aresetn",
-                        "value_src": "constant"
-                      },
-                      "ASSOCIATED_BUSIF": {
-                        "value": "AXIS",
-                        "value_src": "constant"
-                      },
-                      "FREQ_HZ": {
-                        "value": "250000000",
-                        "value_src": "user_prop"
-                      },
-                      "CLK_DOMAIN": {
-                        "value": "overlay_txusr_in",
-                        "value_src": "default_prop"
-                      }
-                    }
-                  },
-                  "axis_aresetn": {
-                    "type": "rst",
-                    "direction": "I",
-                    "parameters": {
-                      "POLARITY": {
-                        "value": "ACTIVE_LOW",
-                        "value_src": "const_prop"
-                      }
-                    }
-                  },
-                  "axis_tdata": {
-                    "direction": "O",
-                    "left": "63",
-                    "right": "0"
-                  },
-                  "ram_addr_limit": {
-                    "direction": "I",
-                    "left": "31",
-                    "right": "0"
-                  }
-                }
               }
             },
             "interface_nets": {
-              "DACRAMstreamer_0_BRAM_A": {
+              "BRAM_streamer_data_0_BRAM_DATA": {
                 "interface_ports": [
-                  "DACRAMstreamer_0/BRAM_A",
-                  "blk_mem_gen_0/BRAM_PORTB"
+                  "blk_mem_gen_0/BRAM_PORTB",
+                  "BRAM_streamer_data_0/BRAM_DATA"
                 ]
               },
               "axi_bram_ctrl_0_BRAM_PORTA": {
@@ -8443,16 +8419,16 @@
               }
             },
             "nets": {
-              "DACRAMstreamer_0_axis_tdata": {
+              "BRAM_streamer_data_7_o_axis_tdata": {
                 "ports": [
-                  "DACRAMstreamer_0/axis_tdata",
+                  "BRAM_streamer_data_0/o_axis_tdata",
                   "axis_tdata"
                 ]
               },
               "axi_gpio_0_gpio_io_o": {
                 "ports": [
                   "channel_ctrl_0/gpio_io_o",
-                  "DACRAMstreamer_0/ram_addr_limit"
+                  "BRAM_streamer_data_0/i_addr_limit"
                 ]
               },
               "channel_ctrl_0_gpio2_io_o": {
@@ -8464,7 +8440,7 @@
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
-                  "DACRAMstreamer_0/axis_aresetn"
+                  "BRAM_streamer_data_0/i_axis_aresetn"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -8477,7 +8453,7 @@
               "s_axi_aclk_0_1": {
                 "ports": [
                   "txusr_in",
-                  "DACRAMstreamer_0/axis_clk"
+                  "BRAM_streamer_data_0/i_axis_clk"
                 ]
               },
               "zynq_ultra_ps_e_0_pl_clk0": {
@@ -8492,8 +8468,8 @@
           "xlconcat_1": {
             "vlnv": "xilinx.com:ip:xlconcat:2.1",
             "ip_revision": "6",
-            "xci_name": "overlay_xlconcat_0_1",
-            "xci_path": "ip\\overlay_xlconcat_0_1\\overlay_xlconcat_0_1.xci",
+            "xci_name": "zcu102_zpulse_xlconcat_1_0",
+            "xci_path": "ip\\zcu102_zpulse_xlconcat_1_0\\zcu102_zpulse_xlconcat_1_0.xci",
             "inst_hier_path": "tx_channels/xlconcat_1",
             "parameters": {
               "NUM_PORTS": {
@@ -8610,8 +8586,8 @@
               "tx_channel_5/s_axi_aresetn1",
               "tx_channel_6/s_axi_aresetn1",
               "tx_channel_7/s_axi_aresetn1",
-              "tx_channel_3/s_axi_aresetn1",
-              "tx_channel_2/s_axi_aresetn1"
+              "tx_channel_2/s_axi_aresetn1",
+              "tx_channel_3/s_axi_aresetn1"
             ]
           },
           "proc_sys_reset_1_peripheral_aresetn": {
@@ -8636,8 +8612,8 @@
               "tx_channel_5/txusr_in",
               "tx_channel_6/txusr_in",
               "tx_channel_7/txusr_in",
-              "tx_channel_3/txusr_in",
-              "tx_channel_2/txusr_in"
+              "tx_channel_2/txusr_in",
+              "tx_channel_3/txusr_in"
             ]
           },
           "tx_channel_0_axis_tdata": {
@@ -8766,12 +8742,27 @@
       "util_vector_logic_0": {
         "vlnv": "xilinx.com:ip:util_vector_logic:2.0",
         "ip_revision": "4",
-        "xci_name": "overlay_util_vector_logic_0_0",
-        "xci_path": "ip\\overlay_util_vector_logic_0_0\\overlay_util_vector_logic_0_0.xci",
+        "xci_name": "zcu102_zpulse_util_vector_logic_0_0",
+        "xci_path": "ip\\zcu102_zpulse_util_vector_logic_0_0\\zcu102_zpulse_util_vector_logic_0_0.xci",
         "inst_hier_path": "util_vector_logic_0",
         "parameters": {
           "C_OPERATION": {
             "value": "not"
+          }
+        }
+      },
+      "reset_gpio": {
+        "vlnv": "xilinx.com:ip:axi_gpio:2.0",
+        "ip_revision": "35",
+        "xci_name": "zcu102_zpulse_reset_gpio_0",
+        "xci_path": "ip\\zcu102_zpulse_reset_gpio_0\\zcu102_zpulse_reset_gpio_0.xci",
+        "inst_hier_path": "reset_gpio",
+        "parameters": {
+          "C_ALL_OUTPUTS": {
+            "value": "1"
+          },
+          "C_GPIO_WIDTH": {
+            "value": "1"
           }
         }
       }
@@ -8890,6 +8881,12 @@
           "control_interconnects/M07_AXI",
           "tx_channels/S_AXI_CTRL_7"
         ]
+      },
+      "control_interconnects_M08_AXI": {
+        "interface_ports": [
+          "reset_gpio/S_AXI",
+          "control_interconnects/M08_AXI"
+        ]
       }
     },
     "nets": {
@@ -8941,7 +8938,15 @@
           "bram_interconnects/M05_ARESETN",
           "bram_interconnects/M06_ARESETN",
           "bram_interconnects/M07_ARESETN",
-          "proc_sys_reset_0/ext_reset_in"
+          "proc_sys_reset_0/ext_reset_in",
+          "reset_gpio/s_axi_aresetn",
+          "control_interconnects/M08_ARESETN"
+        ]
+      },
+      "reset_gpio_gpio_io_o": {
+        "ports": [
+          "reset_gpio/gpio_io_o",
+          "proc_sys_reset_1/aux_reset_in"
         ]
       },
       "s_axi_aclk_0_1": {
@@ -8996,7 +9001,9 @@
           "bram_interconnects/M07_ACLK",
           "proc_sys_reset_1/slowest_sync_clk",
           "zynq_ultra_ps_e_0/maxihpm0_fpd_aclk",
-          "zynq_ultra_ps_e_0/maxihpm1_fpd_aclk"
+          "zynq_ultra_ps_e_0/maxihpm1_fpd_aclk",
+          "reset_gpio/s_axi_aclk",
+          "control_interconnects/M08_ACLK"
         ]
       },
       "zynq_ultra_ps_e_0_pl_resetn0": {
@@ -9089,6 +9096,11 @@
               "SEG_channel_ctrl_0_Reg_7": {
                 "address_block": "/tx_channels/tx_channel_7/channel_ctrl_0/S_AXI/Reg",
                 "offset": "0x00B00E0000",
+                "range": "64K"
+              },
+              "SEG_reset_gpio_Reg": {
+                "address_block": "/reset_gpio/S_AXI/Reg",
+                "offset": "0x00B0020000",
                 "range": "64K"
               }
             }

@@ -1,2 +1,3 @@
-Sources/overlay_wrapper.vhd 93
-Sources/Top.vhd top=Top 93
+Sources/BRAM_streamer_data.vhd 93
+Sources/zcu102_zpulse_wrapper.vhd 93
+Sources/top_zcu102_zpulse.vhd top=Top 93
