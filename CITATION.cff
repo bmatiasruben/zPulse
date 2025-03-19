@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please consider citation."
+authors:
+  - family-names: "Bolaños"
+    given-names: "Matías Rubén"
+    orcid: "https://orcid.org/0000-0003-3525-0395"
+preferred-citation:
+  authors:
+    - family-names: "Bolaños"
+      given-names: "Matías Rubén"
+      orcid: "https://orcid.org/0000-0003-3525-0395"
+  title: "zPulse: Transceiver-based pulse generator"
+
+title: "zPulse: Transceiver-based pulse generator"
+date-released: 2025-03-19
