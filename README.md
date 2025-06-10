@@ -60,13 +60,36 @@ If your board is compatible with installing Pynq with Ubuntu on the back side (Z
 
 Make sure to install [Ubuntu version 20.04](https://ubuntu.com/download/amd). I tried installing version 22.04 but I didn't manage to make it work, so I stopped testing (it might be compatible with some fix, but I'm not an expert in Ubuntu to try to fix it).
 
+Once Ubuntu is installed, follow up by 
+```bash
+git clone https://github.com/ATchelet/ZCU102-PYNQ.git
+cd ZCU102-PYNQ/
+sudo bash install.sh
+```
+
+To define a custom IP for your system (highly recommended), you have to edit the file ```bash etc/netplan/01-netcfg.yaml``` so its contents are
+```bash 
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: no
+      addresses:
+        - 192.168.XX.YYY/24
+      gateway4: 192.168.XX.ZZZ
+      nameservers:
+          addresses: [8.8.8.8, 4.4.4.4]
+```
+Where ZZZ is the gateway you are using on the network. The relevant part is that both the XX parts for the address and the gateway are equal.
+
 # Use
 
-Once the Vivado project is recreated and the bitstream is generated, you will have the two files required for the Pynq Overlay (.hwh and .bit).
+Once the Vivado project is recreated and the bitstream is generated, you will have the two files required for the Pynq Overlay (.hwh and .bit). To enter the Pynq GUI, just type 192.168.XX.YYY:9090/lab (where 192.168.XX.YYY is the IP you set chose on the ```bash etc/netplan/01-netcfg.yaml``` file). The password to enter the GUI will be xilinx.
 
 Within the Pynq folder, you will find the file zPulse_overlay.py which is a custom class to make control of the pulse generation with transceivers easier, zPulse_GUI.ipynb that is the full GUI for controlling all channels.
 
-To start the GUI, just run the only cell present in zPulse_GUI.ipynb. From within the GUI, you can control everything you need, from pulse width, pulse offset, number of pulses, and overall waveform period.
+To start the zPulse GUI, just run the only cell present in zPulse_GUI.ipynb. From within the GUI, you can control everything you need, from pulse width, pulse offset, number of pulses, and overall waveform period.
 
 <p align="center">
 <img src="./images/pynq_gui.png" width="95%"/>

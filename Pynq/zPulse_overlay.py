@@ -5,7 +5,7 @@
 from pynq import Overlay, MMIO, GPIO
 import os
 
-class QFOverlay(Overlay):
+class zPulseOverlay(Overlay):
     def __init__(self, bitfile_name=None, **kwargs):
         """Construct a new zPulseOverlay
 
@@ -40,6 +40,10 @@ class QFOverlay(Overlay):
         self.addr_limit[6] = self.tx_channels.tx_channel_6.channel_ctrl_0.channel1
         self.addr_limit[7] = self.tx_channels.tx_channel_7.channel_ctrl_0.channel1
 
+    def reset(self):
+        self.reset_gpio.channel1[0].on()
+        self.reset_gpio.channel1[0].off()
+        
     def enable_channel(self, ch_index=None):
         if (isinstance(ch_index, int) and 0 <= ch_index <= 7):
             self.ch_enable[ch_index].on()
