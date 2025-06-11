@@ -50,6 +50,20 @@ The version used was Vivado 2024.2. Even though the board used was the ZCU102, a
 
 When re-generating the project you might see that the input clock frequency for the Transceiver Wizard is 148.5 MHz instead of the standard 156.25 MHz. That is because ZCU102 requires Ubuntu for Pynq to work, and installing Ubuntu changes the frequency of the Si570 to that 148.5 MHz. If using a different board, check if the frequency is correct.
 
+Once the project is re-generated (and re-compiled), you require two files from here that are the bitstream (.bit) and the hardware handoff (.hwh). Those files are located in
+
+```bash
+.bit <- $REPO_DIR/Projects/zPulse/zPulse.runs/impl_1/Top.bit
+.hwh <- $REPO_DIR/Projects/zPulse/zPulse.gen/sources_1/bd/zcu102_zpulse/hw_handoff/zcu102_zpulse.hwh
+```
+Alternatively, if you set up the Hog repo correctly and you didn't mess it up too much, you should be able to find the bitstream file also within 
+
+```bash
+.bit <- $REPO_DIR/bin/zPulse-vX.X.X-HASH
+```
+
+Where X.X.X is the tag you are working on and HASH is the commit hash from git.
+
 ## Pynq side
 
 If using a board already compatible with Pynq, then you can skip the next subsection and go directly with a standard Pynq installation or pre-built image.
@@ -85,9 +99,24 @@ Where ZZZ is the gateway you are using on the network. The relevant part is that
 
 # Use
 
-Once the Vivado project is recreated and the bitstream is generated, you will have the two files required for the Pynq Overlay (.hwh and .bit). To enter the Pynq GUI, just type 192.168.XX.YYY:9090/lab (where 192.168.XX.YYY is the IP you set chose on the ```bash etc/netplan/01-netcfg.yaml``` file). The password to enter the GUI will be xilinx.
+Once the Vivado project is recreated and the bitstream is generated, you will have the two files required for the Pynq Overlay (.hwh and .bit). To enter the Pynq GUI, just type 192.168.XX.YYY:9090/lab (where 192.168.XX.YYY is the IP you set chose on the ```etc/netplan/01-netcfg.yaml``` file). The password to enter the GUI will be xilinx.
 
 Within the Pynq folder, you will find the file zPulse_overlay.py which is a custom class to make control of the pulse generation with transceivers easier, zPulse_GUI.ipynb that is the full GUI for controlling all channels.
+
+I suggest creating the following folder structure within the root directory available in the Pynq environment (corresponding to ```/home/root/jupyter_notebooks```)
+```bash
+$PYNQ_ROOT_DIR
+    ├── zPulse
+    │   ├── Bitstream
+    │   │   ├── zcu102_zpulse.bit
+    │   │   └── zcu102_zpulse.hwh
+    │   └── zPulse_overlay.py
+    └── zPulse_GUI.ipynb
+```
+and then modify the line creating the overlay on the jupyter notebook to be compliant with either this or your own folder structure. By default, the line is compatible with the one provided here, such that
+```bash
+ol = zPulseOverlay("zPulse/Bitstream/zcu102_zpulse.bit")
+```
 
 To start the zPulse GUI, just run the only cell present in zPulse_GUI.ipynb. From within the GUI, you can control everything you need, from pulse width, pulse offset, number of pulses, and overall waveform period.
 
