@@ -6,7 +6,7 @@
 
 **DISCLAIMER UPDATE**: I did create my own, and is now within Sources/BRAM_streamer_data.vhd
 
-# Features
+## Features
 
 This design allows you to create pulses using the Zynq Ultrascale+ Transceiver channels, allowing you to add an arbitrary amount of pulses (>1024) that can be as small as 62.5 ps wide. The system works for up to 8 channels and can store waveforms up to ~130 μs. This number can be easily increased by just reducing the number of channels, and further increased by adding some compresion algorithm.
 
@@ -16,7 +16,7 @@ Moreover, when modifying any of the waveforms, the system does not power-off and
 
 Finally, it allows you to save and load settings for all channels, since at re-compilation of the GUI all settings are lost (_oops_).
 
-# Installation
+## Installation
 
 Installing this is a fairly lengthy process, mainly because it changes from board to board, but the steps are all there, just difficult to find all together.
 
@@ -34,7 +34,7 @@ git clone --recursive https://github.com/bmatiasruben/zPulse.git
 
 for Git 1.65 or later. This will download the entire repository including the Hog submodule.
 
-## Vivado side
+### Vivado side
 
 To clone the Vivado project, I am currently using [HOG](https://github.com/Hog-CERN/Hog) to do version control, so follow their instructions to re-create the project. To do so, open a bash console and run
 
@@ -68,11 +68,11 @@ Alternatively, if you set up the Hog repo correctly and you didn't mess it up to
 
 Where X.X.X is the tag you are working on and HASH is the commit hash from git.
 
-## Pynq side
+### Pynq side
 
 If using a board already compatible with Pynq, then you can skip the next subsection and go directly with a standard Pynq installation or pre-built image.
 
-### Ubuntu installation
+#### Ubuntu installation
 
 If your board is compatible with installing Pynq with Ubuntu on the back side (ZCU102, Kria KV260 and Kria KR260), you need to install Ubuntu first before doing anything. When doing so, I followed the tutorial within [ATchelet/ZCU102-PYNQ](https://github.com/ATchelet/ZCU102-PYNQ). Even though some text is incorrect and still talks about the Kria KV260, the content is correct.
 
@@ -101,7 +101,7 @@ network:
 ```
 Where ZZZ is the gateway you are using on the network. The relevant part is that both the XX parts for the address and the gateway are equal.
 
-# Use
+## Use
 
 Once the Vivado project is recreated and the bitstream is generated, you will have the two files required for the Pynq Overlay (.hwh and .bit). To enter the Pynq GUI, just type 192.168.XX.YYY:9090/lab (where 192.168.XX.YYY is the IP you set chose on the ```etc/netplan/01-netcfg.yaml``` file). The password to enter the GUI will be xilinx.
 
@@ -128,7 +128,7 @@ To start the zPulse GUI, just run the only cell present in zPulse_GUI.ipynb. Fro
 <img src="./images/pynq_gui.png" width="95%"/>
 </p>
 
-# Contribute
+## Contribute
 
 If you regenerate this design for a different FPGA board that is not the ZCU102, please let me know and it can be added within this same repository. Hog allows you to control separate projects (aimed for different boards for example), so it is easy to integrate new board designs.
 
