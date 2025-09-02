@@ -19,6 +19,9 @@ class zPulseOverlay(Overlay):
         self.ch_player = {}
         self.ch_enable = {}
         self.addr_limit = {}
+        self.preemph = {}
+        self.postemph = {}
+        self.amplitude = {}
         # Check which DAC channels are enabled (from 0 to 7 based on DAC_ENABLED)
         for i in range(8):
             self.ch_player[i] = self.memdict_to_view(f"tx_channels/tx_channel_{i}/axi_bram_ctrl_0")
@@ -39,6 +42,33 @@ class zPulseOverlay(Overlay):
         self.addr_limit[5] = self.tx_channels.tx_channel_5.channel_ctrl_0.channel1
         self.addr_limit[6] = self.tx_channels.tx_channel_6.channel_ctrl_0.channel1
         self.addr_limit[7] = self.tx_channels.tx_channel_7.channel_ctrl_0.channel1
+        
+        self.preemph[0] = self.tx_channels.tx_channel_0.emphasis_ctrl_0.channel1
+        self.preemph[1] = self.tx_channels.tx_channel_1.emphasis_ctrl_0.channel1
+        self.preemph[2] = self.tx_channels.tx_channel_2.emphasis_ctrl_0.channel1
+        self.preemph[3] = self.tx_channels.tx_channel_3.emphasis_ctrl_0.channel1
+        self.preemph[4] = self.tx_channels.tx_channel_4.emphasis_ctrl_0.channel1
+        self.preemph[5] = self.tx_channels.tx_channel_5.emphasis_ctrl_0.channel1
+        self.preemph[6] = self.tx_channels.tx_channel_6.emphasis_ctrl_0.channel1
+        self.preemph[7] = self.tx_channels.tx_channel_7.emphasis_ctrl_0.channel1
+        
+        self.postemph[0] = self.tx_channels.tx_channel_0.emphasis_ctrl_0.channel2
+        self.postemph[1] = self.tx_channels.tx_channel_1.emphasis_ctrl_0.channel2
+        self.postemph[2] = self.tx_channels.tx_channel_2.emphasis_ctrl_0.channel2
+        self.postemph[3] = self.tx_channels.tx_channel_3.emphasis_ctrl_0.channel2
+        self.postemph[4] = self.tx_channels.tx_channel_4.emphasis_ctrl_0.channel2
+        self.postemph[5] = self.tx_channels.tx_channel_5.emphasis_ctrl_0.channel2
+        self.postemph[6] = self.tx_channels.tx_channel_6.emphasis_ctrl_0.channel2
+        self.postemph[7] = self.tx_channels.tx_channel_7.emphasis_ctrl_0.channel2
+        
+        self.amplitude[0] = self.tx_channels.tx_channel_0.voltage_ctr_0.channel1
+        self.amplitude[1] = self.tx_channels.tx_channel_1.voltage_ctr_0.channel1
+        self.amplitude[2] = self.tx_channels.tx_channel_2.voltage_ctr_0.channel1
+        self.amplitude[3] = self.tx_channels.tx_channel_3.voltage_ctr_0.channel1
+        self.amplitude[4] = self.tx_channels.tx_channel_4.voltage_ctr_0.channel1
+        self.amplitude[5] = self.tx_channels.tx_channel_5.voltage_ctr_0.channel1
+        self.amplitude[6] = self.tx_channels.tx_channel_6.voltage_ctr_0.channel1
+        self.amplitude[7] = self.tx_channels.tx_channel_7.voltage_ctr_0.channel1
 
     def reset(self):
         self.reset_gpio.channel1[0].on()
@@ -60,7 +90,4 @@ class zPulseOverlay(Overlay):
         mem_range = self.mem_dict[ip]["addr_range"]
         ipmmio = MMIO(baseAddress, mem_range)
         return ipmmio.array[0:ipmmio.length].view(dtype)
-    
-        
-        
     
