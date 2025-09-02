@@ -1,3 +1,4 @@
 Sources/BRAM_streamer_data.vhd 93
 Sources/zcu102_zpulse_wrapper.vhd 93
 Sources/top_zcu102_zpulse.vhd top=Top 93
+Projects/zPulse/zPulse.gen/sources_1/bd/zcu102_zpulse/hdl/zcu102_zpulse_wrapper.vhd 93

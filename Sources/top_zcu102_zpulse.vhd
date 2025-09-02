@@ -16,28 +16,33 @@ entity Top is
         gthtxn_out : out std_logic_vector(7 downto 0);
 
         clk_out_10 : out std_logic;
-        o_led : out std_logic_vector(7 downto 0)
+        o_led      : out std_logic_vector(7 downto 0)
+        -- i_sw_pre   : in std_logic_vector(3 downto 0);
+        -- i_sw_post  : in std_logic_vector(3 downto 0)
     );
 end Top;
 
 architecture Behavioral of Top is
 
-    signal w_bufg_to_rxusrclk : std_logic_vector(7 downto 0);
-    signal w_bufg_to_rxusrclk2 : std_logic_vector(7 downto 0);
-    signal w_bufg_to_txusrclk : std_logic_vector(7 downto 0);
-    signal w_bufg_to_txusrclk2 : std_logic_vector(7 downto 0);
-    signal w_rxusrclk : std_logic;
-    signal w_rxusrclk2 : std_logic;
-    signal w_txusrclk : std_logic;
-    signal w_txusrclk2 : std_logic;
-    signal w_clk_out_250 : std_logic;
+    signal w_bufg_to_rxusrclk     : std_logic_vector(7 downto 0);
+    signal w_bufg_to_rxusrclk2    : std_logic_vector(7 downto 0);
+    signal w_bufg_to_txusrclk     : std_logic_vector(7 downto 0);
+    signal w_bufg_to_txusrclk2    : std_logic_vector(7 downto 0);
+    signal w_rxusrclk             : std_logic;
+    signal w_rxusrclk2            : std_logic;
+    signal w_txusrclk             : std_logic;
+    signal w_txusrclk2            : std_logic;
+    signal w_clk_out_250          : std_logic;
     signal mgtrefclk_single_ended : std_logic;
-    signal odiv2_to_bufg_gt : std_logic;
-    signal tx_data : std_logic_vector(511 downto 0);
-    signal w_txoutclk : std_logic_vector(7 downto 0);
-    signal w_rxoutclk : std_logic_vector(7 downto 0);
-    signal w_qpll0outrefclk : std_logic_vector(1 downto 0);
-    signal tx_inhibit : std_logic_vector(7 downto 0) := (others => '1');
+    signal odiv2_to_bufg_gt       : std_logic;
+    signal tx_data                : std_logic_vector(511 downto 0);
+    signal w_txoutclk             : std_logic_vector(7 downto 0);
+    signal w_rxoutclk             : std_logic_vector(7 downto 0);
+    signal w_qpll0outrefclk       : std_logic_vector(1 downto 0);
+    signal tx_inhibit             : std_logic_vector(7 downto 0) := (others => '1');
+    signal tx_postcursor          : std_logic_vector(39 downto 0);
+    signal tx_precursor           : std_logic_vector(39 downto 0);
+    signal tx_diffctrl            : std_logic_vector(39 downto 0);
 
 begin
 
@@ -55,30 +60,30 @@ begin
             -- Inputs
             gtwiz_userclk_tx_active_in => "1",
             gtwiz_userclk_rx_active_in => "1",
-            gtwiz_buffbypass_tx_reset_in => "0",
-            gtwiz_buffbypass_tx_start_user_in => "0",
-            gtwiz_reset_clk_freerun_in => w_clk_out_250,
-            gtwiz_reset_all_in => "0",
+            -- gtwiz_buffbypass_tx_reset_in       => "0",
+            -- gtwiz_buffbypass_tx_start_user_in  => "0",
+            gtwiz_reset_clk_freerun_in         => w_clk_out_250,
+            gtwiz_reset_all_in                 => "0",
             gtwiz_reset_tx_pll_and_datapath_in => "0",
-            gtwiz_reset_tx_datapath_in => "0",
+            gtwiz_reset_tx_datapath_in         => "0",
             gtwiz_reset_rx_pll_and_datapath_in => "0",
-            gtwiz_reset_rx_datapath_in => "0",
+            gtwiz_reset_rx_datapath_in         => "0",
             -- Data --
             gtwiz_userdata_tx_in => tx_data,
             -- Clocks --
             gtrefclk00_in(0) => mgtrefclk_single_ended,
             gtrefclk00_in(1) => mgtrefclk_single_ended,
-            txinhibit_in => tx_inhibit,
-            gthrxn_in => "00000000",
-            gthrxp_in => "00000000",
-            rxusrclk_in(0) => w_rxusrclk,
-            rxusrclk_in(1) => w_rxusrclk,
-            rxusrclk_in(2) => w_rxusrclk,
-            rxusrclk_in(3) => w_rxusrclk,
-            rxusrclk_in(4) => w_rxusrclk,
-            rxusrclk_in(5) => w_rxusrclk,
-            rxusrclk_in(6) => w_rxusrclk,
-            rxusrclk_in(7) => w_rxusrclk,
+            txinhibit_in     => tx_inhibit,
+            gthrxn_in        => "00000000",
+            gthrxp_in        => "00000000",
+            rxusrclk_in(0)   => w_rxusrclk,
+            rxusrclk_in(1)   => w_rxusrclk,
+            rxusrclk_in(2)   => w_rxusrclk,
+            rxusrclk_in(3)   => w_rxusrclk,
+            rxusrclk_in(4)   => w_rxusrclk,
+            rxusrclk_in(5)   => w_rxusrclk,
+            rxusrclk_in(6)   => w_rxusrclk,
+            rxusrclk_in(7)   => w_rxusrclk,
 
             txusrclk_in(0) => w_txusrclk,
             txusrclk_in(1) => w_txusrclk,
@@ -109,14 +114,17 @@ begin
 
             -- Outputs
             gtwiz_reset_rx_cdr_stable_out => open,
-            gtwiz_reset_tx_done_out => open,
-            gtwiz_reset_rx_done_out => open,
-            gtwiz_userdata_rx_out => open,
-            qpll0outclk_out => w_qpll0outrefclk,
-            qpll0outrefclk_out => open,
-            gthtxn_out => gthtxn_out,
-            gthtxp_out => gthtxp_out,
-            gtpowergood_out => open,
+            gtwiz_reset_tx_done_out       => open,
+            gtwiz_reset_rx_done_out       => open,
+            gtwiz_userdata_rx_out         => open,
+            qpll0outclk_out               => w_qpll0outrefclk,
+            qpll0outrefclk_out            => open,
+            gthtxn_out                    => gthtxn_out,
+            gthtxp_out                    => gthtxp_out,
+            gtpowergood_out               => open,
+            txpostcursor_in               => tx_postcursor,
+            txprecursor_in                => tx_precursor,
+            txdiffctrl_in                 => tx_diffctrl,
 
             rxoutclk_out => w_rxoutclk,
             txoutclk_out => w_txoutclk,
@@ -131,47 +139,50 @@ begin
         port map(
             CLK_IN_300_clk_n => user_si570_clk_n,
             CLK_IN_300_clk_p => user_si570_clk_p,
-            clk_out_250 => w_clk_out_250,
-            txusr_in => w_txusrclk2,
-            clk_10_out => clk_out_10,
-            tx_data => tx_data,
-            tx_inhibit => tx_inhibit,
-            locked_0 => o_led(0)
+            clk_out_250      => w_clk_out_250,
+            txusr_in         => w_txusrclk2,
+            clk_10_out       => clk_out_10,
+            tx_data          => tx_data,
+            tx_inhibit       => tx_inhibit,
+            locked_0         => o_led(0),
+            tx_postcursor    => tx_postcursor,
+            tx_precursor     => tx_precursor,
+            tx_diffctrl      => tx_diffctrl
         );
 
     IBUFDS_GTE4_inst : IBUFDS_GTE4
     generic map(
-        REFCLK_EN_TX_PATH => '0', -- Refer to Transceiver User Guide
+        REFCLK_EN_TX_PATH  => '0',  -- Refer to Transceiver User Guide
         REFCLK_HROW_CK_SEL => "00", -- Refer to Transceiver User Guide
-        REFCLK_ICNTL_RX => "00" -- Refer to Transceiver User Guide
+        REFCLK_ICNTL_RX    => "00"  -- Refer to Transceiver User Guide
     )
     port map(
-        O => mgtrefclk_single_ended, -- 1-bit output: Refer to Transceiver User Guide
-        ODIV2 => odiv2_to_bufg_gt, -- 1-bit output: Refer to Transceiver User Guide
-        CEB => '0', -- 1-bit input: Refer to Transceiver User Guide
-        I => clk_p, -- 1-bit input: Refer to Transceiver User Guide
-        IB => clk_n -- 1-bit input: Refer to Transceiver User Guide
+        O     => mgtrefclk_single_ended, -- 1-bit output: Refer to Transceiver User Guide
+        ODIV2 => odiv2_to_bufg_gt,       -- 1-bit output: Refer to Transceiver User Guide
+        CEB   => '0',                    -- 1-bit input: Refer to Transceiver User Guide
+        I     => clk_p,                  -- 1-bit input: Refer to Transceiver User Guide
+        IB    => clk_n                   -- 1-bit input: Refer to Transceiver User Guide
     );
 
     BUFG_GT_to_TXUSR_CLK_2 : BUFG_GT
     port map(
-        O => w_txusrclk2, -- 1-bit output: Buffer
-        CE => '1', --CE,           -- 1-bit input: Buffer enable
-        CEMASK => '1', --CEMASK,   -- 1-bit input: CE Mask
-        CLR => '0', --CLR,         -- 1-bit input: Asynchronous clear
-        CLRMASK => '0', --CLRMASK, -- 1-bit input: CLR Mask
-        DIV => "001", --DIV,         -- 3-bit input: Dynamic divide Value
+        O       => w_txusrclk2, -- 1-bit output: Buffer
+        CE      => '1',         --CE,           -- 1-bit input: Buffer enable
+        CEMASK  => '1',         --CEMASK,   -- 1-bit input: CE Mask
+        CLR     => '0',         --CLR,         -- 1-bit input: Asynchronous clear
+        CLRMASK => '0',         --CLRMASK, -- 1-bit input: CLR Mask
+        DIV     => "001",       --DIV,         -- 3-bit input: Dynamic divide Value
         -- I => bufg_to_txusrclk_in_s(0)              -- 1-bit input: Buffer
         I => w_txoutclk(0) -- 1-bit input: Buffer
     );
     BUFG_GT_to_TXUSR_CLK : BUFG_GT
     port map(
-        O => w_txusrclk, -- 1-bit output: Buffer
-        CE => '1', --CE,           -- 1-bit input: Buffer enable
-        CEMASK => '1', --CEMASK,   -- 1-bit input: CE Mask
-        CLR => '0', --CLR,         -- 1-bit input: Asynchronous clear
-        CLRMASK => '0', --CLRMASK, -- 1-bit input: CLR Mask
-        DIV => "000", --DIV,         -- 3-bit input: Dynamic divide Value
+        O       => w_txusrclk, -- 1-bit output: Buffer
+        CE      => '1',        --CE,           -- 1-bit input: Buffer enable
+        CEMASK  => '1',        --CEMASK,   -- 1-bit input: CE Mask
+        CLR     => '0',        --CLR,         -- 1-bit input: Asynchronous clear
+        CLRMASK => '0',        --CLRMASK, -- 1-bit input: CLR Mask
+        DIV     => "000",      --DIV,         -- 3-bit input: Dynamic divide Value
         -- I => bufg_to_txusrclk_in_s(0)              -- 1-bit input: Buffer
         I => w_txoutclk(0) -- 1-bit input: Buffer
     );
