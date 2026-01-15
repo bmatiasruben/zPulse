@@ -19,3 +19,5 @@ set_property IOSTANDARD LVCMOS33 [get_ports {o_led[3]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_led[2]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_led[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_led[0]}]
+
+

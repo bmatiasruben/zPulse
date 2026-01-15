@@ -52,7 +52,7 @@ The version used was Vivado 2024.2. Even though the board used was the ZCU102, a
 <img src="./images/tx_channel.png" width="80%"/>
 </p>
 
-When re-generating the project you might see that the input clock frequency for the Transceiver Wizard is 148.5 MHz instead of the standard 156.25 MHz. That is because ZCU102 requires Ubuntu for Pynq to work, and installing Ubuntu changes the frequency of the Si570 to that 148.5 MHz. If using a different board, check if the frequency is correct.
+When re-generating the project you might see that the input clock frequency for the Transceiver Wizard is 100 MHz instead of the standard 156.25 MHz. That is because the design was created to be able to eventually lock to an external 100 MHz clock, so the Si570 oscillator has to be reconfigured to match this frequency. To do so, I am including a C script that can be compiled from Pynq's terminal that reprograms the oscillator to match this frequency.
 
 Once the project is re-generated (and re-compiled), you require two files from here that are the bitstream (.bit) and the hardware handoff (.hwh). Those files are located in
 
@@ -105,22 +105,60 @@ Where ZZZ is the gateway you are using on the network. The relevant part is that
 
 Once the Vivado project is recreated and the bitstream is generated, you will have the two files required for the Pynq Overlay (.hwh and .bit). To enter the Pynq GUI, just type 192.168.XX.YYY:9090/lab (where 192.168.XX.YYY is the IP you set chose on the ```etc/netplan/01-netcfg.yaml``` file). The password to enter the GUI will be xilinx.
 
-Within the Pynq folder, you will find the file zPulse_overlay.py which is a custom class to make control of the pulse generation with transceivers easier, zPulse_GUI.ipynb that is the full GUI for controlling all channels.
+Within the Pynq folder, you will find the file zPulse_overlay.py which is a custom class to make control of the pulse generation with transceivers easier, zPulse_GUI.ipynb that is the full GUI for controlling all channels, and si570_usr_mgt_100mhz.c, which is a C code to reprogram the Si570 oscillator connected to the transceivers.
 
 I suggest creating the following folder structure within the root directory available in the Pynq environment (corresponding to ```/home/root/jupyter_notebooks```)
 ```bash
 $PYNQ_ROOT_DIR
     ├── zPulse
     │   ├── Bitstream
-    │   │   ├── zcu102_zpulse.bit
-    │   │   └── zcu102_zpulse.hwh
+    │   │   ├── zPulse_16.bit
+    │   │   └── zPulse_16.hwh
+    │   ├── Clocking
+    │   │   └── si570_usr_mgt_100mhz.c
     │   └── zPulse_overlay.py
     └── zPulse_GUI.ipynb
 ```
 and then modify the line creating the overlay on the jupyter notebook to be compliant with either this or your own folder structure. By default, the line is compatible with the one provided here, such that
 ```bash
-ol = zPulseOverlay("zPulse/Bitstream/zcu102_zpulse.bit")
+ol = zPulseOverlay("zPulse/Bitstream/zPulse_16.bit")
 ```
+
+Before actually running the GUI, the Si570 oscillator has to be re-configured to output 100 MHz. To do so, you have to install the ```gcc``` compiler (can be done with ```sudo apt install -y build-essential```), and run 
+```bash
+gcc -Wall -O2 -o /home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz /home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz.c
+```
+which will create a compiled version within the same directory of the C file.
+
+Then, you need to find the I2C bus corresponding to the Si570, by running
+```bash
+sudo apt install i2c-tools
+i2cdetect -l
+```
+and look for the line ```i2c-1-mux (chan_id 3)``` or similar. The first column should say ```i2c-XX``` where XX corresponds to the ID of the connection, which I will refer to as BUS_MGT. Once that number is found, run the script with
+```bash
+sudo ./home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz BUS_MGT
+```
+
+To run the script at boot, simply create a service ```/etc/systemd/system/si570-mgt-10mhz.service``` with
+```bash
+[Unit]
+Description=Set USER MGT Si570 (U56) to 100 MHz after boot
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/si570_usr_mgt_100mhz BUS_MGT
+
+[Install]
+WantedBy=multi-user.target
+```
+and enable it with
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable si570-mgt-10mhz.service
+```
+These steps will set the frequency of your Si570 oscillator to 100 MHz, and can be changed by modifying the ```TARGET_FOUT``` parameter on the C code if a different frequency is required. With the correct frequency set, the GUI can finally be executed.
 
 To start the zPulse GUI, just run the only cell present in zPulse_GUI.ipynb. From within the GUI, you can control everything you need, from pulse width, pulse offset, number of pulses, and overall waveform period.
 

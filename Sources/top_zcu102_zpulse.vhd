@@ -24,25 +24,25 @@ end Top;
 
 architecture Behavioral of Top is
 
-    signal w_bufg_to_rxusrclk     : std_logic_vector(7 downto 0);
-    signal w_bufg_to_rxusrclk2    : std_logic_vector(7 downto 0);
-    signal w_bufg_to_txusrclk     : std_logic_vector(7 downto 0);
-    signal w_bufg_to_txusrclk2    : std_logic_vector(7 downto 0);
-    signal w_rxusrclk             : std_logic;
-    signal w_rxusrclk2            : std_logic;
-    signal w_txusrclk             : std_logic;
-    signal w_txusrclk2            : std_logic;
-    signal w_clk_out_250          : std_logic;
-    signal mgtrefclk_single_ended : std_logic;
-    signal odiv2_to_bufg_gt       : std_logic;
-    signal tx_data                : std_logic_vector(511 downto 0);
-    signal w_txoutclk             : std_logic_vector(7 downto 0);
-    signal w_rxoutclk             : std_logic_vector(7 downto 0);
-    signal w_qpll0outrefclk       : std_logic_vector(1 downto 0);
-    signal tx_inhibit             : std_logic_vector(7 downto 0) := (others => '1');
-    signal tx_postcursor          : std_logic_vector(39 downto 0);
-    signal tx_precursor           : std_logic_vector(39 downto 0);
-    signal tx_diffctrl            : std_logic_vector(39 downto 0);
+signal w_bufg_to_rxusrclk     : std_logic_vector(7 downto 0);
+signal w_bufg_to_rxusrclk2    : std_logic_vector(7 downto 0);
+signal w_bufg_to_txusrclk     : std_logic_vector(7 downto 0);
+signal w_bufg_to_txusrclk2    : std_logic_vector(7 downto 0);
+signal w_rxusrclk             : std_logic;
+signal w_rxusrclk2            : std_logic;
+signal w_txusrclk             : std_logic;
+signal w_txusrclk2            : std_logic;
+signal w_clk_out_250          : std_logic;
+signal mgtrefclk_single_ended : std_logic;
+signal odiv2_to_bufg_gt       : std_logic;
+signal tx_data                : std_logic_vector(511 downto 0);
+signal w_txoutclk             : std_logic_vector(7 downto 0);
+signal w_rxoutclk             : std_logic_vector(7 downto 0);
+signal w_qpll0outrefclk       : std_logic_vector(1 downto 0);
+signal tx_inhibit             : std_logic_vector(7 downto 0) := (others => '1');
+signal tx_postcursor          : std_logic_vector(39 downto 0);
+signal tx_precursor           : std_logic_vector(39 downto 0);
+signal tx_diffctrl            : std_logic_vector(39 downto 0);
 
 begin
 

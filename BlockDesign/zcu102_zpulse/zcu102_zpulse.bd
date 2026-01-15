@@ -7,7 +7,7 @@
       "name": "zcu102_zpulse",
       "rev_ctrl_bd_flag": "RevCtrlBdOff",
       "synth_flow_mode": "None",
-      "tool_version": "2024.2",
+      "tool_version": "2025.2",
       "validated": "true"
     },
     "design_tree": {
@@ -117,7 +117,8 @@
       },
       "util_vector_logic_0": "",
       "reset_gpio": "",
-      "smartconnect_0": ""
+      "smartconnect_0": "",
+      "reset_gpio_proc": ""
     },
     "interface_ports": {
       "CLK_IN_300": {
@@ -290,10 +291,11 @@
     "components": {
       "zynq_ultra_ps_e_0": {
         "vlnv": "xilinx.com:ip:zynq_ultra_ps_e:3.5",
-        "ip_revision": "5",
+        "ip_revision": "8",
         "xci_name": "zcu102_zpulse_zynq_ultra_ps_e_0_0",
         "xci_path": "ip/zcu102_zpulse_zynq_ultra_ps_e_0_0/zcu102_zpulse_zynq_ultra_ps_e_0_0.xci",
         "inst_hier_path": "zynq_ultra_ps_e_0",
+        "has_run_ip_tcl": "true",
         "parameters": {
           "CAN0_BOARD_INTERFACE": {
             "value": "custom"
@@ -1351,10 +1353,10 @@
             "value": "IOPLL"
           },
           "PSU__CRF_APB__DBG_TRACE_CTRL__ACT_FREQMHZ": {
-            "value": "250"
+            "value": "125"
           },
           "PSU__CRF_APB__DBG_TRACE_CTRL__FREQMHZ": {
-            "value": "250"
+            "value": "125"
           },
           "PSU__CRF_APB__DBG_TRACE_CTRL__SRCSEL": {
             "value": "IOPLL"
@@ -2855,12 +2857,12 @@
           },
           "PSU__PROTECTION__FPD_SEGMENTS": {
             "value": [
-              "SA:0xFD1A0000; SIZE:1280; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |  SA:0xFD000000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |",
-              " SA:0xFD010000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |  SA:0xFD020000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware | ",
-              "SA:0xFD030000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |  SA:0xFD040000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware | ",
-              "SA:0xFD050000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |  SA:0xFD610000; SIZE:512; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware | ",
-              "SA:0xFD5D0000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware | SA:0xFD1A0000 ; SIZE:1280; UNIT:KB; RegionTZ:Secure ; WrAllowed:Read/Write; subsystemId:Secure",
-              "Subsystem"
+              "SA:0xFD1A0000; SIZE:1280; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware  |   SA:0xFD000000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware",
+              " |   SA:0xFD010000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware  |   SA:0xFD020000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU",
+              "Firmware  |   SA:0xFD030000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware  |   SA:0xFD040000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write;",
+              "subsystemId:PMU Firmware  |   SA:0xFD050000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware  |   SA:0xFD610000; SIZE:512; UNIT:KB; RegionTZ:Secure;",
+              "WrAllowed:Read/Write; subsystemId:PMU Firmware  |   SA:0xFD5D0000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware  |  SA:0xFD1A0000 ; SIZE:1280; UNIT:KB;",
+              "RegionTZ:Secure ; WrAllowed:Read/Write; subsystemId:Secure Subsystem"
             ]
           },
           "PSU__PROTECTION__LPD_SEGMENTS": {
@@ -3389,6 +3391,12 @@
         },
         "interface_ports": {
           "M_AXI_HPM0_FPD": {
+            "bd_attributes": {
+              "TYPE": {
+                "value": "END_POINT",
+                "value_src": "auto"
+              }
+            },
             "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
             "mode": "Master",
             "address_space_ref": "Data",
@@ -3399,6 +3407,12 @@
             }
           },
           "M_AXI_HPM1_FPD": {
+            "bd_attributes": {
+              "TYPE": {
+                "value": "END_POINT",
+                "value_src": "auto"
+              }
+            },
             "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
             "mode": "Master",
             "address_space_ref": "Data",
@@ -3413,7 +3427,7 @@
           "address_spaces": {
             "Data": {
               "range": "1T",
-              "width": "40",
+              "width": "64",
               "local_memory_map": {
                 "name": "Data",
                 "description": "Address Space Segments",
@@ -3494,47 +3508,101 @@
           "S00_AXI": {
             "mode": "Slave",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           },
           "M00_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           },
           "M01_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           },
           "M02_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           },
           "M03_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           },
           "M04_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           },
           "M05_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           },
           "M06_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           },
           "M07_AXI": {
             "mode": "Master",
             "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-            "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "hdl_attributes": {
+              "LOCKED": {
+                "value": "FALSE",
+                "value_src": "default"
+              }
+            }
           }
         },
         "ports": {
@@ -3699,10 +3767,11 @@
         "components": {
           "xbar": {
             "vlnv": "xilinx.com:ip:axi_crossbar:2.1",
-            "ip_revision": "34",
-            "xci_name": "zcu102_zpulse_bram_interconnects_imp_xbar_0",
-            "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_xbar_0/zcu102_zpulse_bram_interconnects_imp_xbar_0.xci",
+            "ip_revision": "38",
+            "xci_name": "zcu102_zpulse_bram_interconnects_upgraded_ipi_imp_xbar_0",
+            "xci_path": "ip/zcu102_zpulse_bram_interconnects_upgraded_ipi_imp_xbar_0/zcu102_zpulse_bram_interconnects_upgraded_ipi_imp_xbar_0.xci",
             "inst_hier_path": "bram_interconnects/xbar",
+            "has_run_ip_tcl": "true",
             "parameters": {
               "NUM_MI": {
                 "value": "8"
@@ -3716,6 +3785,16 @@
             },
             "interface_ports": {
               "S00_AXI": {
+                "bd_attributes": {
+                  "BRIDGES": {
+                    "value": "M00_AXI:M01_AXI:M02_AXI:M03_AXI:M04_AXI:M05_AXI:M06_AXI:M07_AXI",
+                    "value_src": "auto"
+                  },
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                },
                 "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                 "mode": "Slave",
                 "bridges": [
@@ -3728,6 +3807,70 @@
                   "M06_AXI",
                   "M07_AXI"
                 ]
+              },
+              "M00_AXI": {
+                "bd_attributes": {
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                }
+              },
+              "M01_AXI": {
+                "bd_attributes": {
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                }
+              },
+              "M02_AXI": {
+                "bd_attributes": {
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                }
+              },
+              "M03_AXI": {
+                "bd_attributes": {
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                }
+              },
+              "M04_AXI": {
+                "bd_attributes": {
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                }
+              },
+              "M05_AXI": {
+                "bd_attributes": {
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                }
+              },
+              "M06_AXI": {
+                "bd_attributes": {
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                }
+              },
+              "M07_AXI": {
+                "bd_attributes": {
+                  "TYPE": {
+                    "value": "interior",
+                    "value_src": "default"
+                  }
+                }
               }
             }
           },
@@ -3736,12 +3879,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -3792,12 +3947,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -3837,10 +4004,11 @@
             "components": {
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
-                "ip_revision": "33",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_0",
                 "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_auto_ds_0/zcu102_zpulse_bram_interconnects_imp_auto_ds_0.xci",
                 "inst_hier_path": "bram_interconnects/m00_couplers/auto_ds",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "MI_DATA_WIDTH": {
                     "value": "64"
@@ -3851,11 +4019,29 @@
                 },
                 "interface_ports": {
                   "S_AXI": {
+                    "bd_attributes": {
+                      "BRIDGES": {
+                        "value": "M_AXI",
+                        "value_src": "auto"
+                      },
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    },
                     "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                     "mode": "Slave",
                     "bridges": [
                       "M_AXI"
                     ]
+                  },
+                  "M_AXI": {
+                    "bd_attributes": {
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               }
@@ -3894,12 +4080,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -3939,10 +4137,11 @@
             "components": {
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
-                "ip_revision": "33",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_1",
                 "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_auto_ds_1/zcu102_zpulse_bram_interconnects_imp_auto_ds_1.xci",
                 "inst_hier_path": "bram_interconnects/m01_couplers/auto_ds",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "MI_DATA_WIDTH": {
                     "value": "64"
@@ -3953,11 +4152,29 @@
                 },
                 "interface_ports": {
                   "S_AXI": {
+                    "bd_attributes": {
+                      "BRIDGES": {
+                        "value": "M_AXI",
+                        "value_src": "auto"
+                      },
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    },
                     "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                     "mode": "Slave",
                     "bridges": [
                       "M_AXI"
                     ]
+                  },
+                  "M_AXI": {
+                    "bd_attributes": {
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               }
@@ -3996,12 +4213,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -4041,10 +4270,11 @@
             "components": {
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
-                "ip_revision": "33",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_2",
                 "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_auto_ds_2/zcu102_zpulse_bram_interconnects_imp_auto_ds_2.xci",
                 "inst_hier_path": "bram_interconnects/m02_couplers/auto_ds",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "MI_DATA_WIDTH": {
                     "value": "64"
@@ -4055,11 +4285,29 @@
                 },
                 "interface_ports": {
                   "S_AXI": {
+                    "bd_attributes": {
+                      "BRIDGES": {
+                        "value": "M_AXI",
+                        "value_src": "auto"
+                      },
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    },
                     "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                     "mode": "Slave",
                     "bridges": [
                       "M_AXI"
                     ]
+                  },
+                  "M_AXI": {
+                    "bd_attributes": {
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               }
@@ -4098,12 +4346,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -4143,10 +4403,11 @@
             "components": {
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
-                "ip_revision": "33",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_3",
                 "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_auto_ds_3/zcu102_zpulse_bram_interconnects_imp_auto_ds_3.xci",
                 "inst_hier_path": "bram_interconnects/m03_couplers/auto_ds",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "MI_DATA_WIDTH": {
                     "value": "64"
@@ -4157,11 +4418,29 @@
                 },
                 "interface_ports": {
                   "S_AXI": {
+                    "bd_attributes": {
+                      "BRIDGES": {
+                        "value": "M_AXI",
+                        "value_src": "auto"
+                      },
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    },
                     "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                     "mode": "Slave",
                     "bridges": [
                       "M_AXI"
                     ]
+                  },
+                  "M_AXI": {
+                    "bd_attributes": {
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               }
@@ -4200,12 +4479,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -4245,10 +4536,11 @@
             "components": {
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
-                "ip_revision": "33",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_4",
                 "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_auto_ds_4/zcu102_zpulse_bram_interconnects_imp_auto_ds_4.xci",
                 "inst_hier_path": "bram_interconnects/m04_couplers/auto_ds",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "MI_DATA_WIDTH": {
                     "value": "64"
@@ -4259,11 +4551,29 @@
                 },
                 "interface_ports": {
                   "S_AXI": {
+                    "bd_attributes": {
+                      "BRIDGES": {
+                        "value": "M_AXI",
+                        "value_src": "auto"
+                      },
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    },
                     "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                     "mode": "Slave",
                     "bridges": [
                       "M_AXI"
                     ]
+                  },
+                  "M_AXI": {
+                    "bd_attributes": {
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               }
@@ -4302,12 +4612,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -4347,10 +4669,11 @@
             "components": {
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
-                "ip_revision": "33",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_5",
                 "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_auto_ds_5/zcu102_zpulse_bram_interconnects_imp_auto_ds_5.xci",
                 "inst_hier_path": "bram_interconnects/m05_couplers/auto_ds",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "MI_DATA_WIDTH": {
                     "value": "64"
@@ -4361,11 +4684,29 @@
                 },
                 "interface_ports": {
                   "S_AXI": {
+                    "bd_attributes": {
+                      "BRIDGES": {
+                        "value": "M_AXI",
+                        "value_src": "auto"
+                      },
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    },
                     "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                     "mode": "Slave",
                     "bridges": [
                       "M_AXI"
                     ]
+                  },
+                  "M_AXI": {
+                    "bd_attributes": {
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               }
@@ -4404,12 +4745,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -4449,10 +4802,11 @@
             "components": {
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
-                "ip_revision": "33",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_6",
                 "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_auto_ds_6/zcu102_zpulse_bram_interconnects_imp_auto_ds_6.xci",
                 "inst_hier_path": "bram_interconnects/m06_couplers/auto_ds",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "MI_DATA_WIDTH": {
                     "value": "64"
@@ -4463,11 +4817,29 @@
                 },
                 "interface_ports": {
                   "S_AXI": {
+                    "bd_attributes": {
+                      "BRIDGES": {
+                        "value": "M_AXI",
+                        "value_src": "auto"
+                      },
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    },
                     "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                     "mode": "Slave",
                     "bridges": [
                       "M_AXI"
                     ]
+                  },
+                  "M_AXI": {
+                    "bd_attributes": {
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               }
@@ -4506,12 +4878,24 @@
               "M_AXI": {
                 "mode": "Master",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               },
               "S_AXI": {
                 "mode": "Slave",
                 "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
-                "vlnv": "xilinx.com:interface:aximm_rtl:1.0"
+                "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+                "hdl_attributes": {
+                  "LOCKED": {
+                    "value": "FALSE",
+                    "value_src": "default"
+                  }
+                }
               }
             },
             "ports": {
@@ -4551,10 +4935,11 @@
             "components": {
               "auto_ds": {
                 "vlnv": "xilinx.com:ip:axi_dwidth_converter:2.1",
-                "ip_revision": "33",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_bram_interconnects_imp_auto_ds_7",
                 "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_auto_ds_7/zcu102_zpulse_bram_interconnects_imp_auto_ds_7.xci",
                 "inst_hier_path": "bram_interconnects/m07_couplers/auto_ds",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "MI_DATA_WIDTH": {
                     "value": "64"
@@ -4565,11 +4950,29 @@
                 },
                 "interface_ports": {
                   "S_AXI": {
+                    "bd_attributes": {
+                      "BRIDGES": {
+                        "value": "M_AXI",
+                        "value_src": "auto"
+                      },
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    },
                     "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
                     "mode": "Slave",
                     "bridges": [
                       "M_AXI"
                     ]
+                  },
+                  "M_AXI": {
+                    "bd_attributes": {
+                      "TYPE": {
+                        "value": "interior",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               }
@@ -4767,10 +5170,11 @@
       },
       "clk_wiz_0": {
         "vlnv": "xilinx.com:ip:clk_wiz:6.0",
-        "ip_revision": "15",
+        "ip_revision": "17",
         "xci_name": "zcu102_zpulse_clk_wiz_0_0",
         "xci_path": "ip/zcu102_zpulse_clk_wiz_0_0/zcu102_zpulse_clk_wiz_0_0.xci",
         "inst_hier_path": "clk_wiz_0",
+        "has_run_ip_tcl": "true",
         "parameters": {
           "CLKIN1_JITTER_PS": {
             "value": "33.330000000000005"
@@ -4818,17 +5222,19 @@
       },
       "proc_sys_reset_0": {
         "vlnv": "xilinx.com:ip:proc_sys_reset:5.0",
-        "ip_revision": "16",
+        "ip_revision": "17",
         "xci_name": "zcu102_zpulse_proc_sys_reset_0_0",
         "xci_path": "ip/zcu102_zpulse_proc_sys_reset_0_0/zcu102_zpulse_proc_sys_reset_0_0.xci",
-        "inst_hier_path": "proc_sys_reset_0"
+        "inst_hier_path": "proc_sys_reset_0",
+        "has_run_ip_tcl": "true"
       },
       "proc_sys_reset_1": {
         "vlnv": "xilinx.com:ip:proc_sys_reset:5.0",
-        "ip_revision": "16",
+        "ip_revision": "17",
         "xci_name": "zcu102_zpulse_proc_sys_reset_1_0",
         "xci_path": "ip/zcu102_zpulse_proc_sys_reset_1_0/zcu102_zpulse_proc_sys_reset_1_0.xci",
         "inst_hier_path": "proc_sys_reset_1",
+        "has_run_ip_tcl": "true",
         "parameters": {
           "C_AUX_RESET_HIGH": {
             "value": "1"
@@ -4837,10 +5243,11 @@
       },
       "clk_wiz_1": {
         "vlnv": "xilinx.com:ip:clk_wiz:6.0",
-        "ip_revision": "15",
+        "ip_revision": "17",
         "xci_name": "zcu102_zpulse_clk_wiz_1_0",
         "xci_path": "ip/zcu102_zpulse_clk_wiz_1_0/zcu102_zpulse_clk_wiz_1_0.xci",
         "inst_hier_path": "clk_wiz_1",
+        "has_run_ip_tcl": "true",
         "parameters": {
           "CLKIN1_JITTER_PS": {
             "value": "40.0"
@@ -5087,15 +5494,20 @@
             "direction": "O",
             "left": "39",
             "right": "0"
+          },
+          "i_addr_reset": {
+            "type": "rst",
+            "direction": "I"
           }
         },
         "components": {
           "data_concat": {
             "vlnv": "xilinx.com:ip:xlconcat:2.1",
-            "ip_revision": "6",
-            "xci_name": "zcu102_zpulse_xlconcat_0_0",
-            "xci_path": "ip/zcu102_zpulse_xlconcat_0_0/zcu102_zpulse_xlconcat_0_0.xci",
+            "ip_revision": "7",
+            "xci_name": "zcu102_zpulse_data_concat_0",
+            "xci_path": "ip/zcu102_zpulse_data_concat_0/zcu102_zpulse_data_concat_0.xci",
             "inst_hier_path": "tx_channels/data_concat",
+            "has_run_ip_tcl": "true",
             "parameters": {
               "NUM_PORTS": {
                 "value": "8"
@@ -5169,15 +5581,20 @@
                 "direction": "O",
                 "left": "4",
                 "right": "0"
+              },
+              "i_addr_reset": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_channel_ctrl_0_0",
                 "xci_path": "ip/zcu102_zpulse_channel_ctrl_0_0/zcu102_zpulse_channel_ctrl_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/channel_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -5198,10 +5615,11 @@
               },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-                "ip_revision": "9",
+                "ip_revision": "12",
                 "xci_name": "zcu102_zpulse_blk_mem_gen_0_0",
                 "xci_path": "ip/zcu102_zpulse_blk_mem_gen_0_0/zcu102_zpulse_blk_mem_gen_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/blk_mem_gen_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
                     "value": "false"
@@ -5237,16 +5655,27 @@
               },
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
+                "ip_revision": "13",
                 "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_0",
                 "xci_path": "ip/zcu102_zpulse_axi_bram_ctrl_0_0/zcu102_zpulse_axi_bram_ctrl_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/axi_bram_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "DATA_WIDTH": {
                     "value": "64"
                   },
                   "SINGLE_PORT_BRAM": {
                     "value": "1"
+                  }
+                },
+                "interface_ports": {
+                  "S_AXI": {
+                    "bd_attributes": {
+                      "FUNCTION": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               },
@@ -5256,6 +5685,7 @@
                 "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_0",
                 "xci_path": "ip/zcu102_zpulse_BRAM_streamer_data_0_0/zcu102_zpulse_BRAM_streamer_data_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/BRAM_streamer_data_0",
+                "has_run_ip_tcl": "true",
                 "reference_info": {
                   "ref_type": "hdl",
                   "ref_name": "BRAM_streamer_data",
@@ -5354,15 +5784,20 @@
                     "direction": "O",
                     "left": "63",
                     "right": "0"
+                  },
+                  "i_addr_reset": {
+                    "type": "rst",
+                    "direction": "I"
                   }
                 }
               },
               "emphasis_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_emphasis_ctrl_0_0",
                 "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_0/zcu102_zpulse_emphasis_ctrl_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/emphasis_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -5383,13 +5818,17 @@
               },
               "voltage_ctr_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_voltage_ctr_0l_0",
-                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0l_0/zcu102_zpulse_voltage_ctr_0l_0.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_voltage_ctr_0_0",
+                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_0/zcu102_zpulse_voltage_ctr_0_0.xci",
                 "inst_hier_path": "tx_channels/tx_channel_1/voltage_ctr_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
+                  },
+                  "C_DOUT_DEFAULT": {
+                    "value": "0x000000FF"
                   },
                   "C_GPIO_WIDTH": {
                     "value": "5"
@@ -5467,6 +5906,12 @@
                 "ports": [
                   "emphasis_ctrl_0/gpio_io_o",
                   "gpio_io_o"
+                ]
+              },
+              "i_addr_reset_1": {
+                "ports": [
+                  "i_addr_reset",
+                  "BRAM_streamer_data_0/i_addr_reset"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -5571,15 +6016,20 @@
                 "direction": "O",
                 "left": "4",
                 "right": "0"
+              },
+              "i_addr_reset": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_channel_ctrl_0_1",
                 "xci_path": "ip/zcu102_zpulse_channel_ctrl_0_1/zcu102_zpulse_channel_ctrl_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/channel_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -5600,10 +6050,11 @@
               },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-                "ip_revision": "9",
+                "ip_revision": "12",
                 "xci_name": "zcu102_zpulse_blk_mem_gen_0_1",
                 "xci_path": "ip/zcu102_zpulse_blk_mem_gen_0_1/zcu102_zpulse_blk_mem_gen_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/blk_mem_gen_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
                     "value": "false"
@@ -5639,16 +6090,27 @@
               },
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
+                "ip_revision": "13",
                 "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_1",
                 "xci_path": "ip/zcu102_zpulse_axi_bram_ctrl_0_1/zcu102_zpulse_axi_bram_ctrl_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/axi_bram_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "DATA_WIDTH": {
                     "value": "64"
                   },
                   "SINGLE_PORT_BRAM": {
                     "value": "1"
+                  }
+                },
+                "interface_ports": {
+                  "S_AXI": {
+                    "bd_attributes": {
+                      "FUNCTION": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               },
@@ -5658,6 +6120,7 @@
                 "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_1",
                 "xci_path": "ip/zcu102_zpulse_BRAM_streamer_data_0_1/zcu102_zpulse_BRAM_streamer_data_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/BRAM_streamer_data_0",
+                "has_run_ip_tcl": "true",
                 "reference_info": {
                   "ref_type": "hdl",
                   "ref_name": "BRAM_streamer_data",
@@ -5756,15 +6219,20 @@
                     "direction": "O",
                     "left": "63",
                     "right": "0"
+                  },
+                  "i_addr_reset": {
+                    "type": "rst",
+                    "direction": "I"
                   }
                 }
               },
               "emphasis_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_axi_gpio_0_1",
-                "xci_path": "ip/zcu102_zpulse_axi_gpio_0_1/zcu102_zpulse_axi_gpio_0_1.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_1",
+                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_1/zcu102_zpulse_emphasis_ctrl_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/emphasis_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -5785,13 +6253,17 @@
               },
               "voltage_ctr_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_emphasis_ctrl_0",
-                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0/zcu102_zpulse_emphasis_ctrl_0.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_voltage_ctr_0_1",
+                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_1/zcu102_zpulse_voltage_ctr_0_1.xci",
                 "inst_hier_path": "tx_channels/tx_channel_0/voltage_ctr_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
+                  },
+                  "C_DOUT_DEFAULT": {
+                    "value": "0x000000FF"
                   },
                   "C_GPIO_WIDTH": {
                     "value": "5"
@@ -5871,6 +6343,12 @@
                   "gpio_io_o"
                 ]
               },
+              "i_addr_reset_1": {
+                "ports": [
+                  "i_addr_reset",
+                  "BRAM_streamer_data_0/i_addr_reset"
+                ]
+              },
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
@@ -5882,8 +6360,8 @@
                   "s_axi_aresetn",
                   "axi_bram_ctrl_0/s_axi_aresetn",
                   "channel_ctrl_0/s_axi_aresetn",
-                  "voltage_ctr_0/s_axi_aresetn",
-                  "emphasis_ctrl_0/s_axi_aresetn"
+                  "emphasis_ctrl_0/s_axi_aresetn",
+                  "voltage_ctr_0/s_axi_aresetn"
                 ]
               },
               "s_axi_aclk_0_1": {
@@ -5903,8 +6381,8 @@
                   "s_axi_aclk",
                   "axi_bram_ctrl_0/s_axi_aclk",
                   "channel_ctrl_0/s_axi_aclk",
-                  "voltage_ctr_0/s_axi_aclk",
-                  "emphasis_ctrl_0/s_axi_aclk"
+                  "emphasis_ctrl_0/s_axi_aclk",
+                  "voltage_ctr_0/s_axi_aclk"
                 ]
               }
             }
@@ -5973,15 +6451,20 @@
                 "direction": "O",
                 "left": "4",
                 "right": "0"
+              },
+              "i_addr_reset": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_channel_ctrl_0_2",
                 "xci_path": "ip/zcu102_zpulse_channel_ctrl_0_2/zcu102_zpulse_channel_ctrl_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/channel_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -6002,10 +6485,11 @@
               },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-                "ip_revision": "9",
+                "ip_revision": "12",
                 "xci_name": "zcu102_zpulse_blk_mem_gen_0_2",
                 "xci_path": "ip/zcu102_zpulse_blk_mem_gen_0_2/zcu102_zpulse_blk_mem_gen_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/blk_mem_gen_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
                     "value": "false"
@@ -6041,16 +6525,27 @@
               },
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
+                "ip_revision": "13",
                 "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_2",
                 "xci_path": "ip/zcu102_zpulse_axi_bram_ctrl_0_2/zcu102_zpulse_axi_bram_ctrl_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/axi_bram_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "DATA_WIDTH": {
                     "value": "64"
                   },
                   "SINGLE_PORT_BRAM": {
                     "value": "1"
+                  }
+                },
+                "interface_ports": {
+                  "S_AXI": {
+                    "bd_attributes": {
+                      "FUNCTION": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               },
@@ -6060,6 +6555,7 @@
                 "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_2",
                 "xci_path": "ip/zcu102_zpulse_BRAM_streamer_data_0_2/zcu102_zpulse_BRAM_streamer_data_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/BRAM_streamer_data_0",
+                "has_run_ip_tcl": "true",
                 "reference_info": {
                   "ref_type": "hdl",
                   "ref_name": "BRAM_streamer_data",
@@ -6158,15 +6654,20 @@
                     "direction": "O",
                     "left": "63",
                     "right": "0"
+                  },
+                  "i_addr_reset": {
+                    "type": "rst",
+                    "direction": "I"
                   }
                 }
               },
               "emphasis_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_1",
-                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_1/zcu102_zpulse_emphasis_ctrl_0_1.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_2",
+                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_2/zcu102_zpulse_emphasis_ctrl_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/emphasis_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -6187,13 +6688,17 @@
               },
               "voltage_ctr_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_voltage_ctr_0l_1",
-                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0l_1/zcu102_zpulse_voltage_ctr_0l_1.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_voltage_ctr_0_2",
+                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_2/zcu102_zpulse_voltage_ctr_0_2.xci",
                 "inst_hier_path": "tx_channels/tx_channel_2/voltage_ctr_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
+                  },
+                  "C_DOUT_DEFAULT": {
+                    "value": "0x000000FF"
                   },
                   "C_GPIO_WIDTH": {
                     "value": "5"
@@ -6271,6 +6776,12 @@
                 "ports": [
                   "emphasis_ctrl_0/gpio_io_o",
                   "gpio_io_o"
+                ]
+              },
+              "i_addr_reset_1": {
+                "ports": [
+                  "i_addr_reset",
+                  "BRAM_streamer_data_0/i_addr_reset"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -6375,15 +6886,20 @@
                 "direction": "O",
                 "left": "4",
                 "right": "0"
+              },
+              "i_addr_reset": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_channel_ctrl_0_3",
                 "xci_path": "ip/zcu102_zpulse_channel_ctrl_0_3/zcu102_zpulse_channel_ctrl_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/channel_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -6404,10 +6920,11 @@
               },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-                "ip_revision": "9",
+                "ip_revision": "12",
                 "xci_name": "zcu102_zpulse_blk_mem_gen_0_3",
                 "xci_path": "ip/zcu102_zpulse_blk_mem_gen_0_3/zcu102_zpulse_blk_mem_gen_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/blk_mem_gen_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
                     "value": "false"
@@ -6443,16 +6960,27 @@
               },
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
+                "ip_revision": "13",
                 "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_3",
                 "xci_path": "ip/zcu102_zpulse_axi_bram_ctrl_0_3/zcu102_zpulse_axi_bram_ctrl_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/axi_bram_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "DATA_WIDTH": {
                     "value": "64"
                   },
                   "SINGLE_PORT_BRAM": {
                     "value": "1"
+                  }
+                },
+                "interface_ports": {
+                  "S_AXI": {
+                    "bd_attributes": {
+                      "FUNCTION": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               },
@@ -6462,6 +6990,7 @@
                 "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_3",
                 "xci_path": "ip/zcu102_zpulse_BRAM_streamer_data_0_3/zcu102_zpulse_BRAM_streamer_data_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/BRAM_streamer_data_0",
+                "has_run_ip_tcl": "true",
                 "reference_info": {
                   "ref_type": "hdl",
                   "ref_name": "BRAM_streamer_data",
@@ -6560,15 +7089,20 @@
                     "direction": "O",
                     "left": "63",
                     "right": "0"
+                  },
+                  "i_addr_reset": {
+                    "type": "rst",
+                    "direction": "I"
                   }
                 }
               },
               "emphasis_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_2",
-                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_2/zcu102_zpulse_emphasis_ctrl_0_2.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_3",
+                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_3/zcu102_zpulse_emphasis_ctrl_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/emphasis_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -6589,13 +7123,17 @@
               },
               "voltage_ctr_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_voltage_ctr_0l_2",
-                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0l_2/zcu102_zpulse_voltage_ctr_0l_2.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_voltage_ctr_0_3",
+                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_3/zcu102_zpulse_voltage_ctr_0_3.xci",
                 "inst_hier_path": "tx_channels/tx_channel_3/voltage_ctr_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
+                  },
+                  "C_DOUT_DEFAULT": {
+                    "value": "0x000000FF"
                   },
                   "C_GPIO_WIDTH": {
                     "value": "5"
@@ -6673,6 +7211,12 @@
                 "ports": [
                   "emphasis_ctrl_0/gpio_io_o",
                   "gpio_io_o"
+                ]
+              },
+              "i_addr_reset_1": {
+                "ports": [
+                  "i_addr_reset",
+                  "BRAM_streamer_data_0/i_addr_reset"
                 ]
               },
               "proc_sys_reset_1_peripheral_aresetn": {
@@ -6777,15 +7321,20 @@
                 "direction": "O",
                 "left": "4",
                 "right": "0"
+              },
+              "i_addr_reset": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_channel_ctrl_0_4",
                 "xci_path": "ip/zcu102_zpulse_channel_ctrl_0_4/zcu102_zpulse_channel_ctrl_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/channel_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -6806,10 +7355,11 @@
               },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-                "ip_revision": "9",
+                "ip_revision": "12",
                 "xci_name": "zcu102_zpulse_blk_mem_gen_0_4",
                 "xci_path": "ip/zcu102_zpulse_blk_mem_gen_0_4/zcu102_zpulse_blk_mem_gen_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/blk_mem_gen_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
                     "value": "false"
@@ -6845,16 +7395,27 @@
               },
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
+                "ip_revision": "13",
                 "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_4",
                 "xci_path": "ip/zcu102_zpulse_axi_bram_ctrl_0_4/zcu102_zpulse_axi_bram_ctrl_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/axi_bram_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "DATA_WIDTH": {
                     "value": "64"
                   },
                   "SINGLE_PORT_BRAM": {
                     "value": "1"
+                  }
+                },
+                "interface_ports": {
+                  "S_AXI": {
+                    "bd_attributes": {
+                      "FUNCTION": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               },
@@ -6864,6 +7425,7 @@
                 "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_4",
                 "xci_path": "ip/zcu102_zpulse_BRAM_streamer_data_0_4/zcu102_zpulse_BRAM_streamer_data_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/BRAM_streamer_data_0",
+                "has_run_ip_tcl": "true",
                 "reference_info": {
                   "ref_type": "hdl",
                   "ref_name": "BRAM_streamer_data",
@@ -6962,15 +7524,20 @@
                     "direction": "O",
                     "left": "63",
                     "right": "0"
+                  },
+                  "i_addr_reset": {
+                    "type": "rst",
+                    "direction": "I"
                   }
                 }
               },
               "emphasis_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_3",
-                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_3/zcu102_zpulse_emphasis_ctrl_0_3.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_4",
+                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_4/zcu102_zpulse_emphasis_ctrl_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/emphasis_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -6991,13 +7558,17 @@
               },
               "voltage_ctr_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_voltage_ctr_0_0",
-                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_0/zcu102_zpulse_voltage_ctr_0_0.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_voltage_ctr_0_4",
+                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_4/zcu102_zpulse_voltage_ctr_0_4.xci",
                 "inst_hier_path": "tx_channels/tx_channel_4/voltage_ctr_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
+                  },
+                  "C_DOUT_DEFAULT": {
+                    "value": "0x000000FF"
                   },
                   "C_GPIO_WIDTH": {
                     "value": "5"
@@ -7077,6 +7648,12 @@
                   "gpio_io_o"
                 ]
               },
+              "i_addr_reset_1": {
+                "ports": [
+                  "i_addr_reset",
+                  "BRAM_streamer_data_0/i_addr_reset"
+                ]
+              },
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
@@ -7109,8 +7686,8 @@
                   "s_axi_aclk",
                   "axi_bram_ctrl_0/s_axi_aclk",
                   "channel_ctrl_0/s_axi_aclk",
-                  "voltage_ctr_0/s_axi_aclk",
-                  "emphasis_ctrl_0/s_axi_aclk"
+                  "emphasis_ctrl_0/s_axi_aclk",
+                  "voltage_ctr_0/s_axi_aclk"
                 ]
               }
             }
@@ -7179,15 +7756,20 @@
                 "direction": "O",
                 "left": "4",
                 "right": "0"
+              },
+              "i_addr_reset": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_channel_ctrl_0_5",
                 "xci_path": "ip/zcu102_zpulse_channel_ctrl_0_5/zcu102_zpulse_channel_ctrl_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/channel_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -7208,10 +7790,11 @@
               },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-                "ip_revision": "9",
+                "ip_revision": "12",
                 "xci_name": "zcu102_zpulse_blk_mem_gen_0_5",
                 "xci_path": "ip/zcu102_zpulse_blk_mem_gen_0_5/zcu102_zpulse_blk_mem_gen_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/blk_mem_gen_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
                     "value": "false"
@@ -7247,16 +7830,27 @@
               },
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
+                "ip_revision": "13",
                 "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_5",
                 "xci_path": "ip/zcu102_zpulse_axi_bram_ctrl_0_5/zcu102_zpulse_axi_bram_ctrl_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/axi_bram_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "DATA_WIDTH": {
                     "value": "64"
                   },
                   "SINGLE_PORT_BRAM": {
                     "value": "1"
+                  }
+                },
+                "interface_ports": {
+                  "S_AXI": {
+                    "bd_attributes": {
+                      "FUNCTION": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               },
@@ -7266,6 +7860,7 @@
                 "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_5",
                 "xci_path": "ip/zcu102_zpulse_BRAM_streamer_data_0_5/zcu102_zpulse_BRAM_streamer_data_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/BRAM_streamer_data_0",
+                "has_run_ip_tcl": "true",
                 "reference_info": {
                   "ref_type": "hdl",
                   "ref_name": "BRAM_streamer_data",
@@ -7364,15 +7959,20 @@
                     "direction": "O",
                     "left": "63",
                     "right": "0"
+                  },
+                  "i_addr_reset": {
+                    "type": "rst",
+                    "direction": "I"
                   }
                 }
               },
               "emphasis_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_4",
-                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_4/zcu102_zpulse_emphasis_ctrl_0_4.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_5",
+                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_5/zcu102_zpulse_emphasis_ctrl_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/emphasis_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -7393,13 +7993,17 @@
               },
               "voltage_ctr_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_voltage_ctr_0_1",
-                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_1/zcu102_zpulse_voltage_ctr_0_1.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_voltage_ctr_0_5",
+                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_5/zcu102_zpulse_voltage_ctr_0_5.xci",
                 "inst_hier_path": "tx_channels/tx_channel_5/voltage_ctr_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
+                  },
+                  "C_DOUT_DEFAULT": {
+                    "value": "0x000000FF"
                   },
                   "C_GPIO_WIDTH": {
                     "value": "5"
@@ -7477,6 +8081,12 @@
                 "ports": [
                   "emphasis_ctrl_0/gpio_io_o",
                   "gpio_io_o"
+                ]
+              },
+              "i_addr_reset_1": {
+                "ports": [
+                  "i_addr_reset",
+                  "BRAM_streamer_data_0/i_addr_reset"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -7581,15 +8191,20 @@
                 "direction": "O",
                 "left": "4",
                 "right": "0"
+              },
+              "i_addr_reset": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_channel_ctrl_0_6",
                 "xci_path": "ip/zcu102_zpulse_channel_ctrl_0_6/zcu102_zpulse_channel_ctrl_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/channel_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -7610,10 +8225,11 @@
               },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-                "ip_revision": "9",
+                "ip_revision": "12",
                 "xci_name": "zcu102_zpulse_blk_mem_gen_0_6",
                 "xci_path": "ip/zcu102_zpulse_blk_mem_gen_0_6/zcu102_zpulse_blk_mem_gen_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/blk_mem_gen_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
                     "value": "false"
@@ -7649,16 +8265,27 @@
               },
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
+                "ip_revision": "13",
                 "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_6",
                 "xci_path": "ip/zcu102_zpulse_axi_bram_ctrl_0_6/zcu102_zpulse_axi_bram_ctrl_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/axi_bram_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "DATA_WIDTH": {
                     "value": "64"
                   },
                   "SINGLE_PORT_BRAM": {
                     "value": "1"
+                  }
+                },
+                "interface_ports": {
+                  "S_AXI": {
+                    "bd_attributes": {
+                      "FUNCTION": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               },
@@ -7668,6 +8295,7 @@
                 "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_6",
                 "xci_path": "ip/zcu102_zpulse_BRAM_streamer_data_0_6/zcu102_zpulse_BRAM_streamer_data_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/BRAM_streamer_data_0",
+                "has_run_ip_tcl": "true",
                 "reference_info": {
                   "ref_type": "hdl",
                   "ref_name": "BRAM_streamer_data",
@@ -7766,15 +8394,20 @@
                     "direction": "O",
                     "left": "63",
                     "right": "0"
+                  },
+                  "i_addr_reset": {
+                    "type": "rst",
+                    "direction": "I"
                   }
                 }
               },
               "emphasis_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_5",
-                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_5/zcu102_zpulse_emphasis_ctrl_0_5.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_6",
+                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_6/zcu102_zpulse_emphasis_ctrl_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/emphasis_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -7795,13 +8428,17 @@
               },
               "voltage_ctr_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_voltage_ctr_0_2",
-                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_2/zcu102_zpulse_voltage_ctr_0_2.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_voltage_ctr_0_6",
+                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_6/zcu102_zpulse_voltage_ctr_0_6.xci",
                 "inst_hier_path": "tx_channels/tx_channel_6/voltage_ctr_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
+                  },
+                  "C_DOUT_DEFAULT": {
+                    "value": "0x000000FF"
                   },
                   "C_GPIO_WIDTH": {
                     "value": "5"
@@ -7879,6 +8516,12 @@
                 "ports": [
                   "emphasis_ctrl_0/gpio_io_o",
                   "gpio_io_o"
+                ]
+              },
+              "i_addr_reset_1": {
+                "ports": [
+                  "i_addr_reset",
+                  "BRAM_streamer_data_0/i_addr_reset"
                 ]
               },
               "proc_sys_reset_0_peripheral_aresetn": {
@@ -7983,15 +8626,20 @@
                 "direction": "O",
                 "left": "4",
                 "right": "0"
+              },
+              "i_addr_reset": {
+                "type": "rst",
+                "direction": "I"
               }
             },
             "components": {
               "channel_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
+                "ip_revision": "37",
                 "xci_name": "zcu102_zpulse_channel_ctrl_0_7",
                 "xci_path": "ip/zcu102_zpulse_channel_ctrl_0_7/zcu102_zpulse_channel_ctrl_0_7.xci",
                 "inst_hier_path": "tx_channels/tx_channel_7/channel_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -8012,16 +8660,27 @@
               },
               "axi_bram_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_bram_ctrl:4.1",
-                "ip_revision": "11",
+                "ip_revision": "13",
                 "xci_name": "zcu102_zpulse_axi_bram_ctrl_0_7",
                 "xci_path": "ip/zcu102_zpulse_axi_bram_ctrl_0_7/zcu102_zpulse_axi_bram_ctrl_0_7.xci",
                 "inst_hier_path": "tx_channels/tx_channel_7/axi_bram_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "DATA_WIDTH": {
                     "value": "64"
                   },
                   "SINGLE_PORT_BRAM": {
                     "value": "1"
+                  }
+                },
+                "interface_ports": {
+                  "S_AXI": {
+                    "bd_attributes": {
+                      "FUNCTION": {
+                        "value": "BRAM_CTRL",
+                        "value_src": "default"
+                      }
+                    }
                   }
                 }
               },
@@ -8031,6 +8690,7 @@
                 "xci_name": "zcu102_zpulse_BRAM_streamer_data_0_7",
                 "xci_path": "ip/zcu102_zpulse_BRAM_streamer_data_0_7/zcu102_zpulse_BRAM_streamer_data_0_7.xci",
                 "inst_hier_path": "tx_channels/tx_channel_7/BRAM_streamer_data_0",
+                "has_run_ip_tcl": "true",
                 "reference_info": {
                   "ref_type": "hdl",
                   "ref_name": "BRAM_streamer_data",
@@ -8129,15 +8789,20 @@
                     "direction": "O",
                     "left": "63",
                     "right": "0"
+                  },
+                  "i_addr_reset": {
+                    "type": "rst",
+                    "direction": "I"
                   }
                 }
               },
               "blk_mem_gen_0": {
                 "vlnv": "xilinx.com:ip:blk_mem_gen:8.4",
-                "ip_revision": "9",
+                "ip_revision": "12",
                 "xci_name": "zcu102_zpulse_blk_mem_gen_0_7",
                 "xci_path": "ip/zcu102_zpulse_blk_mem_gen_0_7/zcu102_zpulse_blk_mem_gen_0_7.xci",
                 "inst_hier_path": "tx_channels/tx_channel_7/blk_mem_gen_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "Assume_Synchronous_Clk": {
                     "value": "false"
@@ -8173,10 +8838,11 @@
               },
               "emphasis_ctrl_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_6",
-                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_6/zcu102_zpulse_emphasis_ctrl_0_6.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_emphasis_ctrl_0_7",
+                "xci_path": "ip/zcu102_zpulse_emphasis_ctrl_0_7/zcu102_zpulse_emphasis_ctrl_0_7.xci",
                 "inst_hier_path": "tx_channels/tx_channel_7/emphasis_ctrl_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
@@ -8197,13 +8863,17 @@
               },
               "voltage_ctr_0": {
                 "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-                "ip_revision": "35",
-                "xci_name": "zcu102_zpulse_voltage_ctr_0_3",
-                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_3/zcu102_zpulse_voltage_ctr_0_3.xci",
+                "ip_revision": "37",
+                "xci_name": "zcu102_zpulse_voltage_ctr_0_7",
+                "xci_path": "ip/zcu102_zpulse_voltage_ctr_0_7/zcu102_zpulse_voltage_ctr_0_7.xci",
                 "inst_hier_path": "tx_channels/tx_channel_7/voltage_ctr_0",
+                "has_run_ip_tcl": "true",
                 "parameters": {
                   "C_ALL_OUTPUTS": {
                     "value": "1"
+                  },
+                  "C_DOUT_DEFAULT": {
+                    "value": "0x000000FF"
                   },
                   "C_GPIO_WIDTH": {
                     "value": "5"
@@ -8283,6 +8953,12 @@
                   "gpio_io_o"
                 ]
               },
+              "i_addr_reset_1": {
+                "ports": [
+                  "i_addr_reset",
+                  "BRAM_streamer_data_0/i_addr_reset"
+                ]
+              },
               "proc_sys_reset_0_peripheral_aresetn": {
                 "ports": [
                   "s_axi_aresetn1",
@@ -8323,49 +8999,65 @@
           },
           "txinhibit_concat": {
             "vlnv": "xilinx.com:ip:xlconcat:2.1",
-            "ip_revision": "6",
-            "xci_name": "zcu102_zpulse_xlconcat_1_0",
-            "xci_path": "ip/zcu102_zpulse_xlconcat_1_0/zcu102_zpulse_xlconcat_1_0.xci",
+            "ip_revision": "7",
+            "xci_name": "zcu102_zpulse_txinhibit_concat_0",
+            "xci_path": "ip/zcu102_zpulse_txinhibit_concat_0/zcu102_zpulse_txinhibit_concat_0.xci",
             "inst_hier_path": "tx_channels/txinhibit_concat",
+            "has_run_ip_tcl": "true",
             "parameters": {
               "NUM_PORTS": {
+                "value": "8"
+              },
+              "dout_width": {
                 "value": "8"
               }
             }
           },
           "preemph_concat": {
             "vlnv": "xilinx.com:ip:xlconcat:2.1",
-            "ip_revision": "6",
-            "xci_name": "zcu102_zpulse_xlconcat_0_1",
-            "xci_path": "ip/zcu102_zpulse_xlconcat_0_1/zcu102_zpulse_xlconcat_0_1.xci",
+            "ip_revision": "7",
+            "xci_name": "zcu102_zpulse_preemph_concat_0",
+            "xci_path": "ip/zcu102_zpulse_preemph_concat_0/zcu102_zpulse_preemph_concat_0.xci",
             "inst_hier_path": "tx_channels/preemph_concat",
+            "has_run_ip_tcl": "true",
             "parameters": {
               "NUM_PORTS": {
                 "value": "8"
+              },
+              "dout_width": {
+                "value": "40"
               }
             }
           },
           "amp_concat": {
             "vlnv": "xilinx.com:ip:xlconcat:2.1",
-            "ip_revision": "6",
-            "xci_name": "zcu102_zpulse_preemph_concat_0",
-            "xci_path": "ip/zcu102_zpulse_preemph_concat_0/zcu102_zpulse_preemph_concat_0.xci",
+            "ip_revision": "7",
+            "xci_name": "zcu102_zpulse_amp_concat_0",
+            "xci_path": "ip/zcu102_zpulse_amp_concat_0/zcu102_zpulse_amp_concat_0.xci",
             "inst_hier_path": "tx_channels/amp_concat",
+            "has_run_ip_tcl": "true",
             "parameters": {
               "NUM_PORTS": {
                 "value": "8"
+              },
+              "dout_width": {
+                "value": "40"
               }
             }
           },
           "postemph_concat": {
             "vlnv": "xilinx.com:ip:xlconcat:2.1",
-            "ip_revision": "6",
-            "xci_name": "zcu102_zpulse_preemph_concat_1_0",
-            "xci_path": "ip/zcu102_zpulse_preemph_concat_1_0/zcu102_zpulse_preemph_concat_1_0.xci",
+            "ip_revision": "7",
+            "xci_name": "zcu102_zpulse_postemph_concat_0",
+            "xci_path": "ip/zcu102_zpulse_postemph_concat_0/zcu102_zpulse_postemph_concat_0.xci",
             "inst_hier_path": "tx_channels/postemph_concat",
+            "has_run_ip_tcl": "true",
             "parameters": {
               "NUM_PORTS": {
                 "value": "8"
+              },
+              "dout_width": {
+                "value": "40"
               }
             }
           }
@@ -8569,6 +9261,19 @@
             "ports": [
               "amp_concat/dout",
               "dout_1"
+            ]
+          },
+          "i_addr_reset_1": {
+            "ports": [
+              "i_addr_reset",
+              "tx_channel_3/i_addr_reset",
+              "tx_channel_2/i_addr_reset",
+              "tx_channel_1/i_addr_reset",
+              "tx_channel_4/i_addr_reset",
+              "tx_channel_5/i_addr_reset",
+              "tx_channel_6/i_addr_reset",
+              "tx_channel_7/i_addr_reset",
+              "tx_channel_0/i_addr_reset"
             ]
           },
           "postemph_concat_dout": {
@@ -8891,10 +9596,11 @@
       },
       "util_vector_logic_0": {
         "vlnv": "xilinx.com:ip:util_vector_logic:2.0",
-        "ip_revision": "4",
+        "ip_revision": "5",
         "xci_name": "zcu102_zpulse_util_vector_logic_0_0",
         "xci_path": "ip/zcu102_zpulse_util_vector_logic_0_0/zcu102_zpulse_util_vector_logic_0_0.xci",
         "inst_hier_path": "util_vector_logic_0",
+        "has_run_ip_tcl": "true",
         "parameters": {
           "C_OPERATION": {
             "value": "not"
@@ -8903,10 +9609,11 @@
       },
       "reset_gpio": {
         "vlnv": "xilinx.com:ip:axi_gpio:2.0",
-        "ip_revision": "35",
+        "ip_revision": "37",
         "xci_name": "zcu102_zpulse_reset_gpio_0",
         "xci_path": "ip/zcu102_zpulse_reset_gpio_0/zcu102_zpulse_reset_gpio_0.xci",
         "inst_hier_path": "reset_gpio",
+        "has_run_ip_tcl": "true",
         "parameters": {
           "C_ALL_OUTPUTS": {
             "value": "1"
@@ -8918,13 +9625,14 @@
       },
       "smartconnect_0": {
         "vlnv": "xilinx.com:ip:smartconnect:1.0",
-        "ip_revision": "25",
+        "ip_revision": "28",
         "xci_name": "zcu102_zpulse_smartconnect_0_0",
         "xci_path": "ip/zcu102_zpulse_smartconnect_0_0/zcu102_zpulse_smartconnect_0_0.xci",
         "inst_hier_path": "smartconnect_0",
+        "has_run_ip_tcl": "true",
         "parameters": {
           "NUM_MI": {
-            "value": "25"
+            "value": "26"
           },
           "NUM_SI": {
             "value": "1"
@@ -8968,8 +9676,19 @@
               "M21_AXI",
               "M22_AXI",
               "M23_AXI",
-              "M24_AXI"
-            ]
+              "M24_AXI",
+              "M25_AXI"
+            ],
+            "bd_attributes": {
+              "BRIDGES": {
+                "value": "M00_AXI:M01_AXI:M02_AXI:M03_AXI:M04_AXI:M05_AXI:M06_AXI:M07_AXI:M08_AXI:M09_AXI:M10_AXI:M11_AXI:M12_AXI:M13_AXI:M14_AXI:M15_AXI:M16_AXI:M17_AXI:M18_AXI:M19_AXI:M20_AXI:M21_AXI:M22_AXI:M23_AXI:M24_AXI:M25_AXI",
+                "value_src": "auto"
+              },
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
+            }
           },
           "M00_AXI": {
             "mode": "Master",
@@ -8993,6 +9712,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9019,6 +9744,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M02_AXI": {
@@ -9043,6 +9774,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9069,6 +9806,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M04_AXI": {
@@ -9093,6 +9836,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9119,6 +9868,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M06_AXI": {
@@ -9143,6 +9898,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9169,6 +9930,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M08_AXI": {
@@ -9193,6 +9960,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9219,6 +9992,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M10_AXI": {
@@ -9243,6 +10022,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9269,6 +10054,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M12_AXI": {
@@ -9293,6 +10084,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9319,6 +10116,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M14_AXI": {
@@ -9343,6 +10146,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9369,6 +10178,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M16_AXI": {
@@ -9393,6 +10208,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9419,6 +10240,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M18_AXI": {
@@ -9443,6 +10270,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9469,6 +10302,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M20_AXI": {
@@ -9493,6 +10332,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9519,6 +10364,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M22_AXI": {
@@ -9543,6 +10394,12 @@
               },
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
               }
             }
           },
@@ -9569,6 +10426,12 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
           },
           "M24_AXI": {
@@ -9594,7 +10457,60 @@
               "WUSER_BITS_PER_BYTE": {
                 "value": "0"
               }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
             }
+          },
+          "M25_AXI": {
+            "mode": "Master",
+            "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
+            "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+            "parameters": {
+              "NUM_READ_OUTSTANDING": {
+                "value": "8"
+              },
+              "NUM_READ_THREADS": {
+                "value": "1"
+              },
+              "NUM_WRITE_OUTSTANDING": {
+                "value": "8"
+              },
+              "NUM_WRITE_THREADS": {
+                "value": "1"
+              },
+              "RUSER_BITS_PER_BYTE": {
+                "value": "0"
+              },
+              "WUSER_BITS_PER_BYTE": {
+                "value": "0"
+              }
+            },
+            "bd_attributes": {
+              "TYPE": {
+                "value": "interior",
+                "value_src": "default"
+              }
+            }
+          }
+        }
+      },
+      "reset_gpio_proc": {
+        "vlnv": "xilinx.com:ip:axi_gpio:2.0",
+        "ip_revision": "37",
+        "xci_name": "zcu102_zpulse_reset_gpio_1",
+        "xci_path": "ip/zcu102_zpulse_reset_gpio_1/zcu102_zpulse_reset_gpio_1.xci",
+        "inst_hier_path": "reset_gpio_proc",
+        "has_run_ip_tcl": "true",
+        "parameters": {
+          "C_ALL_OUTPUTS": {
+            "value": "1"
+          },
+          "C_GPIO_WIDTH": {
+            "value": "1"
           }
         }
       }
@@ -9804,6 +10720,12 @@
           "smartconnect_0/M24_AXI"
         ]
       },
+      "smartconnect_0_M25_AXI": {
+        "interface_ports": [
+          "smartconnect_0/M25_AXI",
+          "reset_gpio_proc/S_AXI"
+        ]
+      },
       "zynq_ultra_ps_e_0_M_AXI_HPM0_FPD": {
         "interface_ports": [
           "zynq_ultra_ps_e_0/M_AXI_HPM0_FPD",
@@ -9858,12 +10780,19 @@
           "bram_interconnects/M07_ARESETN",
           "proc_sys_reset_0/ext_reset_in",
           "reset_gpio/s_axi_aresetn",
-          "smartconnect_0/aresetn"
+          "smartconnect_0/aresetn",
+          "reset_gpio_proc/s_axi_aresetn"
         ]
       },
       "reset_gpio_gpio_io_o": {
         "ports": [
           "reset_gpio/gpio_io_o",
+          "tx_channels/i_addr_reset"
+        ]
+      },
+      "reset_gpio_proc_gpio_io_o": {
+        "ports": [
+          "reset_gpio_proc/gpio_io_o",
           "proc_sys_reset_1/aux_reset_in"
         ]
       },
@@ -9926,10 +10855,11 @@
           "bram_interconnects/M06_ACLK",
           "bram_interconnects/M07_ACLK",
           "proc_sys_reset_1/slowest_sync_clk",
+          "reset_gpio/s_axi_aclk",
+          "smartconnect_0/aclk",
           "zynq_ultra_ps_e_0/maxihpm0_fpd_aclk",
           "zynq_ultra_ps_e_0/maxihpm1_fpd_aclk",
-          "reset_gpio/s_axi_aclk",
-          "smartconnect_0/aclk"
+          "reset_gpio_proc/s_axi_aclk"
         ]
       },
       "zynq_ultra_ps_e_0_pl_resetn0": {
