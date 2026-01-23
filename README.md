@@ -160,7 +160,8 @@ sudo systemctl enable si570-mgt-10mhz.service
 ```
 These steps will set the frequency of your Si570 oscillator to 100 MHz, and can be changed by modifying the ```TARGET_FOUT``` parameter on the C code if a different frequency is required. With the correct frequency set, the GUI can finally be executed.
 
-To start the zPulse GUI, just run the only cell present in zPulse_GUI.ipynb. From within the GUI, you can control everything you need, from pulse width, pulse offset, number of pulses, and overall waveform period.
+To start the zPulse GUI, just run the only cell present in zPulse_GUI.ipynb. From within the GUI, you can control everything you need, from pulse width, pulse offset, number of pulses, and overall waveform period. At runtime, you will be prompted to select from a list of bitstreams (every .hwh file within the Bitstreams folder). The resolution will be automatically selected from the value after the underscore on the bitstream filename (meaning zPulse_16.bit will automatically set the resolution step to 62.5 ps).
+Each channel is now loaded dinamically, meaning that it will only load Channel 1 at runtime, and the rest will only be loaded (once) if the corresponding tab is accessed. This reduces initial startup time.
 
 <p align="center">
 <img src="./images/pynq_gui.png" width="95%"/>
