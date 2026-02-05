@@ -4,7 +4,7 @@
     "xci_name": "gtwizard_ultrascale_0",
     "component_reference": "xilinx.com:ip:gtwizard_ultrascale:1.7",
     "ip_revision": "22",
-    "gen_directory": "../../../../zPulse.gen/sources_1/ip/gtwizard_ultrascale_0",
+    "gen_directory": "../../Projects/zPulse/zPulse.gen/sources_1/ip/gtwizard_ultrascale_0",
     "parameters": {
       "component_parameters": {
         "GT_TYPE": [ { "value": "GTH", "resolve_type": "user", "usage": "all" } ],
@@ -838,7 +838,7 @@
         "IPCONTEXT": [ { "value": "IP_Flow" } ],
         "IPREVISION": [ { "value": "22" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../zPulse.gen/sources_1/ip/gtwizard_ultrascale_0" } ],
+        "OUTPUTDIR": [ { "value": "../../Projects/zPulse/zPulse.gen/sources_1/ip/gtwizard_ultrascale_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "." } ],
         "SWVERSION": [ { "value": "2025.2" } ],
@@ -884,5 +884,5 @@
       }
     }
   },
-  "checksum": "669c1cc4"
+  "checksum": "afeb915c"
 }

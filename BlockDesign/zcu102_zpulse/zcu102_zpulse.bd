@@ -3768,8 +3768,8 @@
           "xbar": {
             "vlnv": "xilinx.com:ip:axi_crossbar:2.1",
             "ip_revision": "38",
-            "xci_name": "zcu102_zpulse_bram_interconnects_upgraded_ipi_imp_xbar_0",
-            "xci_path": "ip/zcu102_zpulse_bram_interconnects_upgraded_ipi_imp_xbar_0/zcu102_zpulse_bram_interconnects_upgraded_ipi_imp_xbar_0.xci",
+            "xci_name": "zcu102_zpulse_bram_interconnects_imp_xbar_0",
+            "xci_path": "ip/zcu102_zpulse_bram_interconnects_imp_xbar_0/zcu102_zpulse_bram_interconnects_imp_xbar_0.xci",
             "inst_hier_path": "bram_interconnects/xbar",
             "has_run_ip_tcl": "true",
             "parameters": {
@@ -10501,8 +10501,8 @@
       "reset_gpio_proc": {
         "vlnv": "xilinx.com:ip:axi_gpio:2.0",
         "ip_revision": "37",
-        "xci_name": "zcu102_zpulse_reset_gpio_1",
-        "xci_path": "ip/zcu102_zpulse_reset_gpio_1/zcu102_zpulse_reset_gpio_1.xci",
+        "xci_name": "zcu102_zpulse_reset_gpio_proc_0",
+        "xci_path": "ip/zcu102_zpulse_reset_gpio_proc_0/zcu102_zpulse_reset_gpio_proc_0.xci",
         "inst_hier_path": "reset_gpio_proc",
         "has_run_ip_tcl": "true",
         "parameters": {
