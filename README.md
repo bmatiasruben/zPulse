@@ -148,7 +148,7 @@ After=multi-user.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/si570_usr_mgt_100mhz BUS_MGT
+ExecStart=/home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz BUS_MGT
 
 [Install]
 WantedBy=multi-user.target
