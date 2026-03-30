@@ -6,17 +6,23 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 entity Top is
     port (
-        clk_n : in std_logic;
-        clk_p : in std_logic;
-
-        user_si570_clk_p : in std_logic;
-        user_si570_clk_n : in std_logic;
+        clk_gt_internal_n : in std_logic;
+        clk_gt_internal_p : in std_logic;
+        clk_gt_external_n : in std_logic;
+        clk_gt_external_p : in std_logic;
+        user_si570_clk_p  : in std_logic;
+        user_si570_clk_n  : in std_logic;
 
         gthtxp_out : out std_logic_vector(7 downto 0);
         gthtxn_out : out std_logic_vector(7 downto 0);
 
-        clk_out_10 : out std_logic;
-        o_led      : out std_logic_vector(7 downto 0)
+        -- CLK_OUT_HPC0_clk_n : out std_logic;
+        -- CLK_OUT_HPC0_clk_p : out std_logic;
+        CLK_OUT_HPC1_clk_n : out std_logic;
+        CLK_OUT_HPC1_clk_p : out std_logic;
+
+        clk_10mhz_in : in std_logic;
+        o_led        : out std_logic_vector(7 downto 0)
         -- i_sw_pre   : in std_logic_vector(3 downto 0);
         -- i_sw_post  : in std_logic_vector(3 downto 0)
     );
@@ -24,36 +30,49 @@ end Top;
 
 architecture Behavioral of Top is
 
-signal w_bufg_to_rxusrclk     : std_logic_vector(7 downto 0);
-signal w_bufg_to_rxusrclk2    : std_logic_vector(7 downto 0);
-signal w_bufg_to_txusrclk     : std_logic_vector(7 downto 0);
-signal w_bufg_to_txusrclk2    : std_logic_vector(7 downto 0);
-signal w_rxusrclk             : std_logic;
-signal w_rxusrclk2            : std_logic;
-signal w_txusrclk             : std_logic;
-signal w_txusrclk2            : std_logic;
-signal w_clk_out_250          : std_logic;
-signal mgtrefclk_single_ended : std_logic;
-signal odiv2_to_bufg_gt       : std_logic;
-signal tx_data                : std_logic_vector(511 downto 0);
-signal w_txoutclk             : std_logic_vector(7 downto 0);
-signal w_rxoutclk             : std_logic_vector(7 downto 0);
-signal w_qpll0outrefclk       : std_logic_vector(1 downto 0);
-signal tx_inhibit             : std_logic_vector(7 downto 0) := (others => '1');
-signal tx_postcursor          : std_logic_vector(39 downto 0);
-signal tx_precursor           : std_logic_vector(39 downto 0);
-signal tx_diffctrl            : std_logic_vector(39 downto 0);
+    signal w_bufg_to_rxusrclk              : std_logic_vector(7 downto 0);
+    signal w_bufg_to_rxusrclk2             : std_logic_vector(7 downto 0);
+    signal w_bufg_to_txusrclk              : std_logic_vector(7 downto 0);
+    signal w_bufg_to_txusrclk2             : std_logic_vector(7 downto 0);
+    signal w_rxusrclk                      : std_logic;
+    signal w_rxusrclk2                     : std_logic;
+    signal w_txusrclk                      : std_logic;
+    signal w_txusrclk2                     : std_logic;
+    signal w_clk_out_250                   : std_logic;
+    signal mgtrefclk_internal_single_ended : std_logic;
+    signal mgtrefclk_external_single_ended : std_logic;
+    signal odiv2_to_bufg_gt                : std_logic;
+    signal tx_data                         : std_logic_vector(511 downto 0);
+    signal w_txoutclk                      : std_logic_vector(7 downto 0);
+    signal w_rxoutclk                      : std_logic_vector(7 downto 0);
+    signal w_qpll0outrefclk                : std_logic_vector(1 downto 0);
+    signal tx_inhibit                      : std_logic_vector(7 downto 0) := (others => '1');
+    signal tx_postcursor                   : std_logic_vector(39 downto 0);
+    signal tx_precursor                    : std_logic_vector(39 downto 0);
+    signal tx_diffctrl                     : std_logic_vector(39 downto 0);
+    signal w_clk_10_out                    : std_logic;
+    signal w_clk_100                       : std_logic;
+    signal w_ext_clk_locked                : std_logic;
+    signal w_clk_output                    : std_logic;
+    signal w_clock_selector                : std_logic_vector(5 downto 0);
 
 begin
 
-    o_led(7 downto 1) <= (others => '0');
+    o_led(4 downto 2) <= (others => '0');
+    o_led(1)          <= w_ext_clk_locked;
+    o_led(7 downto 5) <= w_clock_selector(2 downto 0);
+    w_clk_output      <= w_clk_100 when w_ext_clk_locked = '1' else w_clk_10_out;
+    w_clock_selector  <= "100010" when w_ext_clk_locked = '1' else "011001";
 
-    -- bufg_clocks : for i in 0 to 7 generate
-    --     w_bufg_to_rxusrclk(i) <= w_rxusrclk;
-    --     w_bufg_to_rxusrclk2(i) <= w_rxusrclk2;
-    --     w_bufg_to_txusrclk(i) <= w_txusrclk;
-    --     w_bufg_to_txusrclk2(i) <= w_txusrclk2;
-    -- end generate; -- bufg_clocks
+    OBUFDS_HPC1_inst : OBUFDS
+    generic map(
+        IOSTANDARD => "DIFF_SSTL12", -- Specify the output I/O standard
+        SLEW       => "SLOW")        -- Specify the output slew rate
+    port map(
+        O  => CLK_OUT_HPC1_clk_p, -- Diff_p output (connect directly to top-level port)
+        OB => CLK_OUT_HPC1_clk_n, -- Diff_n output (connect directly to top-level port)
+        I  => w_clk_output        -- Buffer input
+    );
 
     GTX_Wizard : entity work.gtwizard_ultrascale_0
         port map(
@@ -71,19 +90,26 @@ begin
             -- Data --
             gtwiz_userdata_tx_in => tx_data,
             -- Clocks --
-            gtrefclk00_in(0) => mgtrefclk_single_ended,
-            gtrefclk00_in(1) => mgtrefclk_single_ended,
-            txinhibit_in     => tx_inhibit,
-            gthrxn_in        => "00000000",
-            gthrxp_in        => "00000000",
-            rxusrclk_in(0)   => w_rxusrclk,
-            rxusrclk_in(1)   => w_rxusrclk,
-            rxusrclk_in(2)   => w_rxusrclk,
-            rxusrclk_in(3)   => w_rxusrclk,
-            rxusrclk_in(4)   => w_rxusrclk,
-            rxusrclk_in(5)   => w_rxusrclk,
-            rxusrclk_in(6)   => w_rxusrclk,
-            rxusrclk_in(7)   => w_rxusrclk,
+            gtrefclk00_in(0)      => mgtrefclk_internal_single_ended,
+            gtrefclk00_in(1)      => '0',
+            gtrefclk10_in(0)      => mgtrefclk_external_single_ended,
+            gtrefclk10_in(1)      => '0',
+            gtnorthrefclk00_in(0) => '0',
+            gtnorthrefclk00_in(1) => mgtrefclk_internal_single_ended,
+            gtnorthrefclk10_in(0) => '0',
+            gtnorthrefclk10_in(1) => mgtrefclk_external_single_ended,
+            qpll0refclksel_in     => w_clock_selector,
+            txinhibit_in          => tx_inhibit,
+            gthrxn_in             => "00000000",
+            gthrxp_in             => "00000000",
+            rxusrclk_in(0)        => w_rxusrclk,
+            rxusrclk_in(1)        => w_rxusrclk,
+            rxusrclk_in(2)        => w_rxusrclk,
+            rxusrclk_in(3)        => w_rxusrclk,
+            rxusrclk_in(4)        => w_rxusrclk,
+            rxusrclk_in(5)        => w_rxusrclk,
+            rxusrclk_in(6)        => w_rxusrclk,
+            rxusrclk_in(7)        => w_rxusrclk,
 
             txusrclk_in(0) => w_txusrclk,
             txusrclk_in(1) => w_txusrclk,
@@ -135,33 +161,50 @@ begin
 
     -- Block design
 
-    bd : entity work.overlay_wrapper
+    bd : entity work.zcu102_zpulse_wrapper
         port map(
-            CLK_IN_300_clk_n => user_si570_clk_n,
-            CLK_IN_300_clk_p => user_si570_clk_p,
-            clk_out_250      => w_clk_out_250,
-            txusr_in         => w_txusrclk2,
-            clk_10_out       => clk_out_10,
-            tx_data          => tx_data,
-            tx_inhibit       => tx_inhibit,
-            locked_0         => o_led(0),
-            tx_postcursor    => tx_postcursor,
-            tx_precursor     => tx_precursor,
-            tx_diffctrl      => tx_diffctrl
+            CLK_IN_300_clk_n    => user_si570_clk_n,
+            CLK_IN_300_clk_p    => user_si570_clk_p,
+            clk_out_100         => w_clk_100,
+            clk_out_250         => w_clk_out_250,
+            txusr_in            => w_txusrclk2,
+            clk_10_out          => w_clk_10_out,
+            clk_10mhz_in        => clk_10mhz_in,
+            ext_clk_locked      => w_ext_clk_locked,
+            tx_data             => tx_data,
+            tx_inhibit          => tx_inhibit,
+            internal_clk_locked => o_led(0),
+            tx_postcursor       => tx_postcursor,
+            tx_precursor        => tx_precursor,
+            tx_diffctrl         => tx_diffctrl
         );
 
-    IBUFDS_GTE4_inst : IBUFDS_GTE4
+    IBUFDS_GTE4_int_inst : IBUFDS_GTE4
     generic map(
         REFCLK_EN_TX_PATH  => '0',  -- Refer to Transceiver User Guide
         REFCLK_HROW_CK_SEL => "00", -- Refer to Transceiver User Guide
         REFCLK_ICNTL_RX    => "00"  -- Refer to Transceiver User Guide
     )
     port map(
-        O     => mgtrefclk_single_ended, -- 1-bit output: Refer to Transceiver User Guide
-        ODIV2 => odiv2_to_bufg_gt,       -- 1-bit output: Refer to Transceiver User Guide
-        CEB   => '0',                    -- 1-bit input: Refer to Transceiver User Guide
-        I     => clk_p,                  -- 1-bit input: Refer to Transceiver User Guide
-        IB    => clk_n                   -- 1-bit input: Refer to Transceiver User Guide
+        O     => mgtrefclk_internal_single_ended, -- 1-bit output: Refer to Transceiver User Guide
+        ODIV2 => open,                            -- 1-bit output: Refer to Transceiver User Guide
+        CEB   => '0',                             -- 1-bit input: Refer to Transceiver User Guide
+        I     => clk_gt_internal_p,               -- 1-bit input: Refer to Transceiver User Guide
+        IB    => clk_gt_internal_n                -- 1-bit input: Refer to Transceiver User Guide
+    );
+
+    IBUFDS_GTE4_ext_inst : IBUFDS_GTE4
+    generic map(
+        REFCLK_EN_TX_PATH  => '0',  -- Refer to Transceiver User Guide
+        REFCLK_HROW_CK_SEL => "00", -- Refer to Transceiver User Guide
+        REFCLK_ICNTL_RX    => "00"  -- Refer to Transceiver User Guide
+    )
+    port map(
+        O     => mgtrefclk_external_single_ended, -- 1-bit output: Refer to Transceiver User Guide
+        ODIV2 => open,                            -- 1-bit output: Refer to Transceiver User Guide
+        CEB   => '0',                             -- 1-bit input: Refer to Transceiver User Guide
+        I     => clk_gt_external_p,               -- 1-bit input: Refer to Transceiver User Guide
+        IB    => clk_gt_external_n                -- 1-bit input: Refer to Transceiver User Guide
     );
 
     BUFG_GT_to_TXUSR_CLK_2 : BUFG_GT

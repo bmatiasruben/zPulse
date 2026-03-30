@@ -23,6 +23,7 @@ Vivado_IP/*/*
 
 BlockDesign/*/*
 !BlockDesign/*/*.bd
+!BlockDesign/*/*/*.vhd
 
 ## OS
 .DS_Store
