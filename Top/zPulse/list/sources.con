@@ -1,2 +1,2 @@
-Constraints/pins.xdc 
-Constraints/debug.xdc
+Constraints/pins.xdc nosynth
+Constraints/debug.xdc 
