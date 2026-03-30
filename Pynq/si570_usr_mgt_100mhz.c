@@ -46,7 +46,7 @@
 
 // ZCU102 USER MGT Si570 factory output
 #define FACTORY_FOUT         156250000ULL  // 156.25 MHz
-#define TARGET_FOUT          10000000UL    // 10 MHz
+#define TARGET_FOUT          100000000ULL  // 100 MHz
 
 static int i2c_read_regs(int fd, uint8_t reg, uint8_t *buf, size_t len)
 {
@@ -234,7 +234,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    printf("Using %s, addr 0x%02x (USER MGT Si570) -> 10 MHz\n", devname, SI570_ADDR);
+    printf("Using %s, addr 0x%02x (USER MGT Si570) -> 100 MHz\n", devname, SI570_ADDR);
 
     // Optional: recall factory config into RAM (Control reg bit 0)
     val = SI570_CNTRL_RECALL;
@@ -267,7 +267,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    printf("USER MGT Si570 programmed to %u Hz (10 MHz)\n", TARGET_FOUT);
+    printf("USER MGT Si570 programmed to %u Hz (100 MHz)\n", TARGET_FOUT);
 
     close(fd);
     return 0;
