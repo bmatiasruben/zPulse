@@ -140,7 +140,7 @@ and look for the line ```i2c-1-mux (chan_id 3)``` or similar. The first column s
 sudo ./home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz BUS_MGT
 ```
 
-To run the script at boot, simply create a service ```/etc/systemd/system/si570-mgt-10mhz.service``` with
+To run the script at boot, simply create a service ```/etc/systemd/system/si570-mgt-100mhz.service``` with
 ```bash
 [Unit]
 Description=Set USER MGT Si570 (U56) to 100 MHz after boot
@@ -156,7 +156,7 @@ WantedBy=multi-user.target
 and enable it with
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable si570-mgt-10mhz.service
+sudo systemctl enable si570-mgt-100mhz.service
 ```
 These steps will set the frequency of your Si570 oscillator to 100 MHz, and can be changed by modifying the ```TARGET_FOUT``` parameter on the C code if a different frequency is required. With the correct frequency set, the GUI can finally be executed.
 
@@ -166,6 +166,13 @@ Each channel is now loaded dinamically, meaning that it will only load Channel 1
 <p align="center">
 <img src="./images/pynq_gui.png" width="95%"/>
 </p>
+
+### Locking to an external 10 MHz
+
+As of the latest version, the system can be locked to an external 10 MHz clock using the CLK1_M2C_P port of the FMC HPC1 of the ZCU102 board (corresponding to the CLK_P pin on the [HiTech Global FMC module](https://www.hitechglobal.com/FMCModules/FMC_SMA_LVDS.htm)). 
+Once the system detects that an external clock is being used, it automatically switches to using that clock to lock the Transceivers, thus locking the entire system. 
+
+Regardless of wheter an external 10 MHz clock is provided, the CLK1_M2C_N port of the FMC HPC1 (corresponding to the CLK_N pin on the [HiTech Global FMC module](https://www.hitechglobal.com/FMCModules/FMC_SMA_LVDS.htm)) takes out a 10 MHz clock that is always locked to the Transceivers for locking external devices.
 
 ## Contribute
 

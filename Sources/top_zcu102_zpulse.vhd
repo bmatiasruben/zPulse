@@ -8,23 +8,15 @@ entity Top is
     port (
         clk_gt_internal_n : in std_logic;
         clk_gt_internal_p : in std_logic;
-        clk_gt_external_n : in std_logic;
-        clk_gt_external_p : in std_logic;
         user_si570_clk_p  : in std_logic;
         user_si570_clk_n  : in std_logic;
 
         gthtxp_out : out std_logic_vector(7 downto 0);
         gthtxn_out : out std_logic_vector(7 downto 0);
 
-        -- CLK_OUT_HPC0_clk_n : out std_logic;
-        -- CLK_OUT_HPC0_clk_p : out std_logic;
-        CLK_OUT_HPC1_clk_n : out std_logic;
-        CLK_OUT_HPC1_clk_p : out std_logic;
-
-        clk_10mhz_in : in std_logic;
-        o_led        : out std_logic_vector(7 downto 0)
-        -- i_sw_pre   : in std_logic_vector(3 downto 0);
-        -- i_sw_post  : in std_logic_vector(3 downto 0)
+        clk_10mhz_in  : in std_logic;
+        clk_10mhz_out : out std_logic;
+        o_led         : out std_logic_vector(7 downto 0)
     );
 end Top;
 
@@ -53,26 +45,17 @@ architecture Behavioral of Top is
     signal w_clk_10_out                    : std_logic;
     signal w_clk_100                       : std_logic;
     signal w_ext_clk_locked                : std_logic;
-    signal w_clk_output                    : std_logic;
-    signal w_clock_selector                : std_logic_vector(5 downto 0);
+    signal w_clk_to_bufg                   : std_logic;
+    signal w_clk_100_int                   : std_logic;
+    signal w_clk_to_gt                     : std_logic;
 
 begin
 
-    o_led(4 downto 2) <= (others => '0');
+    o_led(7 downto 2) <= (others => '0');
     o_led(1)          <= w_ext_clk_locked;
-    o_led(7 downto 5) <= w_clock_selector(2 downto 0);
-    w_clk_output      <= w_clk_100 when w_ext_clk_locked = '1' else w_clk_10_out;
-    w_clock_selector  <= "100010" when w_ext_clk_locked = '1' else "011001";
-
-    OBUFDS_HPC1_inst : OBUFDS
-    generic map(
-        IOSTANDARD => "DIFF_SSTL12", -- Specify the output I/O standard
-        SLEW       => "SLOW")        -- Specify the output slew rate
-    port map(
-        O  => CLK_OUT_HPC1_clk_p, -- Diff_p output (connect directly to top-level port)
-        OB => CLK_OUT_HPC1_clk_n, -- Diff_n output (connect directly to top-level port)
-        I  => w_clk_output        -- Buffer input
-    );
+    -- o_led(7 downto 5) <= w_clock_selector(2 downto 0);
+    clk_10mhz_out <= w_clk_10_out;
+    w_clk_to_gt   <= w_clk_100 when w_ext_clk_locked = '1' else w_clk_100_int;
 
     GTX_Wizard : entity work.gtwizard_ultrascale_0
         port map(
@@ -90,26 +73,22 @@ begin
             -- Data --
             gtwiz_userdata_tx_in => tx_data,
             -- Clocks --
-            gtrefclk00_in(0)      => mgtrefclk_internal_single_ended,
-            gtrefclk00_in(1)      => '0',
-            gtrefclk10_in(0)      => mgtrefclk_external_single_ended,
-            gtrefclk10_in(1)      => '0',
-            gtnorthrefclk00_in(0) => '0',
-            gtnorthrefclk00_in(1) => mgtrefclk_internal_single_ended,
-            gtnorthrefclk10_in(0) => '0',
-            gtnorthrefclk10_in(1) => mgtrefclk_external_single_ended,
-            qpll0refclksel_in     => w_clock_selector,
-            txinhibit_in          => tx_inhibit,
-            gthrxn_in             => "00000000",
-            gthrxp_in             => "00000000",
-            rxusrclk_in(0)        => w_rxusrclk,
-            rxusrclk_in(1)        => w_rxusrclk,
-            rxusrclk_in(2)        => w_rxusrclk,
-            rxusrclk_in(3)        => w_rxusrclk,
-            rxusrclk_in(4)        => w_rxusrclk,
-            rxusrclk_in(5)        => w_rxusrclk,
-            rxusrclk_in(6)        => w_rxusrclk,
-            rxusrclk_in(7)        => w_rxusrclk,
+            gtrefclk00_in(0)  => '0',
+            gtrefclk00_in(1)  => '0',
+            gtgrefclk0_in(0)  => w_clk_to_gt,
+            gtgrefclk0_in(1)  => w_clk_to_gt,
+            qpll0refclksel_in => "111111",
+            txinhibit_in      => tx_inhibit,
+            gthrxn_in         => "00000000",
+            gthrxp_in         => "00000000",
+            rxusrclk_in(0)    => w_rxusrclk,
+            rxusrclk_in(1)    => w_rxusrclk,
+            rxusrclk_in(2)    => w_rxusrclk,
+            rxusrclk_in(3)    => w_rxusrclk,
+            rxusrclk_in(4)    => w_rxusrclk,
+            rxusrclk_in(5)    => w_rxusrclk,
+            rxusrclk_in(6)    => w_rxusrclk,
+            rxusrclk_in(7)    => w_rxusrclk,
 
             txusrclk_in(0) => w_txusrclk,
             txusrclk_in(1) => w_txusrclk,
@@ -187,24 +166,21 @@ begin
     )
     port map(
         O     => mgtrefclk_internal_single_ended, -- 1-bit output: Refer to Transceiver User Guide
-        ODIV2 => open,                            -- 1-bit output: Refer to Transceiver User Guide
+        ODIV2 => w_clk_to_bufg,                   -- 1-bit output: Refer to Transceiver User Guide
         CEB   => '0',                             -- 1-bit input: Refer to Transceiver User Guide
         I     => clk_gt_internal_p,               -- 1-bit input: Refer to Transceiver User Guide
         IB    => clk_gt_internal_n                -- 1-bit input: Refer to Transceiver User Guide
     );
-
-    IBUFDS_GTE4_ext_inst : IBUFDS_GTE4
-    generic map(
-        REFCLK_EN_TX_PATH  => '0',  -- Refer to Transceiver User Guide
-        REFCLK_HROW_CK_SEL => "00", -- Refer to Transceiver User Guide
-        REFCLK_ICNTL_RX    => "00"  -- Refer to Transceiver User Guide
-    )
+    BUFG_GT_to_REFCLK : BUFG_GT
     port map(
-        O     => mgtrefclk_external_single_ended, -- 1-bit output: Refer to Transceiver User Guide
-        ODIV2 => open,                            -- 1-bit output: Refer to Transceiver User Guide
-        CEB   => '0',                             -- 1-bit input: Refer to Transceiver User Guide
-        I     => clk_gt_external_p,               -- 1-bit input: Refer to Transceiver User Guide
-        IB    => clk_gt_external_n                -- 1-bit input: Refer to Transceiver User Guide
+        O       => w_clk_100_int, -- 1-bit output: Buffer
+        CE      => '1',           --CE,           -- 1-bit input: Buffer enable
+        CEMASK  => '1',           --CEMASK,   -- 1-bit input: CE Mask
+        CLR     => '0',           --CLR,         -- 1-bit input: Asynchronous clear
+        CLRMASK => '0',           --CLRMASK, -- 1-bit input: CLR Mask
+        DIV     => "000",         --DIV,         -- 3-bit input: Dynamic divide Value
+        -- I => bufg_to_txusrclk_in_s(0)              -- 1-bit input: Buffer
+        I => w_clk_to_bufg -- 1-bit input: Buffer
     );
 
     BUFG_GT_to_TXUSR_CLK_2 : BUFG_GT

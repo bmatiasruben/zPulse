@@ -4619,6 +4619,9 @@
           "CLKIN1_UI_JITTER": {
             "value": "0.001"
           },
+          "CLKOUT1_DRIVES": {
+            "value": "Buffer"
+          },
           "CLKOUT1_JITTER": {
             "value": "175.558"
           },
@@ -4627,6 +4630,9 @@
           },
           "CLKOUT1_REQUESTED_OUT_FREQ": {
             "value": "300.000"
+          },
+          "FEEDBACK_SOURCE": {
+            "value": "FDBK_ONCHIP"
           },
           "JITTER_SEL": {
             "value": "Max_I_Jitter"
