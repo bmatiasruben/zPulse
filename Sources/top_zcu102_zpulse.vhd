@@ -149,6 +149,7 @@ begin
             txusr_in            => w_txusrclk2,
             clk_10_out          => w_clk_10_out,
             clk_10mhz_in        => clk_10mhz_in,
+            clk_100_in          => w_clk_to_gt,
             ext_clk_locked      => w_ext_clk_locked,
             tx_data             => tx_data,
             tx_inhibit          => tx_inhibit,
