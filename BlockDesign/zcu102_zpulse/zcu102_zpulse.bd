@@ -1,7 +1,7 @@
 {
   "design": {
     "design_info": {
-      "boundary_crc": "0x7581DF24199A2467",
+      "boundary_crc": "0x7FDF45AE27523B06",
       "device": "xczu9eg-ffvb1156-2-e",
       "name": "zcu102_zpulse",
       "rev_ctrl_bd_flag": "RevCtrlBdOff",
@@ -349,6 +349,32 @@
           "PortWidth": {
             "value": "40",
             "value_src": "ip_prop"
+          }
+        }
+      },
+      "clk_100_in": {
+        "type": "clk",
+        "direction": "I",
+        "parameters": {
+          "CLK_DOMAIN": {
+            "value": "zcu102_zpulse_clk_in1_0",
+            "value_src": "default"
+          },
+          "FREQ_HZ": {
+            "value": "100000000",
+            "value_src": "default"
+          },
+          "FREQ_TOLERANCE_HZ": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "PHASE": {
+            "value": "0.0",
+            "value_src": "default"
           }
         }
       }
@@ -2599,6 +2625,12 @@
           "PSU__IRQ_P2F_UART1__INT": {
             "value": "0"
           },
+          "PSU__IRQ_P2F_USB2_OTG__INT0": {
+            "value": "0"
+          },
+          "PSU__IRQ_P2F_USB2_OTG__INT1": {
+            "value": "0"
+          },
           "PSU__IRQ_P2F_USB3_ENDPOINT__INT0": {
             "value": "0"
           },
@@ -3674,10 +3706,10 @@
         "has_run_ip_tcl": "true",
         "parameters": {
           "CLKIN1_JITTER_PS": {
-            "value": "40.0"
+            "value": "100.0"
           },
           "CLKOUT1_JITTER": {
-            "value": "450.501"
+            "value": "460.700"
           },
           "CLKOUT1_PHASE_ERROR": {
             "value": "523.418"
@@ -3689,22 +3721,22 @@
             "value": "92.375"
           },
           "MMCM_CLKIN1_PERIOD": {
-            "value": "4.000"
+            "value": "10.000"
           },
           "MMCM_CLKIN2_PERIOD": {
-            "value": "10.0"
+            "value": "10.000"
           },
           "MMCM_CLKOUT0_DIVIDE_F": {
             "value": "92.375"
           },
           "MMCM_DIVCLK_DIVIDE": {
-            "value": "25"
+            "value": "10"
           },
           "OPTIMIZE_CLOCKING_STRUCTURE_EN": {
             "value": "true"
           },
           "PRIM_IN_FREQ": {
-            "value": "250"
+            "value": "100"
           },
           "USE_LOCKED": {
             "value": "false"
@@ -10913,6 +10945,12 @@
           "clk_wiz_2/clk_in1"
         ]
       },
+      "clk_in1_0_2": {
+        "ports": [
+          "clk_100_in",
+          "clk_wiz_1/clk_in1"
+        ]
+      },
       "clk_wiz_0_clk_out1": {
         "ports": [
           "clk_wiz_0/clk_out1",
@@ -11004,7 +11042,6 @@
       "s_axi_aclk_0_1": {
         "ports": [
           "txusr_in",
-          "clk_wiz_1/clk_in1",
           "proc_sys_reset_0/slowest_sync_clk",
           "tx_channels/txusr_in"
         ]
