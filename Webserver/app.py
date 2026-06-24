@@ -1,11 +1,9 @@
-import numpy as np
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from pathlib import Path
-import json
-import re
 from zPulse.zPulse_overlay import zPulseOverlay
 import threading
 from hardware import generate_waveform
+import copy
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 bitstream_dir = SCRIPT_DIR / "zPulse" / "Bitstream"
@@ -14,21 +12,29 @@ app = Flask(__name__)
 
 hw_lock = threading.Lock()
 ol = None
+current_bitstream_name = None
 CHANNELS = 8
+DEFAULT_SETTINGS = {
+    "period": 20,
+    "delay": 0,
+    "pulses": [{"width": 5, "start": 0}],
+    "pre_emph": 0,
+    "post_emph": 0,
+    "amplitude": 15,
+    "enabled": False
+}
 
-def resolution_from_name(name: str) -> float:
-    match = re.search(r'(\d+)_(\d+)', name)
-    if not match:
-        raise ValueError(f"Could not parse sampling rate from bitstream name: {name}")
+channel_settings = {
+    ch: copy.deepcopy(DEFAULT_SETTINGS) for ch in range(CHANNELS)
+}
 
-    integer_part, decimal_part = match.groups()
-    gbps = float(f"{integer_part}.{decimal_part}")
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-    if gbps <= 0:
-        raise ValueError(f"Invalid sampling rate parsed from name: {gbps}")
-
-    resolution_ps = 1000.0 / gbps
-    return resolution_ps
+@app.route('/api/status', methods=['GET'])
+def get_status():
+    return jsonify(loaded=(ol is not None), bitstream_name=current_bitstream_name)
 
 @app.route('/api/bitstreams', methods=['GET'])
 def get_bitstreams():
@@ -50,27 +56,49 @@ def get_bitstreams():
 
     return jsonify(bitstreams=[f.stem for f in bit_files])
 
+defaults_applied = False
+
 @app.route('/api/load_bitstream', methods=['POST'])
 def load_bitstream():
-    global ol
+    global ol, current_bitstream_name, defaults_applied
     data = request.json
     name = data['name']
     bit_path = bitstream_dir / f"{name}.bit"
-    # Check if file exists and also the .hwh
+
     if not bit_path.exists() or not bit_path.with_suffix('.hwh').exists():
         return jsonify(status="error", message=f"Bitstream '{name}' not found"), 404
-    # Set resolution from filename
-    try:
-        resolution_ps = resolution_from_name(data['name'])
-    except ValueError:
-        resolution_ps = 62.5
-    # Instantiate overlay 
+
     with hw_lock:
         try:
             ol = zPulseOverlay(str(bit_path))
         except Exception as e:
+            app.logger.exception(f"Failed to program bitstream '{name}'")
             return jsonify(status="error", message=f"Bitstream '{name}' could not be programmed"), 500
-    return jsonify(status="ok", resolution=resolution_ps, channels=CHANNELS)
+
+    current_bitstream_name = name
+
+    if not defaults_applied:
+        for ch in range(CHANNELS):
+            settings = channel_settings[ch]
+            waveform = generate_waveform(settings['period'], settings['delay'], settings['pulses'])
+            with hw_lock:
+                ol.send_waveform_to_memory(ch, waveform)
+                ol.preemph[ch].write(settings['pre_emph'], 0xFFFFFFF)
+                ol.postemph[ch].write(settings['post_emph'], 0xFFFFFFF)
+                ol.amplitude[ch].write(2 * settings['amplitude'], 0xFFFFFFF)
+                if settings['enabled']:
+                    ol.enable_channel(ch)
+        defaults_applied = True
+
+    return jsonify(status="ok", channels=CHANNELS)
+
+@app.route('/api/channel/<int:ch>', methods=['GET'])
+def get_channel_settings(ch):
+    if not (0 <= ch < CHANNELS):
+        return jsonify(status="error", message=f"Invalid channel: {ch}"), 400
+    settings = channel_settings[ch]
+    waveform = generate_waveform(settings['period'], settings['delay'], settings['pulses'])
+    return jsonify(status="ok", settings=settings, waveform=waveform.tolist())
 
 @app.route('/api/channel/<int:ch>', methods=['POST'])
 def update_channel(ch):
@@ -87,6 +115,9 @@ def update_channel(ch):
     waveform = generate_waveform(period, delay, pulses)
     with hw_lock:
         ol.send_waveform_to_memory(ch, waveform)
+    channel_settings[ch]['period'] = period
+    channel_settings[ch]['delay'] = delay
+    channel_settings[ch]['pulses'] = pulses
     return jsonify(status='ok', waveform=waveform.tolist())
 
 @app.route('/api/channel/<int:ch>/enable', methods=['POST'])
@@ -105,6 +136,7 @@ def set_channel_enable(ch):
             ol.enable_channel(ch)
         else:
             ol.disable_channel(ch)
+    channel_settings[ch]['enabled'] = enable
 
     return jsonify(status='ok', enabled=enable)
 
@@ -124,6 +156,9 @@ def set_channel_drive(ch):
         ol.preemph[ch].write(pre_emph, 0xFFFFFFF)
         ol.postemph[ch].write(post_emph, 0xFFFFFFF)
         ol.amplitude[ch].write(2 * amplitude, 0xFFFFFFF)
+    channel_settings[ch]['amplitude'] = amplitude
+    channel_settings[ch]['pre_emph'] = pre_emph
+    channel_settings[ch]['post_emph'] = post_emph
     
     return jsonify(status='ok')
 
