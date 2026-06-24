@@ -4,6 +4,8 @@ from zPulse.zPulse_overlay import zPulseOverlay
 import threading
 from hardware import generate_waveform
 import copy
+import subprocess
+
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 bitstream_dir = SCRIPT_DIR / "zPulse" / "Bitstream"
@@ -67,6 +69,14 @@ def load_bitstream():
 
     if not bit_path.exists() or not bit_path.with_suffix('.hwh').exists():
         return jsonify(status="error", message=f"Bitstream '{name}' not found"), 404
+    with hw_lock:
+        try:
+            subprocess.run(
+                ['/home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz', '10'],
+                check=True
+            )
+        except subprocess.CalledProcessError as e:
+            app.logger.warning(f"Clock setup executable failed: {e}")
 
     with hw_lock:
         try:
