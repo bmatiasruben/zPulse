@@ -14,23 +14,6 @@ MEMORY_WIDTH: int = 64
 def lcm(a: int, b: int) -> int:
     return int(a * b / math.gcd(a, b))
 
-def binary_array_to_integers(bits):
-    """Convert a 0/1 numpy array into little-endian 32-bit integers.
-       bits[0] is the earliest (LSB) within each 32-bit group."""
-    n = len(bits)
-    pad = (-n) % 32
-    if pad:
-        bits = np.concatenate([bits, np.zeros(pad, dtype=int)])
-    ints = []
-    # Little-endian within each 32-bit word: bit0 is LSB
-    for i in range(0, len(bits), 32):
-        word = 0
-        # assemble 32 bits
-        for b in range(32):
-            word |= (int(bits[i + b]) & 1) << b
-        ints.append(word)
-    return ints
-
 class zPulseOverlay(Overlay):
     def __init__(self, bitfile_name=None, **kwargs):
         """Construct a new zPulseOverlay
@@ -80,11 +63,7 @@ class zPulseOverlay(Overlay):
         return ipmmio.array[0:ipmmio.length].view(dtype)
     
     def send_waveform_to_memory(self, ch_idx, waveform):
-        period = len(waveform)
-        repetition_factor = int(lcm(period, MEMORY_WIDTH) / period)
-        extended_waveform = np.tile(waveform, repetition_factor)
-        int_waveform_to_memory = binary_array_to_integers(extended_waveform)
-        addr_limit = len(int_waveform_to_memory)
-        self.ch_player[ch_idx][:addr_limit] = int_waveform_to_memory
+        addr_limit = len(waveform)
+        self.ch_player[ch_idx][:addr_limit] = waveform
         self.addr_limit[ch_idx].write(addr_limit * 4 - MEMORY_WIDTH//8, 0xFFFFFFF)
     
