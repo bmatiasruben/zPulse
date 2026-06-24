@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>zPulse</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+
+<body>
+    <h1>zPulse: Pulse generator</h1>
+    <div id="bitstream-selector">
+        <h2>Select Bitstream</h2>
+        <select id="bitstream-dropdown">
+            <option value="">-- Select a bitstream --</option>
+        </select>
+        <input type="number" id="resolution" placeholder="Resolution (ps)">
+        <button id="load-bitstream-btn">Load Bitstream</button>
+    </div>
+
+    <div id="channel-gui" style="display: none;">
+        <div id="tab-buttons"></div>
+        <div id="channels-container"></div>
+    </div>
+
+
+
+
+</body>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</html>

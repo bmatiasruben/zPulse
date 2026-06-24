@@ -1,0 +1,321 @@
+/* ── zPulse – Lab instrument aesthetic ─────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+:root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface-2: #1c2030;
+    --border: #2a2f3f;
+    --accent: #4d9ef7;
+    --accent-dim: #2563c4;
+    --warn: #f0a500;
+    --danger: #e05252;
+    --text: #c8d0e0;
+    --text-dim: #5a6480;
+    --text-bright: #eef2ff;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --radius: 4px;
+    --tab-h: 36px;
+}
+
+/* ── Reset & base ───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+h1 {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+}
+
+h1::before {
+    content: '> ';
+    opacity: 0.4;
+}
+
+h2 {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+}
+
+h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin: 20px 0 10px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+}
+
+/* ── Bitstream selector ─────────────────────────────────────────────────────── */
+#bitstream-selector {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+#bitstream-selector h2 {
+    margin: 0;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+/* ── Tab bar ────────────────────────────────────────────────────────────────── */
+#tab-buttons {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 0;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0;
+}
+
+.tab-button {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--text-dim);
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.tab-button:hover {
+    color: var(--text);
+}
+
+.tab-button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* ── Channel panel ──────────────────────────────────────────────────────────── */
+.channel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 24px;
+}
+
+.channel-columns {
+    display: flex;
+    gap: 40px;
+}
+
+.column {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ── Form layout ────────────────────────────────────────────────────────────── */
+.field-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 160px;
+    letter-spacing: 0.04em;
+}
+
+/* ── Inputs ─────────────────────────────────────────────────────────────────── */
+input[type="number"],
+input[type="text"],
+select {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--surface-2);
+    color: var(--text-bright);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 10px;
+    width: 120px;
+    outline: none;
+    transition: border-color 0.15s;
+    /* -moz-appearance: textfield; */
+}
+
+/* input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+} */
+
+input[type="number"]:focus,
+input[type="text"]:focus,
+select:focus {
+    border-color: var(--accent);
+}
+
+select {
+    width: auto;
+    min-width: 200px;
+    cursor: pointer;
+}
+
+/* ── Checkbox (enable toggle) ───────────────────────────────────────────────── */
+.enable-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    width: 80px;
+    padding: 8px;
+    border-radius: var(--radius);
+    border: 1px solid var(--danger);
+    background: transparent;
+    color: var(--danger);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.enable-btn.enabled {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(77, 158, 247, 0.12);
+}
+
+.enable-btn:hover {
+    background: var(--danger);
+    color: var(--bg);
+}
+
+.enable-btn.enabled:hover {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+/* ── Range slider (num pulses) ──────────────────────────────────────────────── */
+input[type="range"] {
+    appearance: none;
+    height: 4px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    accent-color: var(--accent);
+    width: 160px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    cursor: pointer;
+}
+
+/* ── Pulse count label ──────────────────────────────────────────────────────── */
+#channels-container span[id^="num-pulses-label"] {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    min-width: 20px;
+    display: inline-block;
+    text-align: center;
+}
+
+/* ── Pulse rows ─────────────────────────────────────────────────────────────── */
+.pulse-tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(77, 158, 247, 0.12);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
+button {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--accent-dim);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+button:hover {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+/* ── Chart ──────────────────────────────────────────────────────────────────── */
+canvas {
+    margin-top: 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    width: 100% !important;
+    max-height: 400px;
+}
+
+/* ── Resolution field ───────────────────────────────────────────────────────── */
+#resolution {
+    width: 100px;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
