@@ -110,7 +110,7 @@ Once the Vivado project is recreated and the bitstream is generated, you will ha
 To enter the Pynq GUI, just type 192.168.XX.YYY:9090/lab (where 192.168.XX.YYY is the IP you set chose on the ```etc/netplan/01-netcfg.yaml``` file). The password to enter the GUI will be xilinx. From here, you can SSH into the board or just enter through the Pynq GUI and open a new terminal. From any of those two, just run:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/bmatiasruben/zPulse/main/install.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/bmatiasruben/zPulse/main/install_zpulse.sh | sudo bash
 ```
 
 This single command will:
