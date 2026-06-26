@@ -68,8 +68,6 @@ class zPulseOverlay(Overlay):
         
     def disable_channel(self, ch_index=None):
         if (isinstance(ch_index, int) and 0 <= ch_index <= 7):
-            zero_waveform = [0] * self.ch_player[ch_index].shape[0]
-            self.ch_player[ch_index][:] = zero_waveform
             self.ch_enable[ch_index].off()
                     
     def memdict_to_view(self, ip, dtype='int32'):
