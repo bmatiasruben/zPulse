@@ -126,6 +126,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=root
+ExecStartPre=/bin/sleep 30
 ExecStart=/home/ubuntu/start_zpulse.sh
 Restart=on-failure
 RestartSec=5
