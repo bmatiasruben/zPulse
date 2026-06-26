@@ -110,10 +110,7 @@ echo "[7/7] Installing Flask and setting up web server..."
 
 cat > /home/ubuntu/start_zpulse.sh << EOF
 #!/bin/bash
-export PATH=$PYNQ_VENV/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-source /etc/environment 2>/dev/null || true
-export XILINX_XRT=/usr
-export LD_LIBRARY_PATH=$PYNQ_VENV/lib:\$LD_LIBRARY_PATH
+source /etc/profile.d/pynq_venv.sh
 cd $WEBSERVER_DIR
 exec $PYNQ_VENV/bin/python3 app.py
 EOF
