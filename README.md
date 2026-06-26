@@ -6,6 +6,8 @@
 
 **DISCLAIMER UPDATE**: I did create my own, and is now within Sources/BRAM_streamer_data.vhd
 
+**NEW DISCLAIMER**: AI was used in this project for two things. First, for the backend I used it to guide me on what to do next and what documentation to read (mainly to learn how to do it myself), while still implementing it myself and writing my own code. For the frontend and the installation script, on the other hand, it was fully AI generated and just copy-pasted.
+
 ## Features
 
 This design allows you to create pulses using the Zynq Ultrascale+ Transceiver channels, allowing you to add an arbitrary amount of pulses (>1024) that can be as small as 62.5 ps wide. The system works for up to 8 channels and can store waveforms up to ~130 μs. This number can be easily increased by just reducing the number of channels, and further increased by adding some compresion algorithm.
@@ -101,71 +103,54 @@ network:
 ```
 Where ZZZ is the gateway you are using on the network. The relevant part is that both the XX parts for the address and the gateway are equal.
 
+#### zPulse installation
+
+Once the Vivado project is recreated and the bitstream is generated, you will have the two files required for the Pynq Overlay (.hwh and .bit). This step can be skipped if using the provided files in the last release.
+
+To enter the Pynq GUI, just type 192.168.XX.YYY:9090/lab (where 192.168.XX.YYY is the IP you set chose on the ```etc/netplan/01-netcfg.yaml``` file). The password to enter the GUI will be xilinx. From here, you can SSH into the board or just enter through the Pynq GUI and open a new terminal. From any of those two, just run:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/bmatiasruben/zPulse/main/install.sh | sudo bash
+```
+
+This single command will:
+
+- Clone the zPulse repository onto the board
+- Download the latest bitstream release assets (.bit and .hwh files)
+- Deploy the web server to `/home/ubuntu/Webserver`
+- Deploy the Jupyter notebook and overlay to `/home/root/jupyter_notebooks`
+- Compile the Si570 clock utility
+- Auto-detect the Si570 I2C bus and set up a systemd service to configure it at boot
+- Install Flask and set up a systemd service to start the web server at boot
+
+Once the script completes, the web UI is accessible at:
+
+```
+http://<board-ip>:5000
+```
+
+and the Jupyter interface remains available at:
+
+```
+http://<board-ip>:9090
+```
+
 ## Use
 
-Once the Vivado project is recreated and the bitstream is generated, you will have the two files required for the Pynq Overlay (.hwh and .bit). To enter the Pynq GUI, just type 192.168.XX.YYY:9090/lab (where 192.168.XX.YYY is the IP you set chose on the ```etc/netplan/01-netcfg.yaml``` file). The password to enter the GUI will be xilinx.
+### Web UI
 
-Within the Pynq folder, you will find the file zPulse_overlay.py which is a custom class to make control of the pulse generation with transceivers easier, zPulse_GUI.ipynb that is the full GUI for controlling all channels, and si570_usr_mgt_100mhz.c, which is a C code to reprogram the Si570 oscillator connected to the transceivers.
+The web UI is the recommended interface for controlling zPulse. Once the board is powered on, navigate to `http://<board-ip>:5000` from any browser on the same network. From there:
 
-I suggest creating the following folder structure within the root directory available in the Pynq environment (corresponding to ```/home/root/jupyter_notebooks```)
-```bash
-$PYNQ_ROOT_DIR
-    ├── zPulse
-    │   ├── Bitstream
-    │   │   ├── zPulse_16.bit
-    │   │   └── zPulse_16.hwh
-    │   ├── Clocking
-    │   │   └── si570_usr_mgt_100mhz.c
-    │   └── zPulse_overlay.py
-    └── zPulse_GUI.ipynb
-```
-and then modify the line creating the overlay on the jupyter notebook to be compliant with either this or your own folder structure. By default, the line is compatible with the one provided here, such that
-```bash
-ol = zPulseOverlay("zPulse/Bitstream/zPulse_16.bit")
-```
+1. Select a bitstream from the dropdown and click **Load Bitstream** — the FPGA will be programmed automatically and the resolution set based on the bitstream filename (e.g. `zPulse_16.bit` sets 62.5 ps resolution)
+2. Use the channel tabs to configure each channel independently: period, delay, pulses (width and start), drive controls (pre/post emphasis and amplitude), and enable/disable
+3. Settings are preserved server-side and visible to any browser connecting to the same board
 
-Before actually running the GUI, the Si570 oscillator has to be re-configured to output 100 MHz. To do so, you have to install the ```gcc``` compiler (can be done with ```sudo apt install -y build-essential```), and run 
-```bash
-gcc -Wall -O2 -o /home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz /home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz.c
-```
-which will create a compiled version within the same directory of the C file.
+It is worth noting that this interface is more limited when compared to pure Pynq, as you don't get the full power of creating custom waveforms with Python.
 
-Then, you need to find the I2C bus corresponding to the Si570, by running
-```bash
-sudo apt install i2c-tools
-i2cdetect -l
-```
-and look for the line ```i2c-1-mux (chan_id 3)``` or similar. The first column should say ```i2c-XX``` where XX corresponds to the ID of the connection, which I will refer to as BUS_MGT. Once that number is found, run the script with
-```bash
-sudo ./home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz BUS_MGT
-```
+### Jupyter notebook
 
-To run the script at boot, simply create a service ```/etc/systemd/system/si570-mgt-100mhz.service``` with
-```bash
-[Unit]
-Description=Set USER MGT Si570 (U56) to 100 MHz after boot
-After=multi-user.target
+The Jupyter interface is also available for those who prefer it. Navigate to `http://<board-ip>:9090/lab` (password: `xilinx`) and open `zPulse_GUI.ipynb`. Run the only cell present to launch the GUI. This GUI is much slower than the web UI, as it uses matplotlib library to do the plots and that takes some time.
 
-[Service]
-Type=oneshot
-ExecStart=/home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz BUS_MGT
-
-[Install]
-WantedBy=multi-user.target
-```
-and enable it with
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable si570-mgt-100mhz.service
-```
-These steps will set the frequency of your Si570 oscillator to 100 MHz, and can be changed by modifying the ```TARGET_FOUT``` parameter on the C code if a different frequency is required. With the correct frequency set, the GUI can finally be executed.
-
-To start the zPulse GUI, just run the only cell present in zPulse_GUI.ipynb. From within the GUI, you can control everything you need, from pulse width, pulse offset, number of pulses, and overall waveform period. At runtime, you will be prompted to select from a list of bitstreams (every .hwh file within the Bitstreams folder). The resolution will be automatically selected from the value after the underscore on the bitstream filename (meaning zPulse_16.bit will automatically set the resolution step to 62.5 ps).
-Each channel is now loaded dinamically, meaning that it will only load Channel 1 at runtime, and the rest will only be loaded (once) if the corresponding tab is accessed. This reduces initial startup time.
-
-<p align="center">
-<img src="./images/pynq_gui.png" width="95%"/>
-</p>
 
 ### Locking to an external 10 MHz
 
