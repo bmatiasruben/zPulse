@@ -70,7 +70,7 @@ class zPulseOverlay(Overlay):
         if (isinstance(ch_index, int) and 0 <= ch_index <= 7):
             self.ch_enable[ch_index].off()
                     
-    def memdict_to_view(self, ip, dtype='int32'):
+    def memdict_to_view(self, ip, dtype='uint32'):
         """ Configures access to internal memory via MMIO"""
         baseAddress = self.mem_dict[ip]["phys_addr"]
         mem_range = self.mem_dict[ip]["addr_range"]
