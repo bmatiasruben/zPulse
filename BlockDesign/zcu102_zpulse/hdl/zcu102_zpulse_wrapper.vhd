@@ -19,10 +19,25 @@ entity zcu102_zpulse_wrapper is
     clk_100_in : in STD_LOGIC;
     clk_10_out : out STD_LOGIC;
     clk_10mhz_in : in STD_LOGIC;
+    clk_ctrl : out STD_LOGIC;
     clk_out_100 : out STD_LOGIC;
     clk_out_250 : out STD_LOGIC;
     ext_clk_locked : out STD_LOGIC;
     internal_clk_locked : out STD_LOGIC;
+    phase_ctrl_1 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_2 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_3 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_4 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_5 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_6 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_7 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_1 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_2 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_3 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_4 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_5 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_6 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_7 : in STD_LOGIC_VECTOR ( 31 downto 0 );
     tx_data : out STD_LOGIC_VECTOR ( 511 downto 0 );
     tx_diffctrl : out STD_LOGIC_VECTOR ( 39 downto 0 );
     tx_inhibit : out STD_LOGIC_VECTOR ( 7 downto 0 );
@@ -49,7 +64,22 @@ architecture STRUCTURE of zcu102_zpulse_wrapper is
     tx_postcursor : out STD_LOGIC_VECTOR ( 39 downto 0 );
     tx_diffctrl : out STD_LOGIC_VECTOR ( 39 downto 0 );
     tx_precursor : out STD_LOGIC_VECTOR ( 39 downto 0 );
-    clk_100_in : in STD_LOGIC
+    clk_100_in : in STD_LOGIC;
+    clk_ctrl : out STD_LOGIC;
+    phase_ctrl_1 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_1 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_2 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_2 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_3 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_3 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_4 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_4 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_5 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_5 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_6 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_6 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_ctrl_7 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_7 : in STD_LOGIC_VECTOR ( 31 downto 0 )
   );
   end component zcu102_zpulse;
 begin
@@ -60,10 +90,25 @@ zcu102_zpulse_i: component zcu102_zpulse
       clk_100_in => clk_100_in,
       clk_10_out => clk_10_out,
       clk_10mhz_in => clk_10mhz_in,
+      clk_ctrl => clk_ctrl,
       clk_out_100 => clk_out_100,
       clk_out_250 => clk_out_250,
       ext_clk_locked => ext_clk_locked,
       internal_clk_locked => internal_clk_locked,
+      phase_ctrl_1(31 downto 0) => phase_ctrl_1(31 downto 0),
+      phase_ctrl_2(31 downto 0) => phase_ctrl_2(31 downto 0),
+      phase_ctrl_3(31 downto 0) => phase_ctrl_3(31 downto 0),
+      phase_ctrl_4(31 downto 0) => phase_ctrl_4(31 downto 0),
+      phase_ctrl_5(31 downto 0) => phase_ctrl_5(31 downto 0),
+      phase_ctrl_6(31 downto 0) => phase_ctrl_6(31 downto 0),
+      phase_ctrl_7(31 downto 0) => phase_ctrl_7(31 downto 0),
+      phase_status_1(31 downto 0) => phase_status_1(31 downto 0),
+      phase_status_2(31 downto 0) => phase_status_2(31 downto 0),
+      phase_status_3(31 downto 0) => phase_status_3(31 downto 0),
+      phase_status_4(31 downto 0) => phase_status_4(31 downto 0),
+      phase_status_5(31 downto 0) => phase_status_5(31 downto 0),
+      phase_status_6(31 downto 0) => phase_status_6(31 downto 0),
+      phase_status_7(31 downto 0) => phase_status_7(31 downto 0),
       tx_data(511 downto 0) => tx_data(511 downto 0),
       tx_diffctrl(39 downto 0) => tx_diffctrl(39 downto 0),
       tx_inhibit(7 downto 0) => tx_inhibit(7 downto 0),
