@@ -1,3 +1,6 @@
 [submodule "Hog"]
 	path = Hog
 	url = https://gitlab.com/hog-cern/Hog.git
+[submodule "User_IP/tx_phase_aligner"]
+	path = User_IP/tx_phase_aligner
+	url = https://gitlab.cern.ch/HPTD/tx_phase_aligner.git
