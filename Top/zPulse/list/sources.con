@@ -1,2 +1,3 @@
 Constraints/pins.xdc nosynth
 Constraints/debug.xdc 
+Constraints/phase_ctrl.xdc 
