@@ -321,10 +321,6 @@ function buildChannelHTML(ch) {
                         <label>Status</label>
                         <span id="phase-status-${ch}">-</span>
                     </div>
-                    <div class="field-row">
-                        <button id="phase-refresh-${ch}">Refresh</button>
-                        <button id="phase-realign-${ch}">Realign</button>
-                    </div>
                 </div>
                 ${ch === 0 ? '<p>Phase reference channel (aligned, fixed phase)</p>' : ''}
                 <p id="phase-info-${ch}">Not available in this bitstream</p>
@@ -458,12 +454,6 @@ function wireUpChannel(ch) {
         document.getElementById(`${field}-${ch}`).addEventListener('change', () => sendWaveformSettings(ch));
     });
     document.getElementById(`fine-phase-${ch}`).addEventListener('change', () => sendPhaseSettings(ch));
-    document.getElementById(`phase-refresh-${ch}`).addEventListener('click', () => updatePhaseStatus(ch));
-    document.getElementById(`phase-realign-${ch}`).addEventListener('click', () => {
-        fetch(`/api/channel/${ch}/phase/realign`, { method: 'POST' })
-            .then(response => response.json())
-            .then(() => updatePhaseStatus(ch));
-    });
 }
 
 function wireUpAllChannels() {
@@ -472,12 +462,22 @@ function wireUpAllChannels() {
     }
 }
 
+let currentTab = 0;
+
 function showTab(ch) {
+    currentTab = ch;
     for (let i = 0; i < CHANNELS; i++) {
         document.getElementById(`channel-${i}`).style.display = (i === ch) ? 'block' : 'none';
         document.querySelectorAll('.tab-button')[i].classList.toggle('active', i === ch);
     }
 }
+
+// phase status of the visible channel, refreshed while the page is shown (one request every 3 s)
+const PHASE_STATUS_PERIOD_MS = 3000;
+setInterval(() => {
+    const block = document.getElementById(`phase-ctrl-${currentTab}`);
+    if (!document.hidden && block && block.style.display !== 'none') updatePhaseStatus(currentTab);
+}, PHASE_STATUS_PERIOD_MS);
 
 function wireUpTabButtons() {
     document.querySelectorAll('.tab-button').forEach(btn => {
@@ -540,7 +540,7 @@ function sendDriveSettings(ch) {
         .then(data => console.log(data));
 }
 
-// status / realign on every aligned channel, fine phase only where it can be set (not the reference)
+// status on every aligned channel, fine phase only where it can be set (not the reference)
 function showPhaseControl(ch, available, adjustable) {
     document.getElementById(`phase-ctrl-${ch}`).style.display = available ? 'block' : 'none';
     document.getElementById(`fine-phase-row-${ch}`).style.display = adjustable ? '' : 'none';

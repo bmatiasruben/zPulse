@@ -179,7 +179,7 @@ def set_channel_drive(ch):
     return jsonify(status='ok')
 
 def check_phase_channel(ch, control=False):
-    """control=False: status and realign (every channel), control=True: phase offset (not the reference)"""
+    """control=False: status (every channel), control=True: phase offset (not the reference)"""
     if ol is None:
         return jsonify(status="error", message="No bitstream loaded"), 400
     if not (0 <= ch < CHANNELS):
@@ -214,15 +214,6 @@ def set_channel_phase(ch):
     channel_settings[ch]['fine_phase'] = fine_phase
 
     return jsonify(status='ok', fine_phase=fine_phase)
-
-@app.route('/api/channel/<int:ch>/phase/realign', methods=['POST'])
-def realign_channel_phase(ch):
-    error = check_phase_channel(ch)
-    if error:
-        return error
-    with hw_lock:
-        ol.realign_phase(ch)
-    return jsonify(status='ok')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, threaded=False)
