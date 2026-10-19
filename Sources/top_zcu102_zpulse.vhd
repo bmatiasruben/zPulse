@@ -4,6 +4,10 @@
 -- -------------------------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
+
+library xpm;
+use xpm.vcomponents.all;
+
 entity Top is
     port (
         clk_gt_internal_n : in std_logic;
@@ -50,9 +54,11 @@ architecture Behavioral of Top is
     signal w_clk_to_gt                     : std_logic;
     signal gt_tx_inhibit                   : std_logic_vector(7 downto 0);
 
-    -- TX phase control (channel 0 is the reference, channels 1 to 7 are adjustable)
-    type t_word_array is array (1 to 7) of std_logic_vector(31 downto 0);
+    -- TX phase control: every channel is aligned, channel 0 is the reference (offset fixed at 0)
+    -- and channels 1 to 7 are adjustable
+    type t_word_array is array (0 to 7) of std_logic_vector(31 downto 0);
     signal phase_ctrl                      : t_word_array;
+    signal phase_ctrl_ref                  : std_logic_vector(31 downto 0);
     signal phase_status                    : t_word_array;
     signal w_clk_ctrl                      : std_logic;
     signal tx_reset_done                   : std_logic_vector(0 downto 0);
@@ -70,6 +76,10 @@ architecture Behavioral of Top is
     signal txpippmsel                      : std_logic_vector(7 downto 0);
     signal txpippmstepsize                 : std_logic_vector(39 downto 0);
     signal txbufstatus                     : std_logic_vector(15 downto 0);
+
+    -- waveform address reset: from the PS (clk_ctrl) to all streamers (txusrclk2)
+    signal w_addr_reset_ctrl               : std_logic_vector(0 downto 0);
+    signal w_addr_reset_txusr              : std_logic;
 
 begin
 
@@ -101,7 +111,7 @@ begin
             gtgrefclk0_in(1)  => w_clk_to_gt,
             qpll0refclksel_in => "111111",
             txinhibit_in      => gt_tx_inhibit,
-            -- TX phase interpolator / DRP (driven by tx_phase_ctrl, channel 0 tied off)
+            -- TX phase interpolator / DRP (driven by tx_phase_ctrl)
             drpaddr_in         => drpaddr,
             drpclk_in          => drpclk,
             drpdi_in           => drpdi,
@@ -178,19 +188,13 @@ begin
 
     drpclk <= (others => w_clk_ctrl);
 
-    -- Channel 0 is the phase reference: its PI and DRP keep the GT defaults
-    tx_aligned(0)               <= '1';
-    drpaddr(9 downto 0)         <= (others => '0');
-    drpdi(15 downto 0)          <= (others => '0');
-    drpen(0)                    <= '0';
-    drpwe(0)                    <= '0';
-    txpippmen(0)                <= '0';
-    txpippmovrden(0)            <= '0';
-    txpippmpd(0)                <= '0';
-    txpippmsel(0)               <= '0';
-    txpippmstepsize(4 downto 0) <= (others => '0');
+    -- Channel 0 is the phase reference: it is aligned like the others (with the TX buffer on its
+    -- latency is otherwise random after every reset) but its offset stays at 0. TX_PROGCLK_SEL is
+    -- PREPI, so moving the channel 0 PI does not move TXOUTCLK / txusrclk.
+    -- Only realign [17] and reset [31] are taken from its GPIO: apply = 1, target = 0.
+    phase_ctrl(0) <= phase_ctrl_ref(31 downto 17) & '1' & x"0000";
 
-    gen_phase_ctrl : for i in 1 to 7 generate
+    gen_phase_ctrl : for i in 0 to 7 generate
         tx_phase_ctrl_inst : entity work.tx_phase_ctrl
             port map(
                 i_clk_sys         => w_clk_ctrl,
@@ -217,6 +221,17 @@ begin
     -- keep a channel quiet until its phase alignment is done
     gt_tx_inhibit <= tx_inhibit or not tx_aligned;
 
+    -- One synchronizer for all streamers, so that every channel leaves the address reset on the
+    -- same txusrclk2 cycle (independent synchronizers could resolve one cycle apart)
+    addr_reset_cdc : xpm_cdc_single
+        generic map(DEST_SYNC_FF => 4, INIT_SYNC_FF => 0, SIM_ASSERT_CHK => 0, SRC_INPUT_REG => 1)
+        port map(
+            src_clk  => w_clk_ctrl,
+            src_in   => w_addr_reset_ctrl(0),
+            dest_clk => w_txusrclk2,
+            dest_out => w_addr_reset_txusr
+        );
+
     -- Block design
 
     bd : entity work.zcu102_zpulse_wrapper
@@ -237,6 +252,10 @@ begin
             tx_precursor        => tx_precursor,
             tx_diffctrl         => tx_diffctrl,
             clk_ctrl            => w_clk_ctrl,
+            phase_ctrl_0        => phase_ctrl_ref,
+            phase_status_0      => phase_status(0),
+            addr_reset_out      => w_addr_reset_ctrl,
+            addr_reset_in       => w_addr_reset_txusr,
             phase_ctrl_1        => phase_ctrl(1),
             phase_ctrl_2        => phase_ctrl(2),
             phase_ctrl_3        => phase_ctrl(3),

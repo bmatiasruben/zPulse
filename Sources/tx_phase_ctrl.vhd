@@ -5,19 +5,20 @@
 --
 --  Wraps one CERN tx_phase_aligner (https://gitlab.cern.ch/HPTD/tx_phase_aligner) and adds a
 --  setpoint controller so that software only has to write an absolute phase offset (in TX PI
---  codes, relative to the phase reached after the automatic alignment). Keeping both the target
---  and the current offset within one UI (0 to 63) makes the shortest modular path the direct one.
+--  codes, relative to the phase reached after the automatic alignment). The offset spans several
+--  UIs, so a phase sweep can cross a UI boundary without changing the waveform delay. The 7-bit
+--  tx_pi_phase_o of the aligner wraps every 2 UIs: it is unwrapped into a wider counter, so the
+--  current offset is always read back from the aligner (a lost step is corrected by the next one).
 --
 --  Control word (i_ctrl, from AXI GPIO, clk_sys domain):
---      [5:0]  target phase offset in PI codes, 0 to 63 (1 UI = 64 codes on GTH, coarser shifts
---             are done with the waveform delay in whole UIs)
+--      [7:0]  target phase offset in PI codes, 0 to 255 (1 UI = 64 codes on GTH, so up to 4 UIs)
 --      [16]   apply: while '1' the internal target follows [5:0]; while '0' the last target is
 --             held (the AXI GPIO is reset by every ol.reset(), the setpoint must survive it)
 --      [17]   fine realign request (rising edge)
 --      [31]   aligner reset (active high)
 --
 --  Status word (o_status, to AXI GPIO):
---      [6:0]   current phase offset (PI codes, relative to the aligned position)
+--      [7:0]   current phase offset (PI codes, relative to the aligned position)
 --      [14:8]  raw accumulated PI phase (tx_pi_phase_o)
 --      [16]    tx aligned
 --      [17]    busy (current offset /= target)
@@ -78,10 +79,11 @@ architecture Behavioral of tx_phase_ctrl is
     signal r_ps_strobe : std_logic := '0';
     signal r_ps_inc_ndec : std_logic := '0';
 
-    signal r_base : unsigned(6 downto 0) := (others => '0');
-    signal r_target : unsigned(6 downto 0) := (others => '0');
-    signal w_offset : unsigned(6 downto 0);
-    signal w_diff : unsigned(6 downto 0);
+    signal r_phase_prev : unsigned(6 downto 0) := (others => '0');
+    signal w_phase_delta : signed(6 downto 0);
+    signal r_offset : signed(9 downto 0) := (others => '0');
+    signal r_target : signed(9 downto 0) := (others => '0');
+    signal w_diff : signed(9 downto 0);
     signal r_counter : integer range 0 to c_TIMEOUT_CYCLES := 0;
 
 begin
@@ -97,10 +99,11 @@ begin
 
     w_aligner_reset <= (not r_tx_reset_done_sync) or i_ctrl(31);
 
-    w_offset <= unsigned(w_tx_pi_phase) - r_base;
-    w_diff <= r_target - w_offset;
+    -- PI phase change since the previous cycle (at most one step, so no ambiguity on the wrap)
+    w_phase_delta <= signed(unsigned(w_tx_pi_phase) - r_phase_prev);
+    w_diff <= r_target - r_offset;
 
-    -- Setpoint controller: moves the PI one code at a time along the shortest path
+    -- Setpoint controller: moves the PI one code at a time towards the target
     process (i_clk_sys)
     begin
         if rising_edge(i_clk_sys) then
@@ -108,21 +111,24 @@ begin
             r_ps_strobe <= '0';
 
             if i_ctrl(16) = '1' then
-                r_target <= unsigned('0' & i_ctrl(5 downto 0));
+                r_target <= signed("00" & i_ctrl(7 downto 0));
             end if;
 
             if w_aligner_reset = '1' or w_aligned = '0' then
                 r_state <= IDLE;
             else
-                -- latch the phase reached by the automatic alignment
+                -- the offset counts from the phase reached by the automatic alignment
+                r_phase_prev <= unsigned(w_tx_pi_phase);
                 if r_aligned = '0' then
-                    r_base <= unsigned(w_tx_pi_phase);
+                    r_offset <= (others => '0');
+                else
+                    r_offset <= r_offset + resize(w_phase_delta, r_offset'length);
                 end if;
 
                 case r_state is
                     when IDLE =>
                         if r_aligned = '1' and w_diff /= 0 then
-                            r_ps_inc_ndec <= not w_diff(6); -- diff < 64 -> increment
+                            r_ps_inc_ndec <= not w_diff(w_diff'high); -- target above -> increment
                             r_ps_strobe <= '1';
                             r_counter <= 0;
                             r_state <= WAIT_DONE;
@@ -149,8 +155,7 @@ begin
 
     o_aligned <= w_aligned;
 
-    o_status(6 downto 0) <= std_logic_vector(w_offset);
-    o_status(7) <= '0';
+    o_status(7 downto 0) <= std_logic_vector(r_offset(7 downto 0));
     o_status(14 downto 8) <= w_tx_pi_phase;
     o_status(15) <= '0';
     o_status(16) <= w_aligned;

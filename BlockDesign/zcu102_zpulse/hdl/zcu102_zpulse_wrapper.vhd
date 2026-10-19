@@ -2,8 +2,8 @@
 --Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
---Date        : Tue Mar 31 14:12:57 2026
---Host        : mate running 64-bit Ubuntu 25.10
+--Date        : Mon Oct 19 10:58:15 2026
+--Host        : tq-rack running 64-bit Ubuntu 25.10
 --Command     : generate_target zcu102_zpulse_wrapper.bd
 --Design      : zcu102_zpulse_wrapper
 --Purpose     : IP block netlist
@@ -16,6 +16,8 @@ entity zcu102_zpulse_wrapper is
   port (
     CLK_IN_300_clk_n : in STD_LOGIC;
     CLK_IN_300_clk_p : in STD_LOGIC;
+    addr_reset_in : in STD_LOGIC;
+    addr_reset_out : out STD_LOGIC_VECTOR ( 0 to 0 );
     clk_100_in : in STD_LOGIC;
     clk_10_out : out STD_LOGIC;
     clk_10mhz_in : in STD_LOGIC;
@@ -24,6 +26,7 @@ entity zcu102_zpulse_wrapper is
     clk_out_250 : out STD_LOGIC;
     ext_clk_locked : out STD_LOGIC;
     internal_clk_locked : out STD_LOGIC;
+    phase_ctrl_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_ctrl_1 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_ctrl_2 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_ctrl_3 : out STD_LOGIC_VECTOR ( 31 downto 0 );
@@ -31,6 +34,7 @@ entity zcu102_zpulse_wrapper is
     phase_ctrl_5 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_ctrl_6 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_ctrl_7 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_0 : in STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_status_1 : in STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_status_2 : in STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_status_3 : in STD_LOGIC_VECTOR ( 31 downto 0 );
@@ -66,6 +70,8 @@ architecture STRUCTURE of zcu102_zpulse_wrapper is
     tx_precursor : out STD_LOGIC_VECTOR ( 39 downto 0 );
     clk_100_in : in STD_LOGIC;
     clk_ctrl : out STD_LOGIC;
+    phase_ctrl_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    phase_status_0 : in STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_ctrl_1 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_status_1 : in STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_ctrl_2 : out STD_LOGIC_VECTOR ( 31 downto 0 );
@@ -79,7 +85,9 @@ architecture STRUCTURE of zcu102_zpulse_wrapper is
     phase_ctrl_6 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_status_6 : in STD_LOGIC_VECTOR ( 31 downto 0 );
     phase_ctrl_7 : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    phase_status_7 : in STD_LOGIC_VECTOR ( 31 downto 0 )
+    phase_status_7 : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    addr_reset_out : out STD_LOGIC_VECTOR ( 0 to 0 );
+    addr_reset_in : in STD_LOGIC
   );
   end component zcu102_zpulse;
 begin
@@ -87,6 +95,8 @@ zcu102_zpulse_i: component zcu102_zpulse
      port map (
       CLK_IN_300_clk_n => CLK_IN_300_clk_n,
       CLK_IN_300_clk_p => CLK_IN_300_clk_p,
+      addr_reset_in => addr_reset_in,
+      addr_reset_out(0) => addr_reset_out(0),
       clk_100_in => clk_100_in,
       clk_10_out => clk_10_out,
       clk_10mhz_in => clk_10mhz_in,
@@ -95,6 +105,7 @@ zcu102_zpulse_i: component zcu102_zpulse
       clk_out_250 => clk_out_250,
       ext_clk_locked => ext_clk_locked,
       internal_clk_locked => internal_clk_locked,
+      phase_ctrl_0(31 downto 0) => phase_ctrl_0(31 downto 0),
       phase_ctrl_1(31 downto 0) => phase_ctrl_1(31 downto 0),
       phase_ctrl_2(31 downto 0) => phase_ctrl_2(31 downto 0),
       phase_ctrl_3(31 downto 0) => phase_ctrl_3(31 downto 0),
@@ -102,6 +113,7 @@ zcu102_zpulse_i: component zcu102_zpulse
       phase_ctrl_5(31 downto 0) => phase_ctrl_5(31 downto 0),
       phase_ctrl_6(31 downto 0) => phase_ctrl_6(31 downto 0),
       phase_ctrl_7(31 downto 0) => phase_ctrl_7(31 downto 0),
+      phase_status_0(31 downto 0) => phase_status_0(31 downto 0),
       phase_status_1(31 downto 0) => phase_status_1(31 downto 0),
       phase_status_2(31 downto 0) => phase_status_2(31 downto 0),
       phase_status_3(31 downto 0) => phase_status_3(31 downto 0),
