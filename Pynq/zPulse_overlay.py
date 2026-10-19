@@ -6,14 +6,15 @@ from pynq import Overlay, MMIO, GPIO
 import numpy as np
 import os
 import math
+import time
 
 CHANNELS: int = 8  #: Number of channels
 MEMORY_SIZE: int = 262144 #: Memory Size
 MEMORY_WIDTH: int = 64
 
-PHASE_REF_CHANNEL: int = 0  #: Channel 0 is the phase reference (no fine phase control)
+PHASE_REF_CHANNEL: int = 0  #: Channel 0 is the phase reference (aligned, offset fixed at 0)
 PHASE_STEPS_PER_UI: int = 64  #: TX phase interpolator codes per UI (GTH)
-PHASE_MAX_CODES: int = PHASE_STEPS_PER_UI - 1  #: Fine phase range, coarser shifts use the delay
+PHASE_MAX_CODES: int = 4 * PHASE_STEPS_PER_UI - 1  #: Fine phase range (4 UI), so sweeps can cross a UI boundary
 PHASE_APPLY = 1 << 16
 PHASE_REALIGN = 1 << 17
 PHASE_RESET = 1 << 31
@@ -68,7 +69,7 @@ class zPulseOverlay(Overlay):
             self.postemph[i] = tx.emphasis_ctrl_0.channel2
             self.amplitude[i] = tx.voltage_ctr_0.channel1
             # Fine phase control (TX phase interpolator), only in bitstreams that include it
-            if i != PHASE_REF_CHANNEL and hasattr(tx, "phase_ctrl_0"):
+            if hasattr(tx, "phase_ctrl_0"):
                 self.phase_ctrl[i] = tx.phase_ctrl_0.channel1
                 self.phase_status[i] = tx.phase_ctrl_0.channel2
                 self._phase_target[i] = 0
@@ -86,7 +87,12 @@ class zPulseOverlay(Overlay):
             self.ch_enable[ch_index].off()
                     
     def has_phase_control(self, ch_index=None):
-        return ch_index in self.phase_ctrl
+        """True if the fine phase offset of the channel can be set (not the reference channel)."""
+        return ch_index in self.phase_ctrl and ch_index != PHASE_REF_CHANNEL
+
+    def has_phase_status(self, ch_index=None):
+        """True if the channel has a phase aligner (status and realign), reference channel included."""
+        return ch_index in self.phase_status
 
     def set_phase(self, ch_index, codes):
         """Set the fine phase offset of a channel in TX PI codes (1/64 UI), relative to the
@@ -103,7 +109,7 @@ class zPulseOverlay(Overlay):
     def get_phase_status(self, ch_index):
         status = self.phase_status[ch_index].read()
         return {
-            "offset": status & 0x7F,
+            "offset": status & 0xFF,
             "raw": (status >> 8) & 0x7F,
             "aligned": bool(status >> 16 & 1),
             "busy": bool(status >> 17 & 1),
@@ -115,8 +121,22 @@ class zPulseOverlay(Overlay):
         self.phase_ctrl[ch_index].write(target | flag, 0xFFFFFFFF)
         self.phase_ctrl[ch_index].write(target | PHASE_APPLY, 0xFFFFFFFF)
 
-    def fine_realign_phase(self, ch_index):
-        """Redo only the fine alignment of a channel to the half-response of its phase detector."""
+    def fine_realign_phase(self, ch_index, timeout=1.0):
+        """Redo only the fine alignment of a channel to the half-response of its phase detector.
+        The fine alignment starts from the current PI position, so the offset is first brought
+        back to 0 (otherwise the search walks back up to 4 UI, about 1 ms per step); the target
+        is re-applied once the channel is aligned again."""
+        target = self._phase_target[ch_index]
+        self.phase_ctrl[ch_index].write(PHASE_APPLY, 0xFFFFFFFF)
+        deadline = time.monotonic() + timeout
+        while True:
+            status = self.get_phase_status(ch_index)
+            if status["offset"] == 0 and not status["busy"]:
+                break
+            if time.monotonic() > deadline:
+                self.phase_ctrl[ch_index].write(target | PHASE_APPLY, 0xFFFFFFFF)
+                raise TimeoutError(f"Channel {ch_index}: phase offset did not return to 0")
+            time.sleep(0.001)
         self._phase_pulse(ch_index, PHASE_REALIGN)
 
     def realign_phase(self, ch_index):

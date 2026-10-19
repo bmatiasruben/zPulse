@@ -2,7 +2,7 @@ console.log("app.js loaded");
 CHANNELS = 8;
 let RESOLUTION = null;
 const PHASE_STEPS_PER_UI = 64; // TX phase interpolator codes per UI (GTH)
-const PHASE_MAX_CODES = PHASE_STEPS_PER_UI - 1; // coarser shifts use the delay
+const PHASE_MAX_CODES = 4 * PHASE_STEPS_PER_UI - 1; // 4 UI, so sweeps can cross a UI boundary
 const CHANNEL_COLORS = [
     "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
     "#9467bd", "#8c564b", "#e377c2", "#17becf"
@@ -74,7 +74,7 @@ function fetchAndPopulateChannel(ch) {
         .then(data => {
             populateChannelFromSettings(ch, data.settings);
             updateChannelChart(ch, data.waveform);
-            showPhaseControl(ch, data.phase_control);
+            showPhaseControl(ch, data.phase_status, data.phase_control);
         });
 }
 
@@ -313,7 +313,7 @@ function buildChannelHTML(ch) {
 
                 <h3>Phase Control</h3>
                 <div id="phase-ctrl-${ch}" style="display:none;">
-                    <div class="field-row">
+                    <div class="field-row" id="fine-phase-row-${ch}">
                         <label>Fine phase (ps)</label>
                         <input type="number" id="fine-phase-${ch}" min="0" value="0">
                     </div>
@@ -326,7 +326,8 @@ function buildChannelHTML(ch) {
                         <button id="phase-realign-${ch}">Realign</button>
                     </div>
                 </div>
-                <p id="phase-info-${ch}">${ch === 0 ? 'Phase reference channel (fixed phase)' : 'Not available in this bitstream'}</p>
+                ${ch === 0 ? '<p>Phase reference channel (aligned, fixed phase)</p>' : ''}
+                <p id="phase-info-${ch}">Not available in this bitstream</p>
             </div>
 
         </div>
@@ -539,8 +540,10 @@ function sendDriveSettings(ch) {
         .then(data => console.log(data));
 }
 
-function showPhaseControl(ch, available) {
+// status / realign on every aligned channel, fine phase only where it can be set (not the reference)
+function showPhaseControl(ch, available, adjustable) {
     document.getElementById(`phase-ctrl-${ch}`).style.display = available ? 'block' : 'none';
+    document.getElementById(`fine-phase-row-${ch}`).style.display = adjustable ? '' : 'none';
     document.getElementById(`phase-info-${ch}`).style.display = available ? 'none' : 'block';
     if (available) updatePhaseStatus(ch);
 }

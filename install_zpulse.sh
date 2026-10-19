@@ -29,7 +29,8 @@ if [ -d "$CLONE_DIR" ]; then
     echo "  Directory exists, pulling latest..."
     cd "$CLONE_DIR" && git pull
 else
-    git clone --recurse-submodules "$REPO" "$CLONE_DIR"
+    # no submodules: Hog and tx_phase_aligner are only needed to build the bitstream
+    git clone "$REPO" "$CLONE_DIR"
 fi
 
 # ── 3. Download latest bitstream release assets ───────────────────────────────

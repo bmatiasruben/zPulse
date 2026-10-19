@@ -161,15 +161,11 @@ Regardless of wheter an external 10 MHz clock is provided, the CLK1_M2C_N port o
 
 ### Fine phase control
 
-On top of the whole-UI timing set by the delay, channels 1 to 7 have a sub-UI phase control based on the CERN [tx_phase_aligner](https://gitlab.cern.ch/HPTD/tx_phase_aligner) (submodule in `User_IP/tx_phase_aligner`). The transceiver TX buffer is enabled and each channel's TX phase interpolator is driven over DRP, in steps of 1/64 UI (about 1 ps at 16 Gbps). Channel 0 is the phase reference and is not adjusted.
+On top of the whole-UI timing set by the delay, every channel has a fine phase control based on the CERN [tx_phase_aligner](https://gitlab.cern.ch/HPTD/tx_phase_aligner) (submodule in `User_IP/tx_phase_aligner`). The transceiver TX buffer is enabled and each channel's TX phase interpolator is driven over DRP, in steps of 1/64 UI (about 1 ps at 16 Gbps). Channel 0 is the phase reference: it is aligned like the others, so that the skew between channels is the same after every power-up, but its offset is fixed at 0.
 
-After the transceivers come out of reset, each adjustable channel is automatically aligned (and kept inhibited until then). The **Fine phase** field (web UI) or **Phase** box (notebook) sets an offset between 0 and 63/64 UI with respect to that aligned position; larger shifts are done with the delay. The setpoint is kept in the FPGA, so reloading a waveform does not change it. **Realign** restarts the automatic alignment of a channel. From Python, the same is available with `ol.set_phase(ch, codes)`, `ol.get_phase_status(ch)` and `ol.realign_phase(ch)`.
+After the transceivers come out of reset, each channel is automatically aligned (and kept inhibited until then). The **Fine phase** field (web UI) or **Phase** box (notebook) sets an offset between 0 and 255/64 UI (almost 4 UI) with respect to that aligned position, so a phase sweep can cross a UI boundary without changing the delay; larger shifts are done with the delay. The setpoint is kept in the FPGA, so reloading a waveform does not change it. **Realign** restarts the automatic alignment of a channel. From Python, the same is available with `ol.set_phase(ch, codes)`, `ol.get_phase_status(ch)` and `ol.realign_phase(ch)`.
 
-The block design changes (one `phase_ctrl_0` AXI GPIO per channel at `0xB020_0000 + (ch-1)*0x1_0000`) and the transceiver wizard configuration are applied on a freshly created project with
-
-```bash
-vivado -mode batch -source Scripts/add_phase_ctrl.tcl Projects/zPulse/zPulse.xpr
-```
+Each channel has its own `phase_ctrl_0` AXI GPIO (control word on channel 1, status on channel 2) at `0xB020_0000 + ch*0x1_0000`.
 
 ## Contribute
 

@@ -112,7 +112,9 @@ def get_channel_settings(ch):
     settings = channel_settings[ch]
     waveform = generate_waveform(settings['period'], settings['delay'], settings['pulses'])
     phase_control = ol is not None and ol.has_phase_control(ch)
-    return jsonify(status="ok", settings=settings, waveform=waveform.tolist(), phase_control=phase_control)
+    phase_status = ol is not None and ol.has_phase_status(ch)
+    return jsonify(status="ok", settings=settings, waveform=waveform.tolist(),
+                   phase_control=phase_control, phase_status=phase_status)
 
 @app.route('/api/channel/<int:ch>', methods=['POST'])
 def update_channel(ch):
@@ -176,13 +178,16 @@ def set_channel_drive(ch):
     
     return jsonify(status='ok')
 
-def check_phase_channel(ch):
+def check_phase_channel(ch, control=False):
+    """control=False: status and realign (every channel), control=True: phase offset (not the reference)"""
     if ol is None:
         return jsonify(status="error", message="No bitstream loaded"), 400
     if not (0 <= ch < CHANNELS):
         return jsonify(status="error", message=f"Invalid channel: {ch}"), 400
-    if not ol.has_phase_control(ch):
-        return jsonify(status="error", message=f"Channel {ch} has no phase control"), 400
+    if not ol.has_phase_status(ch):
+        return jsonify(status="error", message=f"Channel {ch} has no phase aligner"), 400
+    if control and not ol.has_phase_control(ch):
+        return jsonify(status="error", message=f"Channel {ch} is the phase reference"), 400
     return None
 
 @app.route('/api/channel/<int:ch>/phase', methods=['GET'])
@@ -196,7 +201,7 @@ def get_channel_phase(ch):
 
 @app.route('/api/channel/<int:ch>/phase', methods=['POST'])
 def set_channel_phase(ch):
-    error = check_phase_channel(ch)
+    error = check_phase_channel(ch, control=True)
     if error:
         return error
 
