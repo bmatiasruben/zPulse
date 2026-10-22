@@ -59,11 +59,9 @@ def get_bitstreams():
 
     return jsonify(bitstreams=[f.stem for f in bit_files])
 
-defaults_applied = False
-
 @app.route('/api/load_bitstream', methods=['POST'])
 def load_bitstream():
-    global ol, current_bitstream_name, defaults_applied
+    global ol, current_bitstream_name
     data = request.json
     name = data['name']
     bit_path = bitstream_dir / f"{name}.bit"
@@ -88,20 +86,20 @@ def load_bitstream():
 
     current_bitstream_name = name
 
-    if not defaults_applied:
-        for ch in range(CHANNELS):
-            settings = channel_settings[ch]
-            waveform = generate_waveform(settings['period'], settings['delay'], settings['pulses'])
-            with hw_lock:
-                ol.send_waveform_to_memory(ch, waveform)
-                ol.preemph[ch].write(settings['pre_emph'], 0xFFFFFFF)
-                ol.postemph[ch].write(settings['post_emph'], 0xFFFFFFF)
-                ol.amplitude[ch].write(2 * settings['amplitude'], 0xFFFFFFF)
-                if ol.has_phase_control(ch):
-                    ol.set_phase(ch, settings['fine_phase'])
-                if settings['enabled']:
-                    ol.enable_channel(ch)
-        defaults_applied = True
+    # Programming the bitstream resets the PL, so the settings shown in the GUI are written
+    # again on every load (not only the first one), otherwise the GUI and the outputs differ
+    for ch in range(CHANNELS):
+        settings = channel_settings[ch]
+        waveform = generate_waveform(settings['period'], settings['delay'], settings['pulses'])
+        with hw_lock:
+            ol.send_waveform_to_memory(ch, waveform)
+            ol.preemph[ch].write(settings['pre_emph'], 0xFFFFFFF)
+            ol.postemph[ch].write(settings['post_emph'], 0xFFFFFFF)
+            ol.amplitude[ch].write(2 * settings['amplitude'], 0xFFFFFFF)
+            if ol.has_phase_control(ch):
+                ol.set_phase(ch, settings['fine_phase'])
+            if settings['enabled']:
+                ol.enable_channel(ch)
 
     return jsonify(status="ok", channels=CHANNELS)
 
