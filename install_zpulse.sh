@@ -29,7 +29,8 @@ if [ -d "$CLONE_DIR" ]; then
     echo "  Directory exists, pulling latest..."
     cd "$CLONE_DIR" && git pull
 else
-    git clone --recurse-submodules "$REPO" "$CLONE_DIR"
+    # no submodules: Hog and tx_phase_aligner are only needed to build the bitstream
+    git clone "$REPO" "$CLONE_DIR"
 fi
 
 # ── 3. Download latest bitstream release assets ───────────────────────────────
@@ -94,7 +95,8 @@ SI570_BIN="$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz"
 cat > /etc/systemd/system/si570-mgt-100mhz.service << EOF
 [Unit]
 Description=Set USER MGT Si570 (U56) to 100 MHz after boot
-After=multi-user.target
+# no After=multi-user.target: the unit is WantedBy it, so that would be an ordering cycle and
+# systemd would drop zpulse.service (ordered after this one) at boot
 
 [Service]
 Type=oneshot

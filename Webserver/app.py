@@ -23,6 +23,7 @@ DEFAULT_SETTINGS = {
     "pre_emph": 0,
     "post_emph": 0,
     "amplitude": 15,
+    "fine_phase": 0,  # TX phase interpolator codes (1/64 UI), channels 1 to 7 only
     "enabled": False
 }
 
@@ -58,11 +59,9 @@ def get_bitstreams():
 
     return jsonify(bitstreams=[f.stem for f in bit_files])
 
-defaults_applied = False
-
 @app.route('/api/load_bitstream', methods=['POST'])
 def load_bitstream():
-    global ol, current_bitstream_name, defaults_applied
+    global ol, current_bitstream_name
     data = request.json
     name = data['name']
     bit_path = bitstream_dir / f"{name}.bit"
@@ -87,18 +86,20 @@ def load_bitstream():
 
     current_bitstream_name = name
 
-    if not defaults_applied:
-        for ch in range(CHANNELS):
-            settings = channel_settings[ch]
-            waveform = generate_waveform(settings['period'], settings['delay'], settings['pulses'])
-            with hw_lock:
-                ol.send_waveform_to_memory(ch, waveform)
-                ol.preemph[ch].write(settings['pre_emph'], 0xFFFFFFF)
-                ol.postemph[ch].write(settings['post_emph'], 0xFFFFFFF)
-                ol.amplitude[ch].write(2 * settings['amplitude'], 0xFFFFFFF)
-                if settings['enabled']:
-                    ol.enable_channel(ch)
-        defaults_applied = True
+    # Programming the bitstream resets the PL, so the settings shown in the GUI are written
+    # again on every load (not only the first one), otherwise the GUI and the outputs differ
+    for ch in range(CHANNELS):
+        settings = channel_settings[ch]
+        waveform = generate_waveform(settings['period'], settings['delay'], settings['pulses'])
+        with hw_lock:
+            ol.send_waveform_to_memory(ch, waveform)
+            ol.preemph[ch].write(settings['pre_emph'], 0xFFFFFFF)
+            ol.postemph[ch].write(settings['post_emph'], 0xFFFFFFF)
+            ol.amplitude[ch].write(2 * settings['amplitude'], 0xFFFFFFF)
+            if ol.has_phase_control(ch):
+                ol.set_phase(ch, settings['fine_phase'])
+            if settings['enabled']:
+                ol.enable_channel(ch)
 
     return jsonify(status="ok", channels=CHANNELS)
 
@@ -108,7 +109,10 @@ def get_channel_settings(ch):
         return jsonify(status="error", message=f"Invalid channel: {ch}"), 400
     settings = channel_settings[ch]
     waveform = generate_waveform(settings['period'], settings['delay'], settings['pulses'])
-    return jsonify(status="ok", settings=settings, waveform=waveform.tolist())
+    phase_control = ol is not None and ol.has_phase_control(ch)
+    phase_status = ol is not None and ol.has_phase_status(ch)
+    return jsonify(status="ok", settings=settings, waveform=waveform.tolist(),
+                   phase_control=phase_control, phase_status=phase_status)
 
 @app.route('/api/channel/<int:ch>', methods=['POST'])
 def update_channel(ch):
@@ -171,6 +175,43 @@ def set_channel_drive(ch):
     channel_settings[ch]['post_emph'] = post_emph
     
     return jsonify(status='ok')
+
+def check_phase_channel(ch, control=False):
+    """control=False: status (every channel), control=True: phase offset (not the reference)"""
+    if ol is None:
+        return jsonify(status="error", message="No bitstream loaded"), 400
+    if not (0 <= ch < CHANNELS):
+        return jsonify(status="error", message=f"Invalid channel: {ch}"), 400
+    if not ol.has_phase_status(ch):
+        return jsonify(status="error", message=f"Channel {ch} has no phase aligner"), 400
+    if control and not ol.has_phase_control(ch):
+        return jsonify(status="error", message=f"Channel {ch} is the phase reference"), 400
+    return None
+
+@app.route('/api/channel/<int:ch>/phase', methods=['GET'])
+def get_channel_phase(ch):
+    error = check_phase_channel(ch)
+    if error:
+        return error
+    with hw_lock:
+        phase_status = ol.get_phase_status(ch)
+    return jsonify(status='ok', fine_phase=channel_settings[ch]['fine_phase'], **phase_status)
+
+@app.route('/api/channel/<int:ch>/phase', methods=['POST'])
+def set_channel_phase(ch):
+    error = check_phase_channel(ch, control=True)
+    if error:
+        return error
+
+    fine_phase = int(request.json['fine_phase'])
+    with hw_lock:
+        try:
+            ol.set_phase(ch, fine_phase)
+        except ValueError as e:
+            return jsonify(status="error", message=str(e)), 400
+    channel_settings[ch]['fine_phase'] = fine_phase
+
+    return jsonify(status='ok', fine_phase=fine_phase)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, threaded=False)

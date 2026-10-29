@@ -34,7 +34,7 @@ for Git 2.13 or later, or with
 git clone --recursive https://github.com/bmatiasruben/zPulse.git
 ```
 
-for Git 1.65 or later. This will download the entire repository including the Hog submodule.
+for Git 1.65 or later. This will download the entire repository including the Hog and [tx_phase_aligner](https://gitlab.cern.ch/HPTD/tx_phase_aligner) submodules.
 
 ### Vivado side
 
@@ -142,7 +142,7 @@ http://<board-ip>:9090
 The web UI is the recommended interface for controlling zPulse. Once the board is powered on, navigate to `http://<board-ip>:5000` from any browser on the same network. From there:
 
 1. Select a bitstream from the dropdown and click **Load Bitstream** — the FPGA will be programmed automatically and the resolution set based on the bitstream filename (e.g. `zPulse_16.bit` sets 62.5 ps resolution)
-2. Use the channel tabs to configure each channel independently: period, delay, pulses (width and start), drive controls (pre/post emphasis and amplitude), and enable/disable
+2. Use the channel tabs to configure each channel independently: period, delay, pulses (width and start), drive controls (pre/post emphasis and amplitude), fine phase, and enable/disable
 3. Settings are preserved server-side and visible to any browser connecting to the same board
 
 It is worth noting that this interface is more limited when compared to pure Pynq, as you don't get the full power of creating custom waveforms with Python.
@@ -158,6 +158,14 @@ As of the latest version, the system can be locked to an external 10 MHz clock u
 Once the system detects that an external clock is being used, it automatically switches to using that clock to lock the Transceivers, thus locking the entire system. 
 
 Regardless of wheter an external 10 MHz clock is provided, the CLK1_M2C_N port of the FMC HPC1 (corresponding to the CLK_N pin on the [HiTech Global FMC module](https://www.hitechglobal.com/FMCModules/FMC_SMA_LVDS.htm)) takes out a 10 MHz clock that is always locked to the Transceivers for locking external devices.
+
+### Fine phase control
+
+On top of the whole-UI timing set by the delay, every channel has a fine phase control based on the CERN [tx_phase_aligner](https://gitlab.cern.ch/HPTD/tx_phase_aligner) (submodule in `User_IP/tx_phase_aligner`). The transceiver TX buffer is enabled and each channel's TX phase interpolator is driven over DRP, in steps of 1/64 UI (about 1 ps at 16 Gbps). Channel 0 is the phase reference: it is aligned like the others, so that the skew between channels is the same after every power-up, but its offset is fixed at 0.
+
+After the transceivers come out of reset, each channel is automatically aligned (and kept inhibited until then). The **Fine phase** field (web UI) or **Phase** box (notebook) sets an offset between 0 and 255/64 UI (almost 4 UI) with respect to that aligned position, so a phase sweep can cross a UI boundary without changing the delay; larger shifts are done with the delay. The setpoint is kept in the FPGA, so reloading a waveform does not change it. The web UI shows the phase status of the visible channel, refreshed every 3 s. From Python, the same is available with `ol.set_phase(ch, codes)` and `ol.get_phase_status(ch)`; `ol.fine_realign_phase(ch)` and `ol.realign_phase(ch)` restart the alignment of a channel (e.g. after a large temperature change).
+
+Each channel has its own `phase_ctrl_0` AXI GPIO (control word on channel 1, status on channel 2) at `0xB020_0000 + ch*0x1_0000`.
 
 ## Contribute
 

@@ -6,10 +6,18 @@ from pynq import Overlay, MMIO, GPIO
 import numpy as np
 import os
 import math
+import time
 
 CHANNELS: int = 8  #: Number of channels
 MEMORY_SIZE: int = 262144 #: Memory Size
 MEMORY_WIDTH: int = 64
+
+PHASE_REF_CHANNEL: int = 0  #: Channel 0 is the phase reference (aligned, offset fixed at 0)
+PHASE_STEPS_PER_UI: int = 64  #: TX phase interpolator codes per UI (GTH)
+PHASE_MAX_CODES: int = 4 * PHASE_STEPS_PER_UI - 1  #: Fine phase range (4 UI), so sweeps can cross a UI boundary
+PHASE_APPLY = 1 << 16
+PHASE_REALIGN = 1 << 17
+PHASE_RESET = 1 << 31
 
 def lcm(a: int, b: int) -> int:
     return int(a * b / math.gcd(a, b))
@@ -48,6 +56,9 @@ class zPulseOverlay(Overlay):
         self.preemph = {}
         self.postemph = {}
         self.amplitude = {}
+        self.phase_ctrl = {}
+        self.phase_status = {}
+        self._phase_target = {}
         # Check which DAC channels are enabled (from 0 to 7 based on DAC_ENABLED)
         for i in range(8):
             tx = getattr(self.tx_channels, f"tx_channel_{i}")
@@ -57,6 +68,11 @@ class zPulseOverlay(Overlay):
             self.preemph[i] = tx.emphasis_ctrl_0.channel1
             self.postemph[i] = tx.emphasis_ctrl_0.channel2
             self.amplitude[i] = tx.voltage_ctr_0.channel1
+            # Fine phase control (TX phase interpolator), only in bitstreams that include it
+            if hasattr(tx, "phase_ctrl_0"):
+                self.phase_ctrl[i] = tx.phase_ctrl_0.channel1
+                self.phase_status[i] = tx.phase_ctrl_0.channel2
+                self._phase_target[i] = 0
 
     def reset(self):
         self.reset_gpio.channel1[0].on()
@@ -70,6 +86,63 @@ class zPulseOverlay(Overlay):
         if (isinstance(ch_index, int) and 0 <= ch_index <= 7):
             self.ch_enable[ch_index].off()
                     
+    def has_phase_control(self, ch_index=None):
+        """True if the fine phase offset of the channel can be set (not the reference channel)."""
+        return ch_index in self.phase_ctrl and ch_index != PHASE_REF_CHANNEL
+
+    def has_phase_status(self, ch_index=None):
+        """True if the channel has a phase aligner (status and realign), reference channel included."""
+        return ch_index in self.phase_status
+
+    def set_phase(self, ch_index, codes):
+        """Set the fine phase offset of a channel in TX PI codes (1/64 UI), relative to the
+        phase reached by the automatic alignment. The setpoint is held in the PL, so it
+        survives reset() (which clears the AXI GPIOs)."""
+        if not self.has_phase_control(ch_index):
+            raise ValueError(f"Channel {ch_index} has no phase control (channel {PHASE_REF_CHANNEL} is the reference)")
+        codes = int(codes)
+        if not 0 <= codes <= PHASE_MAX_CODES:
+            raise ValueError(f"Phase must be between 0 and {PHASE_MAX_CODES} codes")
+        self._phase_target[ch_index] = codes
+        self.phase_ctrl[ch_index].write(codes | PHASE_APPLY, 0xFFFFFFFF)
+
+    def get_phase_status(self, ch_index):
+        status = self.phase_status[ch_index].read()
+        return {
+            "offset": status & 0xFF,
+            "raw": (status >> 8) & 0x7F,
+            "aligned": bool(status >> 16 & 1),
+            "busy": bool(status >> 17 & 1),
+            "tx_reset_done": bool(status >> 18 & 1),
+        }
+
+    def _phase_pulse(self, ch_index, flag):
+        target = self._phase_target[ch_index]
+        self.phase_ctrl[ch_index].write(target | flag, 0xFFFFFFFF)
+        self.phase_ctrl[ch_index].write(target | PHASE_APPLY, 0xFFFFFFFF)
+
+    def fine_realign_phase(self, ch_index, timeout=1.0):
+        """Redo only the fine alignment of a channel to the half-response of its phase detector.
+        The fine alignment starts from the current PI position, so the offset is first brought
+        back to 0 (otherwise the search walks back up to 4 UI, about 1 ms per step); the target
+        is re-applied once the channel is aligned again."""
+        target = self._phase_target[ch_index]
+        self.phase_ctrl[ch_index].write(PHASE_APPLY, 0xFFFFFFFF)
+        deadline = time.monotonic() + timeout
+        while True:
+            status = self.get_phase_status(ch_index)
+            if status["offset"] == 0 and not status["busy"]:
+                break
+            if time.monotonic() > deadline:
+                self.phase_ctrl[ch_index].write(target | PHASE_APPLY, 0xFFFFFFFF)
+                raise TimeoutError(f"Channel {ch_index}: phase offset did not return to 0")
+            time.sleep(0.001)
+        self._phase_pulse(ch_index, PHASE_REALIGN)
+
+    def realign_phase(self, ch_index):
+        """Restart the automatic alignment of a channel (the phase offset is re-applied afterwards)."""
+        self._phase_pulse(ch_index, PHASE_RESET)
+
     def memdict_to_view(self, ip, dtype='uint32'):
         """ Configures access to internal memory via MMIO"""
         baseAddress = self.mem_dict[ip]["phys_addr"]

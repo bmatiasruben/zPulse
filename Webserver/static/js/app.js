@@ -1,6 +1,8 @@
 console.log("app.js loaded");
 CHANNELS = 8;
 let RESOLUTION = null;
+const PHASE_STEPS_PER_UI = 64; // TX phase interpolator codes per UI (GTH)
+const PHASE_MAX_CODES = 4 * PHASE_STEPS_PER_UI - 1; // 4 UI, so sweeps can cross a UI boundary
 const CHANNEL_COLORS = [
     "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
     "#9467bd", "#8c564b", "#e377c2", "#17becf"
@@ -11,6 +13,17 @@ function psToSteps(ps) {
 
 function stepsToPs(steps) {
     return steps * RESOLUTION;
+}
+
+function phaseStepPs() {
+    return RESOLUTION / PHASE_STEPS_PER_UI;
+}
+
+function snapPhaseInput(ch) {
+    const input = document.getElementById(`fine-phase-${ch}`);
+    const codes = Math.min(Math.max(Math.round(Number(input.value) / phaseStepPs()), 0), PHASE_MAX_CODES);
+    input.value = +(codes * phaseStepPs()).toFixed(3);
+    return codes;
 }
 
 function snapInputToResolution(inputId) {
@@ -24,6 +37,9 @@ function snapInputToResolution(inputId) {
 function applyResolutionStepToInputs(ch) {
     document.getElementById(`period-${ch}`).step = RESOLUTION;
     document.getElementById(`delay-${ch}`).step = RESOLUTION;
+    const finePhase = document.getElementById(`fine-phase-${ch}`);
+    finePhase.step = phaseStepPs();
+    finePhase.max = PHASE_MAX_CODES * phaseStepPs();
     for (let p = 1; p <= pulseCounts[ch]; p++) {
         document.getElementById(`pulse${p}-width-${ch}`).step = RESOLUTION;
         document.getElementById(`pulse${p}-start-${ch}`).step = RESOLUTION;
@@ -36,6 +52,7 @@ function populateChannelFromSettings(ch, settings) {
     document.getElementById(`pre-emph-${ch}`).value = settings.pre_emph;
     document.getElementById(`post-emph-${ch}`).value = settings.post_emph;
     document.getElementById(`amplitude-${ch}`).value = settings.amplitude;
+    document.getElementById(`fine-phase-${ch}`).value = +(settings.fine_phase * phaseStepPs()).toFixed(3);
     setEnableButton(ch, settings.enabled);
 
     // remove all existing pulse tabs beyond 1
@@ -57,6 +74,7 @@ function fetchAndPopulateChannel(ch) {
         .then(data => {
             populateChannelFromSettings(ch, data.settings);
             updateChannelChart(ch, data.waveform);
+            showPhaseControl(ch, data.phase_status, data.phase_control);
         });
 }
 
@@ -292,6 +310,20 @@ function buildChannelHTML(ch) {
                     <label>Amplitude</label>
                     <input type="number" id="amplitude-${ch}" min="0" max="15">
                 </div>
+
+                <h3>Phase Control</h3>
+                <div id="phase-ctrl-${ch}" style="display:none;">
+                    <div class="field-row" id="fine-phase-row-${ch}">
+                        <label>Fine phase (ps)</label>
+                        <input type="number" id="fine-phase-${ch}" min="0" value="0">
+                    </div>
+                    <div class="field-row">
+                        <label>Status</label>
+                        <span id="phase-status-${ch}">-</span>
+                    </div>
+                </div>
+                ${ch === 0 ? '<p>Phase reference channel (aligned, fixed phase)</p>' : ''}
+                <p id="phase-info-${ch}">Not available in this bitstream</p>
             </div>
 
         </div>
@@ -421,6 +453,7 @@ function wireUpChannel(ch) {
     ['period', 'delay'].forEach(field => {
         document.getElementById(`${field}-${ch}`).addEventListener('change', () => sendWaveformSettings(ch));
     });
+    document.getElementById(`fine-phase-${ch}`).addEventListener('change', () => sendPhaseSettings(ch));
 }
 
 function wireUpAllChannels() {
@@ -429,12 +462,22 @@ function wireUpAllChannels() {
     }
 }
 
+let currentTab = 0;
+
 function showTab(ch) {
+    currentTab = ch;
     for (let i = 0; i < CHANNELS; i++) {
         document.getElementById(`channel-${i}`).style.display = (i === ch) ? 'block' : 'none';
         document.querySelectorAll('.tab-button')[i].classList.toggle('active', i === ch);
     }
 }
+
+// phase status of the visible channel, refreshed while the page is shown (one request every 3 s)
+const PHASE_STATUS_PERIOD_MS = 3000;
+setInterval(() => {
+    const block = document.getElementById(`phase-ctrl-${currentTab}`);
+    if (!document.hidden && block && block.style.display !== 'none') updatePhaseStatus(currentTab);
+}, PHASE_STATUS_PERIOD_MS);
 
 function wireUpTabButtons() {
     document.querySelectorAll('.tab-button').forEach(btn => {
@@ -495,6 +538,43 @@ function sendDriveSettings(ch) {
     })
         .then(response => response.json())
         .then(data => console.log(data));
+}
+
+// status on every aligned channel, fine phase only where it can be set (not the reference)
+function showPhaseControl(ch, available, adjustable) {
+    document.getElementById(`phase-ctrl-${ch}`).style.display = available ? 'block' : 'none';
+    document.getElementById(`fine-phase-row-${ch}`).style.display = adjustable ? '' : 'none';
+    document.getElementById(`phase-info-${ch}`).style.display = available ? 'none' : 'block';
+    if (available) updatePhaseStatus(ch);
+}
+
+function updatePhaseStatus(ch) {
+    fetch(`/api/channel/${ch}/phase`)
+        .then(response => response.json())
+        .then(data => {
+            const label = document.getElementById(`phase-status-${ch}`);
+            if (data.status !== 'ok') {
+                label.textContent = data.message;
+                return;
+            }
+            let state = data.aligned ? 'aligned' : 'NOT aligned';
+            if (data.busy) state += ', moving';
+            label.textContent = `${data.offset} codes (${(data.offset * phaseStepPs()).toFixed(3)} ps) - ${state}`;
+        });
+}
+
+function sendPhaseSettings(ch) {
+    const fine_phase = snapPhaseInput(ch);
+    fetch(`/api/channel/${ch}/phase`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fine_phase })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            updatePhaseStatus(ch);
+        });
 }
 
 function sendWaveformSettings(ch) {
