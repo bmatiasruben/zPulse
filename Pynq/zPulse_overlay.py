@@ -48,6 +48,7 @@ class zPulseOverlay(Overlay):
         
         self.ch_player = {}
         self.ch_enable = {}
+        self._ch_enabled = {}
         self.addr_limit = {}
         self.preemph = {}
         self.postemph = {}
@@ -60,6 +61,7 @@ class zPulseOverlay(Overlay):
             tx = getattr(self.tx_channels, f"tx_channel_{i}")
             self.ch_player[i] = self.memdict_to_view(f"tx_channels/tx_channel_{i}/axi_bram_ctrl_0")
             self.ch_enable[i] = tx.channel_ctrl_0.channel2[0]
+            self._ch_enabled[i] = False
             self.addr_limit[i] = tx.channel_ctrl_0.channel1
             self.preemph[i] = tx.emphasis_ctrl_0.channel1
             self.postemph[i] = tx.emphasis_ctrl_0.channel2
@@ -77,11 +79,18 @@ class zPulseOverlay(Overlay):
     def enable_channel(self, ch_index=None):
         if (isinstance(ch_index, int) and 0 <= ch_index <= 7):
             self.ch_enable[ch_index].on()
+            self._ch_enabled[ch_index] = True
         
     def disable_channel(self, ch_index=None):
         if (isinstance(ch_index, int) and 0 <= ch_index <= 7):
             self.ch_enable[ch_index].off()
-                    
+            self._ch_enabled[ch_index] = False
+
+    def is_channel_enabled(self, ch_index):
+        """True if the channel is enabled. Kept here because read() on the wire fails in older
+        Pynq (AttributeError: '_val'), and it would also switch the wire to input."""
+        return self._ch_enabled[ch_index]
+
     def has_phase_control(self, ch_index=None):
         """True if the fine phase offset of the channel can be set (not the reference channel)."""
         return ch_index in self.phase_ctrl and ch_index != PHASE_REF_CHANNEL
