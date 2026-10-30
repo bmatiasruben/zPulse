@@ -9,6 +9,7 @@ import subprocess
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 bitstream_dir = SCRIPT_DIR / "zPulse" / "Bitstream"
+SI570_BIN = Path("/home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz")  # only installed on boards with a Si570
 
 app = Flask(__name__)
 
@@ -68,14 +69,12 @@ def load_bitstream():
 
     if not bit_path.exists() or not bit_path.with_suffix('.hwh').exists():
         return jsonify(status="error", message=f"Bitstream '{name}' not found"), 404
-    with hw_lock:
-        try:
-            subprocess.run(
-                ['/home/root/jupyter_notebooks/zPulse/Clocking/si570_usr_mgt_100mhz', '10'],
-                check=True
-            )
-        except subprocess.CalledProcessError as e:
-            app.logger.warning(f"Clock setup executable failed: {e}")
+    if SI570_BIN.exists():
+        with hw_lock:
+            try:
+                subprocess.run([str(SI570_BIN), '10'], check=True)
+            except subprocess.CalledProcessError as e:
+                app.logger.warning(f"Clock setup executable failed: {e}")
 
     with hw_lock:
         try:
@@ -128,7 +127,10 @@ def update_channel(ch):
 
     waveform = generate_waveform(period, delay, pulses)
     with hw_lock:
-        ol.send_waveform_to_memory(ch, waveform)
+        try:
+            ol.send_waveform_to_memory(ch, waveform)
+        except ValueError as e:
+            return jsonify(status="error", message=str(e)), 400
     channel_settings[ch]['period'] = period
     channel_settings[ch]['delay'] = delay
     channel_settings[ch]['pulses'] = pulses

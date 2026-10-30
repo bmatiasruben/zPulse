@@ -12569,37 +12569,37 @@
               "SEG_axi_bram_ctrl_0_Mem0_1": {
                 "address_block": "/tx_channels/tx_channel_1/axi_bram_ctrl_0/S_AXI/Mem0",
                 "offset": "0x00A0040000",
-                "range": "256K"
+                "range": "128K"
               },
               "SEG_axi_bram_ctrl_0_Mem0_2": {
                 "address_block": "/tx_channels/tx_channel_2/axi_bram_ctrl_0/S_AXI/Mem0",
                 "offset": "0x00A0080000",
-                "range": "256K"
+                "range": "128K"
               },
               "SEG_axi_bram_ctrl_0_Mem0_3": {
                 "address_block": "/tx_channels/tx_channel_3/axi_bram_ctrl_0/S_AXI/Mem0",
                 "offset": "0x00A00C0000",
-                "range": "256K"
+                "range": "128K"
               },
               "SEG_axi_bram_ctrl_0_Mem0_4": {
                 "address_block": "/tx_channels/tx_channel_4/axi_bram_ctrl_0/S_AXI/Mem0",
                 "offset": "0x00A0100000",
-                "range": "256K"
+                "range": "128K"
               },
               "SEG_axi_bram_ctrl_0_Mem0_5": {
                 "address_block": "/tx_channels/tx_channel_5/axi_bram_ctrl_0/S_AXI/Mem0",
                 "offset": "0x00A0140000",
-                "range": "256K"
+                "range": "128K"
               },
               "SEG_axi_bram_ctrl_0_Mem0_6": {
                 "address_block": "/tx_channels/tx_channel_6/axi_bram_ctrl_0/S_AXI/Mem0",
                 "offset": "0x00A0180000",
-                "range": "256K"
+                "range": "128K"
               },
               "SEG_axi_bram_ctrl_0_Mem0_7": {
                 "address_block": "/tx_channels/tx_channel_7/axi_bram_ctrl_0/S_AXI/Mem0",
                 "offset": "0x00A01C0000",
-                "range": "256K"
+                "range": "128K"
               },
               "SEG_channel_ctrl_0_Reg": {
                 "address_block": "/tx_channels/tx_channel_0/channel_ctrl_0/S_AXI/Reg",

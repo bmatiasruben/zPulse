@@ -597,6 +597,10 @@ function sendWaveformSettings(ch) {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+            if (data.status === 'error') {
+                alert(data.message);
+                return;
+            }
             updateChannelChart(ch, data.waveform);
         });
 }

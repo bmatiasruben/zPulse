@@ -4,12 +4,10 @@
 #  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- --
 from pynq import Overlay, MMIO, GPIO
 import numpy as np
-import os
 import math
 import time
 
 CHANNELS: int = 8  #: Number of channels
-MEMORY_SIZE: int = 262144 #: Memory Size
 MEMORY_WIDTH: int = 64
 
 PHASE_REF_CHANNEL: int = 0  #: Channel 0 is the phase reference (aligned, offset fixed at 0)
@@ -47,8 +45,6 @@ class zPulseOverlay(Overlay):
 
         """
         super().__init__(bitfile_name, **kwargs)
-        
-        board = os.environ['BOARD']
         
         self.ch_player = {}
         self.ch_enable = {}
@@ -156,6 +152,10 @@ class zPulseOverlay(Overlay):
         extended_waveform = np.tile(waveform, repetition_factor)
         int_waveform_to_memory = binary_array_to_integers(extended_waveform)
         addr_limit = len(int_waveform_to_memory)
+        # Depends on the board, the size of each channel memory comes from the .hwh
+        if addr_limit > len(self.ch_player[ch_idx]):
+            raise ValueError(f"Waveform does not fit in the memory of channel {ch_idx}: "
+                             f"needs {addr_limit * 4} bytes, has {self.ch_player[ch_idx].nbytes}")
         self.ch_player[ch_idx][:addr_limit] = int_waveform_to_memory
         self.addr_limit[ch_idx].write(addr_limit * 4 - MEMORY_WIDTH//8, 0xFFFFFFF)
     

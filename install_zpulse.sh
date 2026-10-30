@@ -2,8 +2,10 @@
 set -e
 
 # ── zPulse installer ─────────────────────────────────────────────────────────
-# Usage: curl -sSL https://raw.githubusercontent.com/bmatiasruben/zPulse/main/install.sh | sudo bash
+# Usage: curl -sSL https://raw.githubusercontent.com/bmatiasruben/zPulse/main/install_zpulse.sh | sudo bash
 # Run as root on a fresh Pynq/Ubuntu 20.04 board
+# The board is auto-detected. To force it, pass it as an argument (zcu102 or pz_zu7ev):
+#   curl -sSL .../install_zpulse.sh | sudo bash -s pz_zu7ev
 
 REPO="https://github.com/bmatiasruben/zPulse"
 PYNQ_VENV="/usr/local/share/pynq-venv"
@@ -14,8 +16,46 @@ WEBSERVER_DIR="/home/ubuntu/Webserver"
 JUPYTER_ROOT="/home/root/jupyter_notebooks"
 JUPYTER_ZPULSE="$JUPYTER_ROOT/zPulse"
 
+# ── Board detection ───────────────────────────────────────────────────────────
+detect_board() {
+    # sudo drops the BOARD variable that Pynq sets, so it is read back from its profile script
+    if [ -z "$BOARD" ] && [ -f /etc/profile.d/boardname.sh ]; then
+        . /etc/profile.d/boardname.sh
+    fi
+
+    local id
+    id=$(echo "$BOARD $(cat /proc/device-tree/model 2>/dev/null | tr -d '\0')" | tr 'A-Z' 'a-z')
+    case "$id" in
+        *zcu102*)  echo "zcu102" ;;
+        *zu7ev*)   echo "pz_zu7ev" ;;
+    esac
+}
+
+ZPULSE_BOARD="${1:-$(detect_board)}"
+
+# ASSET_PREFIX: name of the release assets of the board, followed by the line rate (zPulse_zcu102_16.bit)
+# HAS_SI570:    the GT reference clock comes from a Si570 that has to be programmed at boot
+case "$ZPULSE_BOARD" in
+    zcu102)
+        ASSET_PREFIX="zPulse_zcu102_"
+        HAS_SI570=1
+        ;;
+    pz_zu7ev)
+        ASSET_PREFIX="zPulse_pz_zu7ev_"
+        HAS_SI570=0
+        ;;
+    *)
+        echo "ERROR: Could not determine the board ('$ZPULSE_BOARD')." >&2
+        echo "  BOARD='$BOARD', device tree model='$(cat /proc/device-tree/model 2>/dev/null | tr -d '\0')'" >&2
+        echo "  Select it by hand, the supported boards are zcu102 and pz_zu7ev:" >&2
+        echo "  curl -sSL <installer url> | sudo bash -s pz_zu7ev" >&2
+        exit 1
+        ;;
+esac
+
 echo "══════════════════════════════════════"
 echo "  zPulse Installer"
+echo "  Board: $ZPULSE_BOARD"
 echo "══════════════════════════════════════"
 
 # ── 1. Dependencies ───────────────────────────────────────────────────────────
@@ -38,18 +78,21 @@ echo "[3/7] Downloading latest bitstream release..."
 mkdir -p "$WEBSERVER_DIR/zPulse/Bitstream"
 mkdir -p "$JUPYTER_ZPULSE/Bitstream"
 
-LATEST_TAG=$(curl -s "https://api.github.com/repos/bmatiasruben/zPulse/releases/latest" | jq -r '.tag_name')
+RELEASE=$(curl -s "https://api.github.com/repos/bmatiasruben/zPulse/releases/latest")
+LATEST_TAG=$(echo "$RELEASE" | jq -r '.tag_name')
 echo "  Latest release: $LATEST_TAG"
 
-ASSETS=$(curl -s "https://api.github.com/repos/bmatiasruben/zPulse/releases/latest" \
-    | jq -r '.assets[] | select(.name | test("\\.(bit|hwh)$")) | .browser_download_url')
+ASSETS=$(echo "$RELEASE" | jq -r --arg prefix "$ASSET_PREFIX" \
+    '.assets[] | select(.name | test("^" + $prefix + "[0-9].*\\.(bit|hwh)$")) | .browser_download_url')
 
 if [ -z "$ASSETS" ]; then
-    echo "  WARNING: No .bit/.hwh files found in latest release."
+    echo "  WARNING: No .bit/.hwh files for $ZPULSE_BOARD found in latest release."
 else
     for URL in $ASSETS; do
-        FILENAME=$(basename "$URL")
-        echo "  Downloading $FILENAME..."
+        ASSET=$(basename "$URL")
+        # Stored as zPulse_<rate>: the web UI takes the line rate from the first number in the name
+        FILENAME="zPulse_${ASSET#"$ASSET_PREFIX"}"
+        echo "  Downloading $ASSET..."
         curl -L --progress-bar "$URL" -o "/tmp/$FILENAME"
         cp "/tmp/$FILENAME" "$WEBSERVER_DIR/zPulse/Bitstream/$FILENAME"
         cp "/tmp/$FILENAME" "$JUPYTER_ZPULSE/Bitstream/$FILENAME"
@@ -70,29 +113,33 @@ mkdir -p "$JUPYTER_ZPULSE/Clocking"
 
 cp "$CLONE_DIR/Pynq/zPulse_overlay.py" "$JUPYTER_ZPULSE/zPulse_overlay.py"
 cp "$CLONE_DIR/Pynq/zPulse_GUI.ipynb"  "$JUPYTER_ROOT/zPulse_GUI.ipynb"
-cp "$CLONE_DIR/Pynq/si570_usr_mgt_100mhz.c" "$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz.c"
 
-echo "  Compiling Si570 clock utility..."
-gcc -Wall -O2 \
-    -o "$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz" \
-    "$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz.c"
+if [ "$HAS_SI570" = 1 ]; then
+    cp "$CLONE_DIR/Pynq/si570_usr_mgt_100mhz.c" "$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz.c"
+
+    echo "  Compiling Si570 clock utility..."
+    gcc -Wall -O2 \
+        -o "$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz" \
+        "$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz.c"
+fi
 
 # ── 6. Find I2C bus and set up Si570 service ──────────────────────────────────
 echo "[6/7] Setting up Si570 clock service..."
-BUS_MGT=$(i2cdetect -l 2>/dev/null | grep "i2c-1-mux (chan_id 3)" | awk '{print $1}' | sed 's/i2c-//')
+if [ "$HAS_SI570" = 1 ]; then
+    BUS_MGT=$(i2cdetect -l 2>/dev/null | grep "i2c-1-mux (chan_id 3)" | awk '{print $1}' | sed 's/i2c-//')
 
-if [ -z "$BUS_MGT" ]; then
-    echo "  WARNING: Could not auto-detect I2C bus for Si570."
-    echo "  After install, run: i2cdetect -l"
-    echo "  Find 'i2c-1-mux (chan_id 3)' and update BUS_MGT in:"
-    echo "  /etc/systemd/system/si570-mgt-100mhz.service"
-    echo "  Then: systemctl daemon-reload && systemctl restart si570-mgt-100mhz"
-    BUS_MGT="CHANGE_ME"
-fi
+    if [ -z "$BUS_MGT" ]; then
+        echo "  WARNING: Could not auto-detect I2C bus for Si570."
+        echo "  After install, run: i2cdetect -l"
+        echo "  Find 'i2c-1-mux (chan_id 3)' and update BUS_MGT in:"
+        echo "  /etc/systemd/system/si570-mgt-100mhz.service"
+        echo "  Then: systemctl daemon-reload && systemctl restart si570-mgt-100mhz"
+        BUS_MGT="CHANGE_ME"
+    fi
 
-SI570_BIN="$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz"
+    SI570_BIN="$JUPYTER_ZPULSE/Clocking/si570_usr_mgt_100mhz"
 
-cat > /etc/systemd/system/si570-mgt-100mhz.service << EOF
+    cat > /etc/systemd/system/si570-mgt-100mhz.service << EOF
 [Unit]
 Description=Set USER MGT Si570 (U56) to 100 MHz after boot
 # no After=multi-user.target: the unit is WantedBy it, so that would be an ordering cycle and
@@ -105,6 +152,9 @@ ExecStart=$SI570_BIN $BUS_MGT
 [Install]
 WantedBy=multi-user.target
 EOF
+else
+    echo "  Not needed on $ZPULSE_BOARD."
+fi
 
 # ── 7. Install Flask and set up web server service ────────────────────────────
 echo "[7/7] Installing Flask and setting up web server..."
@@ -140,9 +190,11 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
-systemctl enable si570-mgt-100mhz.service
+if [ "$HAS_SI570" = 1 ]; then
+    systemctl enable si570-mgt-100mhz.service
+    systemctl start si570-mgt-100mhz.service
+fi
 systemctl enable zpulse.service
-systemctl start si570-mgt-100mhz.service
 systemctl start zpulse.service
 
 # ── Done ──────────────────────────────────────────────────────────────────────

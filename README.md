@@ -115,13 +115,29 @@ curl -sSL https://raw.githubusercontent.com/bmatiasruben/zPulse/main/install_zpu
 
 This single command will:
 
+- Detect the board (ZCU102 or Puzhi PZ-ZU7EV)
 - Clone the zPulse repository onto the board
-- Download the latest bitstream release assets (.bit and .hwh files)
+- Download the latest bitstream release assets (.bit and .hwh files) of that board
 - Deploy the web server to `/home/ubuntu/Webserver`
 - Deploy the Jupyter notebook and overlay to `/home/root/jupyter_notebooks`
-- Compile the Si570 clock utility
-- Auto-detect the Si570 I2C bus and set up a systemd service to configure it at boot
+- Compile the Si570 clock utility (ZCU102 only)
+- Auto-detect the Si570 I2C bus and set up a systemd service to configure it at boot (ZCU102 only)
 - Install Flask and set up a systemd service to start the web server at boot
+
+If the board is not detected the script stops without installing anything. Select it by hand with:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/bmatiasruben/zPulse/main/install_zpulse.sh | sudo bash -s pz_zu7ev
+```
+
+The installer picks the release assets by name, followed by the line rate in Gbps (`12_5` is 12.5 Gbps):
+
+| Board      | Argument   | Release assets                                      |
+| ---------- | ---------- | --------------------------------------------------- |
+| ZCU102     | `zcu102`   | `zPulse_zcu102_16.bit`, `zPulse_zcu102_16.hwh`      |
+| PZ-ZU7EV   | `pz_zu7ev` | `zPulse_pz_zu7ev_16.bit`, `zPulse_pz_zu7ev_16.hwh`  |
+
+The size of the waveform memories is read from the .hwh when the bitstream is loaded, so it doesn't need to be set anywhere.
 
 Once the script completes, the web UI is accessible at:
 

@@ -20,7 +20,7 @@ entity Top is
 
         clk_10mhz_in  : in std_logic;
         clk_10mhz_out : out std_logic;
-        o_led         : out std_logic_vector(7 downto 0)
+        o_led         : out std_logic_vector(2 downto 0)
     );
 end Top;
 
@@ -83,8 +83,8 @@ architecture Behavioral of Top is
 
 begin
 
-    o_led(7 downto 2) <= (others => '0');
-    o_led(1)          <= w_ext_clk_locked;
+    o_led(2) <= '0';
+    o_led(1) <= w_ext_clk_locked;
     -- o_led(7 downto 5) <= w_clock_selector(2 downto 0);
     clk_10mhz_out <= w_clk_10_out;
     w_clk_to_gt   <= w_clk_125 when w_ext_clk_locked = '1' else
