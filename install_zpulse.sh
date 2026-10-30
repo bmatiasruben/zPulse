@@ -3,18 +3,11 @@ set -e
 
 # ── zPulse installer ─────────────────────────────────────────────────────────
 # Usage: curl -sSL https://raw.githubusercontent.com/bmatiasruben/zPulse/main/install_zpulse.sh | sudo bash
-# Run as root on a fresh Pynq/Ubuntu 20.04 board
+# Run as root on a fresh Pynq/Ubuntu board
 # The board is auto-detected. To force it, pass it as an argument (zcu102 or pz_zu7ev):
 #   curl -sSL .../install_zpulse.sh | sudo bash -s pz_zu7ev
 
 REPO="https://github.com/bmatiasruben/zPulse"
-PYNQ_VENV="/usr/local/share/pynq-venv"
-
-# ── Target directories ────────────────────────────────────────────────────────
-CLONE_DIR="/home/ubuntu/zPulse_src"
-WEBSERVER_DIR="/home/ubuntu/Webserver"
-JUPYTER_ROOT="/home/root/jupyter_notebooks"
-JUPYTER_ZPULSE="$JUPYTER_ROOT/zPulse"
 
 # ── Board detection ───────────────────────────────────────────────────────────
 detect_board() {
@@ -35,14 +28,27 @@ ZPULSE_BOARD="${1:-$(detect_board)}"
 
 # ASSET_PREFIX: name of the release assets of the board, followed by the line rate (zPulse_zcu102_16.bit)
 # HAS_SI570:    the GT reference clock comes from a Si570 that has to be programmed at boot
+# BOARD_HOME:   home of the default user of the Pynq image
+# JUPYTER_ROOT: directory served by Jupyter
+# PYTHON:       interpreter with pynq installed
+# ENV_SETUP:    command that prepares the environment of that interpreter
 case "$ZPULSE_BOARD" in
     zcu102)
         ASSET_PREFIX="zPulse_zcu102_"
         HAS_SI570=1
+        BOARD_HOME="/home/ubuntu"
+        JUPYTER_ROOT="/home/root/jupyter_notebooks"
+        PYTHON="/usr/local/share/pynq-venv/bin/python3"
+        ENV_SETUP="source /etc/profile.d/pynq_venv.sh"
         ;;
     pz_zu7ev)
         ASSET_PREFIX="zPulse_pz_zu7ev_"
         HAS_SI570=0
+        BOARD_HOME="/home/xilinx"
+        JUPYTER_ROOT="/home/xilinx/jupyter_notebooks"
+        # older Pynq image, pynq is installed in the system Python instead of a venv
+        PYTHON="$(command -v python3 || echo python3)"
+        ENV_SETUP=""
         ;;
     *)
         echo "ERROR: Could not determine the board ('$ZPULSE_BOARD')." >&2
@@ -52,6 +58,16 @@ case "$ZPULSE_BOARD" in
         exit 1
         ;;
 esac
+
+# ── Target directories ────────────────────────────────────────────────────────
+CLONE_DIR="$BOARD_HOME/zPulse_src"
+WEBSERVER_DIR="$BOARD_HOME/Webserver"
+JUPYTER_ZPULSE="$JUPYTER_ROOT/zPulse"
+
+if ! ( $ENV_SETUP; "$PYTHON" -c "import pynq" ); then
+    echo "ERROR: pynq cannot be imported with $PYTHON." >&2
+    exit 1
+fi
 
 echo "══════════════════════════════════════"
 echo "  zPulse Installer"
@@ -158,16 +174,16 @@ fi
 
 # ── 7. Install Flask and set up web server service ────────────────────────────
 echo "[7/7] Installing Flask and setting up web server..."
-"$PYNQ_VENV/bin/pip" install flask --quiet
+"$PYTHON" -m pip install flask --quiet
 
-cat > /home/ubuntu/start_zpulse.sh << EOF
+cat > "$BOARD_HOME/start_zpulse.sh" << EOF
 #!/bin/bash
-source /etc/profile.d/pynq_venv.sh
+$ENV_SETUP
 cd $WEBSERVER_DIR
-exec $PYNQ_VENV/bin/python3 app.py
+exec $PYTHON app.py
 EOF
 
-chmod +x /home/ubuntu/start_zpulse.sh
+chmod +x "$BOARD_HOME/start_zpulse.sh"
 
 cat > /etc/systemd/system/zpulse.service << EOF
 [Unit]
@@ -179,7 +195,7 @@ Wants=network-online.target
 Type=simple
 User=root
 ExecStartPre=/bin/sleep 30
-ExecStart=/home/ubuntu/start_zpulse.sh
+ExecStart=$BOARD_HOME/start_zpulse.sh
 Restart=on-failure
 RestartSec=5
 StandardOutput=journal

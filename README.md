@@ -118,8 +118,8 @@ This single command will:
 - Detect the board (ZCU102 or Puzhi PZ-ZU7EV)
 - Clone the zPulse repository onto the board
 - Download the latest bitstream release assets (.bit and .hwh files) of that board
-- Deploy the web server to `/home/ubuntu/Webserver`
-- Deploy the Jupyter notebook and overlay to `/home/root/jupyter_notebooks`
+- Deploy the web server to `/home/ubuntu/Webserver` (`/home/xilinx/Webserver` on the PZ-ZU7EV)
+- Deploy the Jupyter notebook and overlay to `/home/root/jupyter_notebooks` (`/home/xilinx/jupyter_notebooks` on the PZ-ZU7EV)
 - Compile the Si570 clock utility (ZCU102 only)
 - Auto-detect the Si570 I2C bus and set up a systemd service to configure it at boot (ZCU102 only)
 - Install Flask and set up a systemd service to start the web server at boot
