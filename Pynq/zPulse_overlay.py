@@ -141,9 +141,9 @@ class zPulseOverlay(Overlay):
 
     def memdict_to_view(self, ip, dtype='uint32'):
         """ Configures access to internal memory via MMIO"""
-        baseAddress = self.mem_dict[ip]["phys_addr"]
-        mem_range = self.mem_dict[ip]["addr_range"]
-        ipmmio = MMIO(baseAddress, mem_range)
+        # Newer Pynq lists the AXI BRAM controllers in mem_dict, older versions in ip_dict
+        mem_info = self.mem_dict[ip] if ip in self.mem_dict else self.ip_dict[ip]
+        ipmmio = MMIO(mem_info["phys_addr"], mem_info["addr_range"])
         return ipmmio.array[0:ipmmio.length].view(dtype)
     
     def send_waveform_to_memory(self, ch_idx, waveform):
